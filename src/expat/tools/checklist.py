@@ -193,7 +193,8 @@ def build_checklist(
         context={"allowed_source_ids": set(by_id)},
     )
 
-    cited_ids = sorted({x.source_id for x in [*checklist.items, *checklist.fees, *checklist.steps]})
+    entries: list[ChecklistItem | FeeItem | StepItem] = [*checklist.items, *checklist.fees, *checklist.steps]
+    cited_ids = sorted({entry.source_id for entry in entries})
     cited = [by_id[i] for i in cited_ids]
     checklist.cited_sources = [
         CitedSource(source_id=s.source_id, doc_key=s.doc_key, title=s.title, source_url=s.source_url) for s in cited
