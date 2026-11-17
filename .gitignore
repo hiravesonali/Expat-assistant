@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Data (scraped content is not redistributed; rebuild with `expat-ingest`)
+data/*
+!data/.gitkeep
+!data/README.md
+
+# Node
+node_modules/
+.next/
+out/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
