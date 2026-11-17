@@ -261,7 +261,9 @@ def _run_traced(
             },
         )
         yield CitationsEvent(citations=_citations(check.cited, cited_sources, cited_tools))
-        yield AnswerMetaEvent(confidence=confidence, stale_sources=stale, unverified_refs=unverified)
+        yield AnswerMetaEvent(
+            confidence=confidence, stale_sources=stale, unverified_refs=unverified, final_answer=check.answer
+        )
         yield done()
     except Exception as exc:  # the generator must end with a typed event, never a traceback in the UI
         logger.exception("Pipeline failed during %s", stage)

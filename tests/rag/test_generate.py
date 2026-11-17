@@ -198,3 +198,15 @@ def test_assess_confidence():
     assert assess_confidence("a", has_evidence=False, citations=none, unverified_refs=[]) == "insufficient"
     fallback = "I couldn't find this in my official sources. Ask the KVR [S1]."
     assert assess_confidence(fallback, has_evidence=True, citations=ok, unverified_refs=[]) == "insufficient"
+
+
+def test_stale_sources_flags_expired_validity() -> None:
+    from datetime import date
+
+    from fakes import make_source
+
+    from expat.rag.generate import stale_sources
+
+    fresh = make_source("S1", last_verified="2026-11-10", valid_until="2029-12-31")
+    expired = make_source("S2", last_verified="2026-11-10", valid_until="2025-12-31")
+    assert stale_sources([fresh, expired], today=date(2026, 11, 17), staleness_days=90) == ["S2"]

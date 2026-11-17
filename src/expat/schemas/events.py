@@ -58,6 +58,9 @@ class AnswerMetaEvent(BaseModel):
     confidence: Literal["grounded", "partial", "insufficient"]
     stale_sources: list[str] = Field(default_factory=list)
     unverified_refs: list[str] = Field(default_factory=list)  # § tripwire hits
+    # Tokens are streamed BEFORE post-checks run; this is the cleaned text (invalid citations stripped)
+    # that the UI should persist/re-render. None = use the streamed text as-is.
+    final_answer: str | None = None
 
 
 class DoneEvent(BaseModel):

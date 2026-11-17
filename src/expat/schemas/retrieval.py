@@ -124,6 +124,7 @@ class ContextSource(BaseModel):
     legal_reference: str = ""
     language: str
     last_verified: str
+    valid_until: str = ""  # ISO date or "" (no expiry); past dates mark the source as stale
     text: str
 
 

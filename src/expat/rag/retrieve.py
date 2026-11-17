@@ -396,5 +396,6 @@ class HybridRetriever:
             legal_reference=p.legal_reference if p else m.legal_reference,
             language=p.language if p else m.language,
             last_verified=(p.last_verified if p else m.last_verified).isoformat(),
+            valid_until=m.valid_until.isoformat() if m.valid_until else "",
             text=block.text,
         )

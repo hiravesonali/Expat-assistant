@@ -344,9 +344,8 @@ def find_unverified_legal_refs(answer: str, cited_texts: Sequence[str]) -> list[
 def stale_sources(
     sources: Sequence[ContextSource], *, today: date | None = None, staleness_days: int | None = None
 ) -> list[str]:
-    """Source ids whose `last_verified` is older than `settings.staleness_days` (or unparsable).
-
-    TODO(schema): `ContextSource` has no `valid_until`, so "past its validity" can't be checked here.
+    """Source ids that are stale: `last_verified` older than `settings.staleness_days` (or unparsable),
+    or past their `valid_until` date (e.g. a regulation that expired).
     """
     today = today or date.today()
     max_age = timedelta(days=staleness_days if staleness_days is not None else get_settings().staleness_days)
@@ -357,7 +356,8 @@ def stale_sources(
         except ValueError:
             stale.append(source.source_id)
             continue
-        if today - verified > max_age:
+        expired = bool(source.valid_until) and source.valid_until[:10] < today.isoformat()
+        if today - verified > max_age or expired:
             stale.append(source.source_id)
     return stale
 
