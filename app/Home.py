@@ -26,6 +26,7 @@ from pipeline_adapter import DEMO, LIVE, live_status, run_pipeline, sync_secrets
 
 from expat.config import get_settings
 from expat.schemas import (
+    AnswerMetaEvent,
     ErrorEvent,
     PipelineEvent,
     StepEvent,
@@ -382,9 +383,10 @@ def handle_prompt(prompt: str, mode: str) -> None:
             expanded=False,
         )
 
-    conv["messages"].append(
-        {"role": "assistant", "content": answer if isinstance(answer, str) else "", "events": events, "mode": mode}
-    )
+    # Persist the post-checked text (invalid citations stripped) rather than the raw streamed tokens.
+    final = next((ev.final_answer for ev in events if isinstance(ev, AnswerMetaEvent) and ev.final_answer), None)
+    content = final if final is not None else (answer if isinstance(answer, str) else "")
+    conv["messages"].append({"role": "assistant", "content": content, "events": events, "mode": mode})
     # Redraw everything from state: citation chips, banners, retry button, sidebar title.
     st.rerun()
 
