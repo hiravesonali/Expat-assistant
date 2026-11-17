@@ -179,7 +179,8 @@ class ChunkVectorStore:
             current_ids.setdefault(r.metadata.doc_id, set()).add(r.metadata.chunk_id)
         if not current_ids:
             return 0
-        stored = self.collection.get(where={"doc_id": {"$in": list(current_ids)}}, include=["metadatas"])
+        doc_filter: dict[str, Any] = {"doc_id": {"$in": list(current_ids)}}
+        stored = self.collection.get(where=doc_filter, include=["metadatas"])
         metas = stored["metadatas"] or []
         orphans = [
             cid
@@ -212,7 +213,7 @@ class ChunkVectorStore:
         if n == 0:
             return []
         res = self.collection.query(
-            query_embeddings=[self.embeddings.embed_query(text)],  # type: ignore[list-item]
+            query_embeddings=[self.embeddings.embed_query(text)],  # type: ignore[arg-type]
             n_results=n,
             where=where or None,  # Chroma rejects an empty dict
             include=["documents", "metadatas", "distances"],

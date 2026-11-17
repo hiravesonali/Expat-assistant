@@ -178,8 +178,8 @@ def get_embeddings(
 
         inner = OpenAIEmbeddings(
             model=slug,
-            base_url=s.openrouter_base_url,
-            api_key=key,
+            openai_api_base=s.openrouter_base_url,  # field names (not the aliases) keep mypy happy
+            openai_api_key=key,
             check_embedding_ctx_length=False,
             model_kwargs={"encoding_format": "float"},
             default_headers={"X-Title": APP_TITLE},
