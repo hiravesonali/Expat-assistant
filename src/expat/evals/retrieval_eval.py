@@ -126,12 +126,12 @@ def make_target_factory(retriever: Retriever, analysis: AnalysisCache) -> Target
 
 
 def default_target_factory() -> tuple[TargetFactory, AnalysisCache]:  # pragma: no cover - needs the real index
-    """Wire HybridRetriever + analyze from expat.rag. Imported lazily: those modules need an index and API keys."""
-    from expat.rag.query_analysis import analyze
-    from expat.rag.retrieve import HybridRetriever
+    """Wire the SAME Pipeline the chat uses (its retriever + analyze step). Imported lazily: needs an index + keys."""
+    from expat.rag.pipeline import build_default_pipeline
 
-    cache = AnalysisCache(analyze)
-    return make_target_factory(HybridRetriever(), cache), cache
+    pipeline = build_default_pipeline()
+    cache = AnalysisCache(lambda question, profile: pipeline.analyze(question, (), profile))
+    return make_target_factory(pipeline.retriever, cache), cache
 
 
 # --- scoring ---------------------------------------------------------------------------------------------------

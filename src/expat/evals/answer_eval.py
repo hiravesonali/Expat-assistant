@@ -146,12 +146,14 @@ AnswerTargetFactory = Callable[[RetrievalConfig], AnswerTarget]
 
 
 def default_answer_target_factory() -> AnswerTargetFactory:  # pragma: no cover - needs index + API keys
-    """Wire expat.rag.pipeline.run (a generator of PipelineEvents). Imported lazily."""
-    from expat.rag.pipeline import run
+    """Wire the default Pipeline (a generator of PipelineEvents), built once. Imported lazily."""
+    from expat.rag.pipeline import build_default_pipeline
+
+    pipeline = build_default_pipeline()
 
     def factory(config: RetrievalConfig) -> AnswerTarget:
         def target(question: str, profile: UserProfile) -> AnswerOutput:
-            return fold_events(run(question, profile=profile, config=config))
+            return fold_events(pipeline.run(question, (), profile, config=config))
 
         return target
 
