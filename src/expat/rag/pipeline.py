@@ -14,7 +14,6 @@ Tracing: `run` is a LangSmith `@traceable` root run ("expat_pipeline") with the 
 as metadata; analysis, retrieval and the agent appear as named child runs.
 """
 
-import functools
 import logging
 import time
 from collections.abc import Callable, Iterator, Sequence
@@ -49,6 +48,7 @@ from expat.rag.generate import (
 from expat.rag.prompts import ANSWER_PROMPT_VERSION, QUERY_ANALYSIS_PROMPT_VERSION
 from expat.rag.query_analysis import QueryAnalysis, analyze
 from expat.safety import SafetyCategory, category_for_intent, precheck, safety_response
+from expat.schemas.chunks import SectionKind
 from expat.schemas.events import (
     AnswerMetaEvent,
     Citation,
@@ -62,7 +62,14 @@ from expat.schemas.events import (
     ToolResultEvent,
 )
 from expat.schemas.profile import UserProfile
-from expat.schemas.retrieval import ContextSource, RetrievalConfig, RetrievalPlan, RetrievalResult, Retriever
+from expat.schemas.retrieval import (
+    ContextSource,
+    RetrievalConfig,
+    RetrievalPlan,
+    RetrievalResult,
+    Retriever,
+    SubQuery,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -430,25 +437,90 @@ def load_pending_changes(path: Path = PENDING_CHANGES_PATH) -> tuple[str, ...]:
     return tuple(notes)
 
 
-def build_default_pipeline() -> PipelineFn:
+CHECKLIST_QUERY_DE = "Erforderliche Unterlagen für {procedure} in München"
+
+
+@dataclass
+class Pipeline:
+    """The wired pipeline: what the Streamlit chat, the debugger page and the evals all use.
+
+    Why an object instead of a bare function: the Retrieval Debugger needs the *same* `retriever`
+    and `analyze` step the chat uses ("one retrieval code path", docs/PLAN.md), and the
+    checklist tool needs per-request inputs (the user's profile), so tools are assembled per turn.
+    """
+
+    retriever: Retriever
+    analysis_llm: BaseChatModel
+    answer_llm: BaseChatModel
+    pending_changes: tuple[str, ...] = ()
+    _static_tools: list[BaseTool] = field(default_factory=list)
+    _static_agent: AnswerAgent | None = None
+
+    def analyze(self, question: str, history: History = (), profile: UserProfile | None = None) -> RetrievalPlan:
+        """Query analysis only (debugger / retrieval evals). Never raises; falls back to the raw question."""
+        return analyze(question, convert_to_messages(list(history)), profile, self.analysis_llm).to_plan()
+
+    def tools_for(self, profile: UserProfile | None) -> list[BaseTool]:
+        """Static calculators + the profile-bound checklist tool (when we know who is asking)."""
+        if profile is None:
+            return self._static_tools
+        from expat.tools import get_tools
+        from expat.tools.checklist import make_checklist_tool
+
+        def fetch_sources(procedure: str, prof: UserProfile) -> list[ContextSource]:
+            readable = procedure.replace("_", " ")
+            sub = SubQuery(
+                text=f"Which documents do I need for {readable} in Munich?",
+                queries_de=[CHECKLIST_QUERY_DE.format(procedure=readable)],
+                section_kinds=[SectionKind.DOCUMENTS],
+            )
+            plan = RetrievalPlan(standalone_question=sub.text, sub_queries=[sub])
+            return self.retriever.retrieve(plan, prof).parents
+
+        return get_tools(checklist_tool=make_checklist_tool(fetch_sources, self.analysis_llm, profile))
+
+    def run(
+        self,
+        question: str,
+        history: History = (),
+        profile: UserProfile | None = None,
+        config: RetrievalConfig | None = None,
+    ) -> Iterator[PipelineEvent]:
+        tools = self.tools_for(profile)
+        # Reuse the compiled agent when the tool set is the static one; otherwise build per turn (cheap).
+        agent = self._static_agent if tools is self._static_tools else None
+        return run(
+            question,
+            history,
+            profile,
+            retriever=self.retriever,
+            analysis_llm=self.analysis_llm,
+            answer_llm=self.answer_llm,
+            tools=tools,
+            config=config,
+            answer_agent=agent,
+            pending_changes=self.pending_changes,
+        )
+
+    __call__ = run
+
+
+def build_default_pipeline() -> Pipeline:
     """Wire the real models, retriever and tools; call once (e.g. under `st.cache_resource`).
 
-    Imports are lazy so `import expat.rag.pipeline` works on branches where these modules are
-    not merged yet; calling this function then raises a clear ImportError.
+    Imports are lazy so importing this module stays cheap (no Chroma/BM25 loading at import time).
     """
-    from expat.llm import get_chat_model  # type: ignore[import-not-found,unused-ignore]
-    from expat.rag.retrieve import HybridRetriever  # type: ignore[import-not-found,unused-ignore]
-    from expat.tools import get_tools  # type: ignore[attr-defined,unused-ignore]
+    from expat.llm import get_chat_model
+    from expat.rag.retrieve import HybridRetriever
+    from expat.tools import get_tools
 
-    retriever = HybridRetriever.from_settings() if hasattr(HybridRetriever, "from_settings") else HybridRetriever()
-    tools = list(get_tools())
     answer_llm = get_chat_model("answer")
-    return functools.partial(
-        run,
-        retriever=retriever,
+    static_tools = list(get_tools())
+    return Pipeline(
+        retriever=HybridRetriever.from_settings(),
         analysis_llm=get_chat_model("analysis"),
         answer_llm=answer_llm,
-        tools=tools,
-        answer_agent=build_answer_agent(answer_llm, tools),
         pending_changes=load_pending_changes(),
+        _static_tools=static_tools,
+        _static_agent=build_answer_agent(answer_llm, static_tools),
     )
