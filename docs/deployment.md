@@ -97,4 +97,4 @@ uv run pytest tests/app                                         # AppTest smoke 
 | Changes to secrets don't apply | Secrets are read at start | Save the secrets in the settings (restarts the app) or reboot it from *Manage app* |
 | Admin pages open without a password | `ADMIN_PASSWORD` missing or empty in the deployed secrets | Add it under Settings → Secrets |
 | Wrong Python version | Python is chosen at deploy time | Check the app settings; if it cannot be changed there, delete and redeploy with Python 3.12 under Advanced settings |
-| Fallback: Community Cloud unavailable | — | Hugging Face Spaces (Streamlit SDK): Spaces read `requirements.txt` from the repo root (copy `app/requirements.txt` there) and `app_file: app/Home.py` from the README front matter; secrets become Space secrets (environment variables) |
+| Fallback: Community Cloud unavailable | — | Hugging Face Spaces (Streamlit SDK, or the Docker template if that SDK is no longer offered): Spaces read `requirements.txt` from the repo root (copy `app/requirements.txt` there) and `app_file: app/Home.py` from the README front matter; secrets become Space secrets (environment variables) |
