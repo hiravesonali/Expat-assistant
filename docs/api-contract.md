@@ -1,5 +1,7 @@
 # API Contract: FastAPI ↔ Next.js
 
+> **Update 2026-11-17 (ADR-0009):** The MVP is Streamlit-primary, so this HTTP contract is now a **stretch goal**. The event types below live on as the in-process pipeline protocol in `src/expat/schemas/events.py`, which the Streamlit UI renders. Adding FastAPI later means serialising those same events as SSE.
+
 > Status: planning draft (2026-11-17). Described, not implemented.
 
 ## Decision: SSE over WebSockets

@@ -30,7 +30,8 @@
 | Budget | $10–30 total. Expected spend ≈ $5–10 (see `evaluation-plan.md` §4) |
 | City / persona | **Munich (Bavaria)**. Primary persona: **non-EU EU-Blue-Card holder, married, 2 children, renting** |
 | Backend | Python 3.12, uv, FastAPI, LangChain 1.x, Chroma (local, persistent), LangSmith (EU region) |
-| Frontends | Next.js (main chat) + Streamlit (internal admin/debug) |
+| Frontends | ~~Next.js + Streamlit admin~~ → **Streamlit primary** (chat + admin pages), **deployed** on Streamlit Community Cloud (ADR-0009, 2026-11-17). FastAPI + Next.js are stretch goals. |
+| Repo layout | Single uv project at the repo root: `src/expat/` (package), `app/` (Streamlit), `evals/`, `tests/`, `rules/`, `sources.yaml` |
 
 ## Course requirements mapping
 
