@@ -1,0 +1,185 @@
+# Versioned legal constants for the deterministic tools (docs/tools.md, ADR-0008).
+#
+# Rules of this file:
+# - Tools read amounts, thresholds and periods ONLY from here, never from code or prompts.
+# - Every rule carries legal_basis, source_url, valid_from / valid_until (null = open-ended, i.e. the
+#   current law has no end date) and last_verified. Tools refuse dates outside a rule's validity window.
+# - A yearly update = copy this file to rules/<year>.yaml, edit values, bump `version`.
+# - `pending_changes` lists announced but NOT enacted changes. Tools surface them as caveats only.
+
+version: "2026.1"
+last_verified: 2026-11-17
+
+tenancy_notice:
+  # § 573c Abs. 1 BGB: notice by the 3rd working day of a month, to the end of the month after next.
+  tenant_months: 3
+  landlord_months:
+    # Ascending by min_years: the last tier whose min_years <= tenancy duration wins.
+    - { min_years: 0, months: 3 }
+    - { min_years: 5, months: 6 }
+    - { min_years: 8, months: 9 }
+  grace_working_days: 3
+  saturday_is_working_day: false   # BGH, judgment of 2010-07-13, VIII ZR 291/09
+  legal_basis: "§ 573c Abs. 1 BGB"
+  source_url: https://www.gesetze-im-internet.de/bgb/__573c.html
+  valid_from: 2001-09-01           # Mietrechtsreformgesetz
+  valid_until: null
+  last_verified: 2026-11-17
+
+tenancy_munich:
+  kappungsgrenze_pct: 15
+  mietpreisbremse_active: true
+  legal_basis: "§ 558 Abs. 3 BGB, § 556d BGB i.V.m. Bayerische Mieterschutzverordnung"
+  source_url: https://www.verkuendung-bayern.de/baymbl/2025-558/
+  valid_from: 2026-01-01
+  valid_until: 2029-12-31
+  last_verified: 2026-11-17
+
+kindergeld:
+  amount_per_child_eur: 259
+  max_children: 15
+  legal_basis: "§ 66 Abs. 1 EStG"
+  eligibility_legal_basis: "§ 62 Abs. 2 EStG"
+  source_url: https://familienportal.de/bmbfsfj/themen/familie/familienleistungen/kindergeld/kindergeld-73892
+  valid_from: 2026-01-01
+  valid_until: null
+  last_verified: 2026-11-17
+
+elterngeld:
+  basis_min_eur: 300                 # § 2 Abs. 4 BEEG
+  basis_max_eur: 1800                # § 2 Abs. 1 BEEG
+  replacement_rate_default: 0.67     # § 2 Abs. 1 BEEG
+  replacement_rate_high_income: 0.65 # § 2 Abs. 2 Satz 2 BEEG
+  low_income_threshold_eur: 1000     # below: +0.1 pp per full €2, up to 100 % (§ 2 Abs. 2 Satz 1)
+  high_income_threshold_eur: 1200    # above: -0.1 pp per full €2, down to 65 % (§ 2 Abs. 2 Satz 2)
+  slide_step_eur: 2
+  slide_step_rate: 0.001
+  max_replacement_rate: 1.0
+  income_cap_taxable_eur: 175000     # § 1 Abs. 8 BEEG, couples and single parents alike
+  months_basis: 12                   # § 4 Abs. 4 Satz 1 BEEG
+  partner_months: 2                  # § 4 Abs. 4 Satz 3 BEEG
+  legal_basis: "§ 2 BEEG, § 1 Abs. 8 BEEG, § 4 Abs. 4 BEEG"
+  eligibility_legal_basis: "§ 1 Abs. 7 BEEG"
+  source_url: https://www.gesetze-im-internet.de/beeg/__2.html
+  valid_from: 2025-04-01             # the €175,000 cap applies to births from this date
+  valid_until: null                  # current law has no end date; see pending_changes
+  last_verified: 2026-11-17
+
+blue_card:
+  min_salary_standard_eur: 50700
+  min_salary_shortage_eur: 45934.20
+  legal_basis: "§ 18g Abs. 1 AufenthG"
+  source_url: https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card
+  valid_from: 2026-01-01
+  valid_until: 2026-12-31            # thresholds are re-published every year
+  last_verified: 2026-11-17
+
+rundfunkbeitrag:
+  monthly_eur: 18.36
+  legal_basis: "§ 2 RBStV, § 8 RFinStV"
+  source_url: https://www.rundfunkbeitrag.de/
+  valid_from: 2021-07-20             # BVerfG, 1 BvR 2756/20 et al.
+  valid_until: null
+  last_verified: 2026-11-17
+
+schengen:
+  max_days: 90
+  window_days: 180
+  legal_basis: "Art. 6 Abs. 1 VO (EU) 2016/399 (Schengener Grenzkodex)"
+  resident_legal_basis: "Art. 21 SDÜ (CISA)"
+  source_url: https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/border-crossing_en
+  valid_from: 2013-10-18             # rolling 180-day window (VO (EU) 610/2013)
+  valid_until: null
+  last_verified: 2026-11-17
+
+deadlines:
+  anmeldung:
+    kind: days_after
+    amount: 14
+    rule_text: "Register within two weeks after moving into the flat."
+    consequences: "Late registration is an administrative offence; fine up to €1,000 (§ 54 Abs. 2 Nr. 1, Abs. 3 BMG)."
+    legal_basis: "§ 17 Abs. 1 BMG"
+    source_url: https://www.gesetze-im-internet.de/bmg/__17.html
+    valid_from: 2015-11-01
+    valid_until: null
+    last_verified: 2026-11-17
+  abmeldung:
+    kind: days_after
+    amount: 14
+    rule_text: "Deregister within two weeks after moving out if you move abroad (possible at the earliest one week before)."
+    consequences: "Late deregistration is an administrative offence; fine up to €1,000 (§ 54 Abs. 2 Nr. 1, Abs. 3 BMG)."
+    legal_basis: "§ 17 Abs. 2 BMG"
+    source_url: https://www.gesetze-im-internet.de/bmg/__17.html
+    valid_from: 2015-11-01
+    valid_until: null
+    last_verified: 2026-11-17
+  kindergeld_retroactive:
+    kind: calendar_months_retroactive
+    amount: 6
+    rule_text: "Kindergeld is paid retroactively only for the last six months before the month the application is received."
+    consequences: "Months further back than six months before the application month are lost."
+    legal_basis: "§ 66 Abs. 3 EStG"
+    source_url: https://www.gesetze-im-internet.de/estg/__66.html
+    valid_from: 2018-01-01
+    valid_until: null
+    last_verified: 2026-11-17
+  elterngeld_retroactive:
+    kind: life_months_retroactive
+    amount: 3
+    rule_text: "Elterngeld is paid retroactively only for the last three months of the child's life before the life month in which the application is received."
+    consequences: "Earlier life months are lost (they still count as used if Mutterschaftsgeld was paid)."
+    legal_basis: "§ 7 Abs. 1 Satz 2 BEEG"
+    source_url: https://www.gesetze-im-internet.de/beeg/__7.html
+    valid_from: 2007-01-01
+    valid_until: null
+    last_verified: 2026-11-17
+  residence_permit_extension:
+    kind: before_expiry
+    amount: 56                       # recommended lead time in days (8 weeks)
+    rule_text: "Apply for the extension before the current permit expires; this keeps the permit valid until the decision (Fiktionswirkung)."
+    consequences: "Applying after expiry loses the Fiktionswirkung; the stay may become unlawful."
+    legal_basis: "§ 81 Abs. 4 AufenthG"
+    source_url: https://www.gesetze-im-internet.de/aufenthg_2004/__81.html
+    valid_from: 2005-01-01
+    valid_until: null
+    last_verified: 2026-11-17
+  rundfunkbeitrag_registration:
+    kind: without_undue_delay
+    amount: 0
+    rule_text: "Register the flat with the Beitragsservice without undue delay (unverzüglich); the fee is owed from the first day of the month you move in."
+    consequences: "Fees are charged retroactively from the move-in month, plus possible late-payment surcharges."
+    legal_basis: "§ 8 Abs. 1 RBStV, § 7 Abs. 1 RBStV"
+    source_url: https://www.rundfunkbeitrag.de/
+    valid_from: 2013-01-01
+    valid_until: null
+    last_verified: 2026-11-17
+
+pending_changes:
+  - id: elterngeld_reform_2027
+    topic: elterngeld
+    summary: "Cabinet-approved reform (minimum €330 / maximum €1,900) for births from 2027-11-01. NOT law yet."
+    affects_from: 2027-11-01
+    status: cabinet_approved
+    source_url: https://familienportal.de/
+    last_verified: 2026-11-17
+  - id: rundfunkbeitrag_2027
+    topic: rundfunkbeitrag
+    summary: "KEF proposed €18.64 per month from 2027 (not decided by the states); a BVerfG case on the fee procedure is pending. Re-check in January 2027."
+    affects_from: 2027-01-01
+    status: proposed
+    source_url: https://kef-online.de/
+    last_verified: 2026-11-17
+  - id: mietrechtsreform
+    topic: tenancy
+    summary: "A tenancy law reform bill is in the Bundestag; notice periods and rent rules may change once enacted."
+    affects_from: null
+    status: in_parliament
+    source_url: https://www.bundestag.de/
+    last_verified: 2026-11-17
+  - id: steuerklassen_iii_v
+    topic: tax
+    summary: "Political debate about abolishing tax classes III/V in favour of the factor method; no law yet."
+    affects_from: null
+    status: debate
+    source_url: https://www.bundesfinanzministerium.de/
+    last_verified: 2026-11-17
