@@ -1,0 +1,22 @@
+# Streamlit config (committed). Secrets go in .streamlit/secrets.toml (git-ignored), see secrets.toml.example.
+# Community Cloud reads this file from the repo root, because it runs `streamlit run` from the root.
+
+[theme]
+base = "light"
+primaryColor = "#4A6FA5"             # calm, muted blue (buttons, toggles, focus rings)
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F3F6FA" # sidebar, chat bubbles, code blocks
+textColor = "#1F2933"
+linkColor = "#3B5F94"
+borderColor = "#DDE3EA"
+showWidgetBorder = true
+showSidebarBorder = true
+baseRadius = "medium"
+font = "sans-serif"
+
+[client]
+toolbarMode = "minimal"   # hide developer menu items for visitors
+showErrorDetails = "none" # never show tracebacks (which may contain secrets) to visitors
+
+[browser]
+gatherUsageStats = false
