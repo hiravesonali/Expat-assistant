@@ -349,7 +349,8 @@ def _analysis_detail(analysis: QueryAnalysis, plan: RetrievalPlan) -> dict[str, 
         "intent": analysis.intent,
         "language": analysis.language,
         "domains": [d.model_dump(mode="json") for d in analysis.domains],
-        "sub_questions": [q.model_dump(mode="json") for q in plan.sub_queries],
+        # Same shape as RetrievalPlan.model_dump() (the UI contract, see app/demo_pipeline.py).
+        "sub_queries": [q.model_dump(mode="json") for q in plan.sub_queries],
         "needs_clarification": analysis.needs_clarification,
         "fallback": analysis.is_fallback,
         "fallback_reason": analysis.fallback_reason,
@@ -357,24 +358,14 @@ def _analysis_detail(analysis: QueryAnalysis, plan: RetrievalPlan) -> dict[str, 
 
 
 def _retrieval_detail(result: RetrievalResult) -> dict[str, Any]:
+    """UI + eval contract: `sub_results` = SubQuestionResult dumps (top hits only, to keep events small);
+    `sources` = full ContextSource dumps (the faithfulness judge needs the text)."""
     return {
-        "sub_questions": [
-            {
-                "sub_question": sub.sub_question,
-                "queries": sub.queries,
-                "top_hits": [
-                    {
-                        "doc_key": hit.metadata.doc_key,
-                        "title": hit.metadata.title,
-                        "source_name": hit.metadata.source_name,
-                        "score": round(hit.fused_score, 4),
-                    }
-                    for hit in sub.hits[:TOP_HITS_PER_SUB_QUESTION]
-                ],
-            }
+        "sub_results": [
+            sub.model_copy(update={"hits": sub.hits[:TOP_HITS_PER_SUB_QUESTION]}).model_dump(mode="json")
             for sub in result.sub_results
         ],
-        "sources": [{"id": s.source_id, "doc_key": s.doc_key, "title": s.title} for s in result.parents],
+        "sources": [s.model_dump(mode="json") for s in result.parents],
     }
 
 
@@ -391,6 +382,7 @@ def _citations(
             source_url=s.source_url,
             heading_path=s.heading_path,
             legal_reference=s.legal_reference,
+            doc_key=s.doc_key,
             last_verified=s.last_verified,
             quote=s.text[:QUOTE_CHARS],
         )

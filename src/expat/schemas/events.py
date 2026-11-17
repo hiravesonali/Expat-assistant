@@ -44,6 +44,7 @@ class Citation(BaseModel):
     source_url: str = ""
     heading_path: str = ""
     legal_reference: str = ""
+    doc_key: str = ""  # lets evals score citation correctness without the context pack
     last_verified: str = ""
     quote: str = ""
 

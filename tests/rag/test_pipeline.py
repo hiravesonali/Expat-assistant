@@ -97,12 +97,12 @@ def test_normal_question_event_order():
     ]
     assert _text(events) == "You have to give notice in writing [S1]."
     analysis_step = events[1]
-    assert analysis_step.detail["sub_questions"][0]["queries_de"] == [
+    assert analysis_step.detail["sub_queries"][0]["queries_de"] == [
         "Kündigungsfrist Mieter",
         "ordentliche Kündigung Mietvertrag durch Mieter",
     ]
     retrieval_step = events[3]
-    assert retrieval_step.detail["sub_questions"][0]["top_hits"][0]["doc_key"] == "bgb#573c"
+    assert retrieval_step.detail["sub_results"][0]["hits"][0]["metadata"]["doc_key"] == "bgb#573c"
     citations = next(e for e in events if isinstance(e, CitationsEvent)).citations
     assert [c.id for c in citations] == ["S1"] and citations[0].legal_reference == "§ 573c BGB"
     meta = next(e for e in events if isinstance(e, AnswerMetaEvent))
