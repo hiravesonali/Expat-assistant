@@ -8,8 +8,46 @@ from typing import Protocol
 
 from pydantic import BaseModel, Field
 
-from expat.schemas.chunks import ChunkMetadata
+from expat.schemas.chunks import ChunkMetadata, Domain, SectionKind
 from expat.schemas.profile import UserProfile
+
+
+def doc_key_matches(retrieved: str, expected: str) -> bool:
+    """Golden-set matching rule: exact match, or `expected` is a prefix at a '#' boundary.
+
+    expected "muc-anmeldung" matches retrieved "muc-anmeldung#documents";
+    expected "bgb#573c" matches only "bgb#573c" (not "bgb#573").
+    """
+    return retrieved == expected or retrieved.startswith(expected + "#")
+
+
+class SubQuery(BaseModel):
+    """One retrieval unit produced by query analysis (rag/query_analysis.py), consumed by retrieval."""
+
+    text: str  # the (sub-)question in English
+    queries_en: list[str] = Field(default_factory=list)  # paraphrases (multi-query)
+    queries_de: list[str] = Field(default_factory=list)  # German rewrites (cross-lingual)
+    step_back: str | None = None
+    domain: Domain | None = None
+    domain_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    section_kinds: list[SectionKind] = Field(default_factory=list)
+    legal_references: list[str] = Field(default_factory=list)  # e.g. ["§ 573c BGB"]
+
+
+class RetrievalPlan(BaseModel):
+    """The hand-off contract between query analysis and hybrid retrieval.
+
+    Retrieval decides WHICH of these variants to use based on RetrievalConfig flags
+    (e.g. R0 baseline uses only `standalone_question`).
+    """
+
+    standalone_question: str
+    sub_queries: list[SubQuery]
+
+    @classmethod
+    def from_raw(cls, question: str) -> "RetrievalPlan":
+        """Fallback/baseline plan: the raw question only (used for R0 and when analysis fails)."""
+        return cls(standalone_question=question, sub_queries=[SubQuery(text=question)])
 
 
 class RetrievalConfig(BaseModel):
@@ -93,10 +131,11 @@ RetrievalResult.model_rebuild()
 
 
 class Retriever(Protocol):
+    """Implemented by expat.rag.retrieve.HybridRetriever. Query analysis happens BEFORE this call."""
+
     def retrieve(
         self,
-        question: str,
+        plan: RetrievalPlan,
         profile: UserProfile | None = None,
-        history: list[dict] | None = None,
         config: RetrievalConfig | None = None,
     ) -> RetrievalResult: ...

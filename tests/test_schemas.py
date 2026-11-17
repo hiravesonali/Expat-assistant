@@ -54,3 +54,19 @@ def test_profile_summary_mentions_key_facts():
 def test_baseline_config_disables_everything():
     c = RetrievalConfig.baseline()
     assert not (c.use_bm25 or c.use_filters or c.use_german_rewrite or c.use_multi_query)
+
+
+def test_doc_key_matching_rule():
+    from expat.schemas import doc_key_matches
+
+    assert doc_key_matches("muc-anmeldung#documents", "muc-anmeldung")
+    assert doc_key_matches("bgb#573c", "bgb#573c")
+    assert not doc_key_matches("bgb#573", "bgb#573c")
+    assert not doc_key_matches("bgb#573c", "bgb#573")
+
+
+def test_plan_from_raw_has_one_subquery():
+    from expat.schemas import RetrievalPlan
+
+    plan = RetrievalPlan.from_raw("How do I register in Munich?")
+    assert len(plan.sub_queries) == 1 and plan.sub_queries[0].text == plan.standalone_question

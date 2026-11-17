@@ -27,9 +27,12 @@ from expat.schemas.retrieval import (
     ContextSource,
     RankedHit,
     RetrievalConfig,
+    RetrievalPlan,
     RetrievalResult,
     Retriever,
+    SubQuery,
     SubQuestionResult,
+    doc_key_matches,
 )
 
 __all__ = [
@@ -48,14 +51,17 @@ __all__ = [
     "PipelineEvent",
     "RankedHit",
     "RetrievalConfig",
+    "RetrievalPlan",
     "RetrievalResult",
     "Retriever",
     "SectionKind",
     "SourceType",
     "StepEvent",
+    "SubQuery",
     "SubQuestionResult",
     "TokenEvent",
     "ToolCallEvent",
     "ToolResultEvent",
     "UserProfile",
+    "doc_key_matches",
 ]
