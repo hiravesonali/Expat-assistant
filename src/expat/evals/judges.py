@@ -139,4 +139,6 @@ def default_judge_model() -> "BaseChatModel":  # pragma: no cover - needs an API
         warnings.warn(
             f"judge model == answer model ({settings.model_judge}); expect self-preference bias", stacklevel=2
         )
-    return ChatOpenRouter(model=settings.model_judge, temperature=0, api_key=settings.openrouter_api_key)
+    return ChatOpenRouter(
+        model_name=settings.model_judge, temperature=0, openrouter_api_key=settings.openrouter_api_key
+    )
