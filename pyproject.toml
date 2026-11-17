@@ -1,0 +1,67 @@
+[project]
+name = "expat"
+version = "0.1.0"
+description = "Expat Germany Assistant: advanced RAG + tool calling over official German sources (Turing College Sprint 2)"
+readme = "README.md"
+authors = [
+    { name = "Sonali Hirave", email = "hiravesonali@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "bm25s>=0.3.16",
+    "chromadb>=1.5.9",
+    "holidays>=0.89",
+    "httpx>=0.28.1",
+    "langchain>=1.5.0",
+    "langchain-chroma>=1.1.0",
+    "langchain-core>=1.8.1",
+    "langchain-openai>=1.2.0",
+    "langchain-openrouter>=0.2.9",
+    "langsmith>=0.14.17",
+    "lingua-language-detector>=2.1.1",
+    "lxml>=6.0.2",
+    "markdownify>=1.2.2",
+    "openevals>=0.2.5",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.12.0",
+    "pymupdf>=1.27.1",
+    "pystemmer>=3.0.0",
+    "python-dotenv>=1.2.1",
+    "pyyaml>=6.0.3",
+    "streamlit>=1.67.0",
+    "tiktoken>=0.12.0",
+]
+
+[project.scripts]
+# Each module owner adds its CLI here (ingestion: expat-ingest, store: expat-index, evals: expat-eval)
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+    "types-pyyaml>=6.0.12.20261113",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]  # German text contains ambiguous-looking unicode (§, „ “)
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = ["network: needs internet / API keys (deselect with -m 'not network')"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
