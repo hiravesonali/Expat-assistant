@@ -95,3 +95,12 @@ def test_end_to_end_events_with_real_retriever_and_tools(pipeline: Pipeline) -> 
     citations = next(e for e in events if isinstance(e, CitationsEvent)).citations
     assert citations and citations[0].id == "S1"
     assert isinstance(events[-1], DoneEvent)
+
+
+def test_eval_harness_can_fold_real_pipeline_events(pipeline: Pipeline) -> None:
+    """Contract between pipeline events and the answer evals (sources carry full ContextSource dumps)."""
+    from expat.evals.answer_eval import fold_events
+
+    out = fold_events(pipeline.run("How much notice do I have to give my landlord?", [], PROFILE))
+    assert out.contexts, "retrieval step must expose full sources for the faithfulness judge"
+    assert out.cited_doc_keys() == [out.contexts[0].doc_key]
