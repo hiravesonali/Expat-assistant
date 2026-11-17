@@ -371,8 +371,9 @@ def handle_prompt(prompt: str, mode: str) -> None:
                     with tool_slots[ev.call_id].container():
                         ui.render_tool_card(calls[ev.call_id], ev)
 
-        with st.spinner("Thinking…", show_time=True):
-            answer = st.write_stream(token_stream())
+        # write_stream pulls from the generator and renders text as it arrives (typewriter effect).
+        # The st.status box above already shows progress, so no extra spinner is needed.
+        answer = st.write_stream(token_stream())
 
         parts = ui.split_events(events)
         status.update(
