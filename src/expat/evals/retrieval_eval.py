@@ -162,7 +162,7 @@ def _run_one(target: RetrievalTarget, example: GoldenExample) -> ExampleScore:
     start = time.perf_counter()
     try:
         keys = doc_keys_of(target(example.question, example.profile))
-    except Exception as exc:
+    except Exception as exc:  # one failing example must not abort a whole (paid) eval run
         # A crash is a retrieval failure from the user's point of view, so it scores 0 (and is counted in `errors`).
         return ExampleScore(
             id=example.id,
