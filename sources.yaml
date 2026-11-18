@@ -1,0 +1,541 @@
+# Source registry: the input of the ingestion pipeline (`uv run python -m expat.ingestion --all`).
+# Field reference: docs/data-sources.md ("sources.yaml entry format"); model: src/expat/ingestion/sources.py.
+# source_ids are fixed in docs/conventions.md. Add a row there in the same commit as a new entry here.
+# Excluded on purpose (terms / AI-crawler blocks): deutsche-rentenversicherung.de, arbeitsagentur.de,
+# gesetze-im-internet English translations, muenchen.de, fimportal.de.
+
+# --------------------------------------------------------------------------------------------
+# Laws (gesetze-im-internet.de XML, public domain under § 5 UrhG)
+# --------------------------------------------------------------------------------------------
+- id: bgb
+  name: "Bürgerliches Gesetzbuch (BGB)"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/bgb/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: BGB
+  domain: tenancy
+  domain_map:
+    - range: "186-193"      # Fristen/Termine: used for notice-period deadlines
+      domain: tenancy
+      subtopic: deadlines
+    - range: "535-580a"
+      domain: tenancy
+      subtopic: rental_law
+  include_ranges: ["186-193", "535-580a"]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+- id: aufenthg
+  name: "Aufenthaltsgesetz (AufenthG)"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/aufenthg_2004/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: AufenthG
+  domain: bureaucracy
+  subtopic: residence
+  domain_map:
+    - range: "27-36a"
+      domain: bureaucracy
+      subtopic: family_reunification
+  # Residence titles, employment (§ 18g Blue Card), settlement (§ 9, § 18c), family reunion,
+  # integration course, expiry, application procedure (§ 81).
+  include_ranges: ["4-9c", "18-21", "27-36a", "43-45a", "51-52", "81-82"]
+  language: de
+  jurisdiction: federal
+  applies_to: [non_eu]
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+- id: bmg
+  name: "Bundesmeldegesetz (BMG)"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/bmg/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: BMG
+  domain: bureaucracy
+  subtopic: anmeldung
+  include_ranges: ["17-31", "54"]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+- id: beeg
+  name: "Bundeselterngeld- und Elternzeitgesetz (BEEG)"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/beeg/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: BEEG
+  domain: family
+  subtopic: elterngeld
+  domain_map:
+    - range: "15-21"
+      domain: family
+      subtopic: elternzeit
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+- id: estg
+  name: "Einkommensteuergesetz (EStG), Kindergeld §§ 62–78"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/estg/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: EStG
+  domain: family
+  subtopic: kindergeld
+  include_ranges: ["62-78"]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+# Bavarian regulation. Bayern.Recht (gesetze-bayern.de) carries the consolidated text including
+# the Anlage (municipality list) as HTML; verkuendung-bayern.de only links the Anlage as a PDF.
+- id: by-mieterschutzv
+  name: "Bayerische Mieterschutzverordnung (MiSchuV) 2026–2029"
+  publisher: "Bayerische Staatsregierung / gesetze-bayern.de"
+  url: https://www.gesetze-bayern.de/Content/Document/BayMiSchuV2025/true
+  source_type: regulation
+  parser: bayern_recht_html
+  law_abbrev: MiSchuV
+  domain: tenancy
+  subtopic: mietpreisbremse
+  language: de
+  jurisdiction: state
+  state: BY
+  fetch_method: http
+  refresh: monthly
+  valid_from: 2026-01-01
+  valid_until: 2029-12-31
+  terms: "Amtliches Werk, § 5 UrhG (official publication: GVBl. 2025 S. 718)"
+
+# --------------------------------------------------------------------------------------------
+# City of Munich (stadt.muenchen.de). DE is binding; EN is machine-translated (DeepL).
+# --------------------------------------------------------------------------------------------
+- id: muc-anmeldung
+  name: "Wohnsitzanmeldung – Landeshauptstadt München"
+  publisher: "Landeshauptstadt München"
+  url: https://stadt.muenchen.de/service/info/wohnsitzanmeldung/1063475/n0/
+  alt_lang_urls: {en: https://stadt.muenchen.de/service/en-GB/info/register-or-reregister-your-place-of-residence/10424740/n0/}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: anmeldung
+  language: de
+  jurisdiction: city
+  state: BY
+  city: munich
+  applies_to: [all]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH München, private use § 53 UrhG; chunks + link only"
+
+- id: muc-anmeldung-familie
+  name: "Wohnsitzanmeldung – Familie – Landeshauptstadt München"
+  publisher: "Landeshauptstadt München"
+  url: https://stadt.muenchen.de/service/info/wohnsitzanmeldung-familie/10224132/n0/
+  alt_lang_urls: {en: https://stadt.muenchen.de/service/en-GB/info/register-or-reregister-residence-family/10433460/n0/}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: anmeldung
+  language: de
+  jurisdiction: city
+  state: BY
+  city: munich
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH München, private use § 53 UrhG; chunks + link only"
+
+- id: muc-aufenthaltstitel-fachkraefte
+  name: "Aufenthaltserlaubnis – Blaue Karte EU – Servicestelle für Zuwanderung und Einbürgerung München"
+  publisher: "Landeshauptstadt München"
+  url: https://stadt.muenchen.de/service/info/servicestelle-fur-zuwanderung-und-einburgerung/1080627/
+  alt_lang_urls: {en: https://stadt.muenchen.de/service/en-GB/info/servicestelle-fur-zuwanderung-und-einburgerung/10422541/}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: city
+  state: BY
+  city: munich
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH München, private use § 53 UrhG; chunks + link only"
+
+- id: muc-niederlassung-blaue-karte
+  name: "Niederlassungserlaubnis mit Blauer Karte EU – Landeshauptstadt München"
+  publisher: "Landeshauptstadt München"
+  url: https://stadt.muenchen.de/service/info/servicestelle-fur-zuwanderung-und-einburgerung/1080810/
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: de
+  jurisdiction: city
+  state: BY
+  city: munich
+  applies_to: [non_eu, blue_card]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH München, private use § 53 UrhG; chunks + link only"
+
+- id: muc-kita
+  name: "Kita-Platzsuche im kita finder+ – Landeshauptstadt München"
+  publisher: "Landeshauptstadt München, Referat für Bildung und Sport"
+  url: https://stadt.muenchen.de/service/info/geschaftsbereich-kita/10110130/
+  alt_lang_urls: {en: https://stadt.muenchen.de/service/en-GB/info/geschaftsbereich-kita/10428400/}
+  source_type: procedure
+  parser: procedure_html
+  domain: family
+  subtopic: kita
+  language: de
+  jurisdiction: city
+  state: BY
+  city: munich
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH München, private use § 53 UrhG; chunks + link only"
+
+- id: muc-mietspiegel
+  name: "Mietspiegel für München 2025"
+  publisher: "Landeshauptstadt München, Sozialreferat"
+  url: https://stadt.muenchen.de/infos/mietspiegel.html
+  source_type: guide
+  parser: guide_html
+  domain: tenancy
+  subtopic: mietspiegel
+  language: de
+  jurisdiction: city
+  state: BY
+  city: munich
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH München, private use § 53 UrhG; chunks + link only"
+
+# --------------------------------------------------------------------------------------------
+# familienportal.de (BMBFSFJ). Copying needs consent: minimal chunks + deep links.
+# --------------------------------------------------------------------------------------------
+- id: fp-elterngeld
+  name: "Familienportal: Elterngeld"
+  publisher: "Bundesministerium für Bildung, Familie, Senioren, Frauen und Jugend (BMBFSFJ)"
+  pages:
+    - url: https://familienportal.de/familienportal/familienleistungen/elterngeld/faq/was-ist-elterngeld-124628
+    - url: https://familienportal.de/familienportal/familienleistungen/elterngeld/faq/kann-ich-elterngeld-bekommen--155116
+    - url: https://familienportal.de/familienportal/familienleistungen/elterngeld/faq/wie-viel-elterngeld-kann-ich-bekommen--124616
+    - url: https://familienportal.de/familienportal/familienleistungen/elterngeld/faq/wie-kann-ich-elterngeld-beantragen--124762
+    - url: https://familienportal.de/familienportal/familienleistungen/elterngeld/faq/wie-lange-kann-ich-elterngeld-bekommen--124728
+    - url: https://familienportal.de/familienportal/familienleistungen/elterngeld/familiensituation/gibt-es-elterngeld-auch-fuer-auslaendische-eltern--124696
+  source_type: guide
+  parser: guide_html
+  domain: family
+  subtopic: elterngeld
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMBFSFJ; copying needs written consent -> minimal chunks + links"
+
+- id: fp-elterngeld-neuregelungen
+  name: "Familienportal: Neuregelungen beim Elterngeld (Einkommensgrenze 175.000 €)"
+  publisher: "Bundesministerium für Bildung, Familie, Senioren, Frauen und Jugend (BMBFSFJ)"
+  pages:
+    - url: https://familienportal.de/bmbfsfj/themen/familie/familienleistungen/neuregelungen-beim-elterngeld-fuer-geburten-ab-1-april-2024-sowie-ab-1-april-2025-228588
+      source_type: faq
+    - url: https://familienportal.de/familienportal/familienleistungen/elterngeld/faq/was-aendert-sich-fuer-geburten-ab-1-april-2024-beim-elterngeld-237122
+  source_type: guide
+  parser: guide_html
+  domain: family
+  subtopic: elterngeld
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMBFSFJ; copying needs written consent -> minimal chunks + links"
+
+- id: fp-kindergeld
+  name: "Familienportal: Kindergeld (FAQ)"
+  publisher: "Bundesministerium für Bildung, Familie, Senioren, Frauen und Jugend (BMBFSFJ)"
+  pages:
+    - url: https://familienportal.de/familienportal/familienleistungen/kindergeld/faq/was-ist-kindergeld--124914
+    - url: https://familienportal.de/familienportal/familienleistungen/kindergeld/faq/wie-wird-kindergeld-beantragt-und-ausgezahlt--124954
+    - url: https://familienportal.de/familienportal/familienleistungen/kindergeld/faq/fuer-welche-kinder-kann-ich-kindergeld-bekommen--124970
+    - url: https://familienportal.de/familienportal/familienleistungen/kindergeld/faq/bis-zu-welchem-alter-meines-kindes-bekomme-ich-kindergeld--124966
+    - url: https://familienportal.de/familienportal/familienleistungen/kindergeld/faq/was-ist-besser-fuer-mich-kindergeld-oder-kinderfreibetrag--124922
+    - url: https://familienportal.de/familienportal/familienleistungen/kindergeld/familiensituation/koennen-auch-auslaendische-eltern-kindergeld-bekommen--124928
+  source_type: faq
+  parser: faq_html
+  domain: family
+  subtopic: kindergeld
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMBFSFJ; copying needs written consent -> minimal chunks + links"
+
+# --------------------------------------------------------------------------------------------
+# BayernPortal "Leistungen" (Art. 27 BayDiG portal). Same template for every procedure.
+# --------------------------------------------------------------------------------------------
+- id: bp-wohnsitz-anmeldung
+  name: "BayernPortal: Wohnsitz; Anmeldung"
+  publisher: "Bayerisches Staatsministerium für Digitales / BayernPortal"
+  url: https://www.bayernportal.de/dokumente/leistung/8444082781
+  alt_lang_urls: {en: "https://www.bayernportal.de/dokumente/leistung/8444082781?locale=en"}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: anmeldung
+  language: de
+  jurisdiction: state
+  state: BY
+  fetch_method: http
+  refresh: monthly
+  terms: "Official portal (Art. 27 BayDiG); terms text not retrievable -> chunks + link"
+
+- id: bp-blaue-karte
+  name: "BayernPortal: Blaue Karte EU; Beantragung"
+  publisher: "Bayerisches Staatsministerium für Digitales / BayernPortal"
+  url: https://www.bayernportal.de/dokumente/leistung/786532433498
+  alt_lang_urls: {en: "https://www.bayernportal.de/dokumente/leistung/786532433498?locale=en"}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: state
+  state: BY
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "Official portal (Art. 27 BayDiG); terms text not retrievable -> chunks + link"
+
+- id: bp-niederlassungserlaubnis
+  name: "BayernPortal: Niederlassungserlaubnis; Beantragung"
+  publisher: "Bayerisches Staatsministerium für Digitales / BayernPortal"
+  url: https://www.bayernportal.de/dokumente/leistung/769754656498
+  alt_lang_urls: {en: "https://www.bayernportal.de/dokumente/leistung/769754656498?locale=en"}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: de
+  jurisdiction: state
+  state: BY
+  applies_to: [non_eu]
+  fetch_method: http
+  refresh: monthly
+  terms: "Official portal (Art. 27 BayDiG); terms text not retrievable -> chunks + link"
+
+- id: bp-familiennachzug
+  name: "BayernPortal: Aufenthaltserlaubnis; Beantragung für den Familiennachzug zu Ausländern"
+  publisher: "Bayerisches Staatsministerium für Digitales / BayernPortal"
+  url: https://www.bayernportal.de/dokumente/leistung/504424580428
+  alt_lang_urls: {en: "https://www.bayernportal.de/dokumente/leistung/504424580428?locale=en"}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: family_reunification
+  language: de
+  jurisdiction: state
+  state: BY
+  applies_to: [non_eu, family]
+  fetch_method: http
+  refresh: monthly
+  terms: "Official portal (Art. 27 BayDiG); terms text not retrievable -> chunks + link"
+
+- id: bp-kindergeld
+  name: "BayernPortal: Kindergeld; Beantragung"
+  publisher: "Bayerisches Staatsministerium für Digitales / BayernPortal"
+  url: https://www.bayernportal.de/dokumente/leistung/141312744444
+  alt_lang_urls: {en: "https://www.bayernportal.de/dokumente/leistung/141312744444?locale=en"}
+  source_type: procedure
+  parser: procedure_html
+  domain: family
+  subtopic: kindergeld
+  language: de
+  jurisdiction: state
+  state: BY
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "Official portal (Art. 27 BayDiG); terms text not retrievable -> chunks + link"
+
+- id: bp-elterngeld
+  name: "BayernPortal: Elterngeld; Beantragung"
+  publisher: "Bayerisches Staatsministerium für Digitales / BayernPortal"
+  url: https://www.bayernportal.de/dokumente/leistung/617534666450
+  alt_lang_urls: {en: "https://www.bayernportal.de/dokumente/leistung/617534666450?locale=en"}
+  source_type: procedure
+  parser: procedure_html
+  domain: family
+  subtopic: elterngeld
+  language: de
+  jurisdiction: state
+  state: BY
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "Official portal (Art. 27 BayDiG); terms text not retrievable -> chunks + link"
+
+# --------------------------------------------------------------------------------------------
+# BAMF (English pages, <= 15)
+# --------------------------------------------------------------------------------------------
+- id: bamf-blue-card
+  name: "BAMF: The EU Blue Card"
+  publisher: "Bundesamt für Migration und Flüchtlinge (BAMF)"
+  url: https://www.bamf.de/EN/Themen/MigrationAufenthalt/ZuwandererDrittstaaten/Migrathek/BlaueKarteEU/blauekarteeu-node.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: en
+  jurisdiction: federal
+  applies_to: [non_eu, blue_card]
+  fetch_method: http
+  refresh: monthly
+  terms: "© BAMF; text terms not verifiable -> chunks + link"
+
+- id: bamf-family-reunification
+  name: "BAMF: Subsequent immigration to join third-country nationals"
+  publisher: "Bundesamt für Migration und Flüchtlinge (BAMF)"
+  url: https://www.bamf.de/EN/Themen/MigrationAufenthalt/ZuwandererDrittstaaten/Familie/NachzugZuDrittstaatlern/nachzug-zu-drittstaatlern-node.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: family_reunification
+  language: en
+  jurisdiction: federal
+  applies_to: [non_eu, family]
+  fetch_method: http
+  refresh: monthly
+  terms: "© BAMF; text terms not verifiable -> chunks + link"
+
+- id: bamf-settlement
+  name: "BAMF: Settling in Germany (settlement permit)"
+  publisher: "Bundesamt für Migration und Flüchtlinge (BAMF)"
+  url: https://www.bamf.de/EN/Themen/MigrationAufenthalt/ZuwandererDrittstaaten/Migrathek/Niederlassen/niederlassen-node.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: en
+  jurisdiction: federal
+  applies_to: [non_eu]
+  fetch_method: http
+  refresh: monthly
+  terms: "© BAMF; text terms not verifiable -> chunks + link"
+
+- id: bamf-blue-card-mobility
+  name: "BAMF: Mobility with an EU Blue Card"
+  publisher: "Bundesamt für Migration und Flüchtlinge (BAMF)"
+  url: https://www.bamf.de/EN/Themen/MigrationAufenthalt/ZuwandererDrittstaaten/MobilitaetEU/MobilitaetBlaueKarteEU/mobilitaet-blauekarteeu-node.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: en
+  jurisdiction: federal
+  applies_to: [non_eu, blue_card]
+  fetch_method: http
+  refresh: monthly
+  terms: "© BAMF; text terms not verifiable -> chunks + link"
+
+# --------------------------------------------------------------------------------------------
+# make-it-in-germany.com: bot protection blocks scripted fetching -> save pages manually
+# (browser "Save page as... HTML only") to the path below. Missing files are skipped, not errors.
+# --------------------------------------------------------------------------------------------
+- id: miig-blue-card
+  name: "Make it in Germany: EU Blue Card"
+  publisher: "Federal Government of Germany (make-it-in-germany.com)"
+  url: https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: en
+  jurisdiction: federal
+  applies_to: [non_eu, blue_card]
+  fetch_method: manual
+  manual_path: data/manual/miig-blue-card.html
+  refresh: monthly
+  terms: "Free reuse for non-commercial use with credit, unaltered text"
+
+- id: miig-family-reunification
+  name: "Make it in Germany: Family reunification"
+  publisher: "Federal Government of Germany (make-it-in-germany.com)"
+  url: https://www.make-it-in-germany.com/en/visa-residence/family-reunification
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: family_reunification
+  language: en
+  jurisdiction: federal
+  applies_to: [non_eu, family]
+  fetch_method: manual
+  manual_path: data/manual/miig-family-reunification.html
+  refresh: monthly
+  terms: "Free reuse for non-commercial use with credit, unaltered text"
+
+# --------------------------------------------------------------------------------------------
+# rundfunkbeitrag.de (licence fee)
+# --------------------------------------------------------------------------------------------
+- id: rb-fee
+  name: "Rundfunkbeitrag: Welcome (English information, licence fee)"
+  publisher: "ARD ZDF Deutschlandradio Beitragsservice"
+  url: https://www.rundfunkbeitrag.de/welcome/english
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: rundfunkbeitrag
+  language: en
+  jurisdiction: federal
+  fetch_method: http
+  refresh: quarterly
+  terms: "Disclaimer only -> chunks + link"
+
+- id: rb-students
+  name: "Rundfunkbeitrag: Students and Apprentices (FAQ)"
+  publisher: "ARD ZDF Deutschlandradio Beitragsservice"
+  url: https://www.rundfunkbeitrag.de/welcome/english/students-and-apprentices
+  source_type: faq
+  parser: faq_html
+  domain: bureaucracy
+  subtopic: rundfunkbeitrag
+  language: en
+  jurisdiction: federal
+  applies_to: [student]
+  fetch_method: http
+  refresh: quarterly
+  terms: "Disclaimer only -> chunks + link"
+
+- id: rb-payment
+  name: "Rundfunkbeitrag: Informationen zur Zahlung"
+  publisher: "ARD ZDF Deutschlandradio Beitragsservice"
+  url: https://www.rundfunkbeitrag.de/buergerinnen-und-buerger/informationen/zahlung
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: rundfunkbeitrag
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: quarterly
+  terms: "Disclaimer only -> chunks + link"

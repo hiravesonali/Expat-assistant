@@ -20,8 +20,13 @@ An English-language assistant that helps expats in **Munich** (MVP persona: a no
 uv sync                           # Python 3.12 + all deps
 cp .env.example .env              # add OpenRouter + LangSmith keys
 uv run pytest                     # offline unit tests
-uv run streamlit run app/Home.py  # chat UI (once the index is built)
+uv run expat-ingest               # fetch official sources -> data/processed/ (~3 min, polite crawl)
+uv run expat-index                # embed + build Chroma, BM25 and the parent store
+uv run streamlit run app/Home.py  # chat UI (toggle "Live mode" in the sidebar)
 ```
+make-it-in-germany.com blocks scripted downloads: save its two pages by hand to
+`data/manual/miig-blue-card.html` and `data/manual/miig-family-reunification.html`
+(URLs in `sources.yaml`), then run `uv run expat-ingest --source miig-blue-card miig-family-reunification`.
 
 ## Docs
 | | |

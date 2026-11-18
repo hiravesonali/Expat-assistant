@@ -34,7 +34,9 @@ dependencies = [
 ]
 
 [project.scripts]
-# Each module owner adds its CLI here (ingestion: expat-ingest, store: expat-index, evals: expat-eval)
+expat-ingest = "expat.ingestion.__main__:main"
+expat-index = "expat.store.__main__:main"
+expat-eval = "expat.evals.__main__:main"
 
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
