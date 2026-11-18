@@ -35,7 +35,8 @@ def test_home_renders_empty_state_with_examples():
 
 def test_example_prompt_produces_a_cited_answer():
     at = _home()
-    next(b for b in at.button if b.key == "example-0").click().run()
+    # the tenancy suggestion: its demo answer cites two sources and one tool result
+    next(b for b in at.button if b.key and b.key.startswith("example-") and "notice" in (b.help or "")).click().run()
     assert not at.exception, at.exception
 
     conv = at.session_state.conversations[at.session_state.current]

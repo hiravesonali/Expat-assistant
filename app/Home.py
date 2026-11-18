@@ -1,7 +1,7 @@
 """Expat Germany Assistant: the chat page (Streamlit entrypoint, `streamlit run app/Home.py`).
 
-How this page works (Streamlit's rerun model, for React developers)
---------------------------------------------------------------------
+How this page works (Streamlit's rerun model)
+--------------------------------------------
 This file is not a component that mounts once. Streamlit executes it TOP TO BOTTOM on every
 interaction: a chat message, a button click, a form submit. Think of the whole script as one big
 render function whose "props" are `st.session_state` plus the widget values.
@@ -10,7 +10,10 @@ So the flow of one chat turn is:
 1. The user submits a message -> rerun. `st.chat_input` returns the text in THIS run only.
 2. We append it to the conversation in `st.session_state`, run the pipeline, and stream the answer.
 3. We save the finished events in session_state and call `st.rerun()`. The next run redraws the full
-   history from state (with citation chips, banners, and the updated sidebar conversation title).
+   history from state (with source pills, banners, and the updated sidebar conversation title).
+
+Design (chat-product style): the first screen shows only a greeting, the composer and four
+suggestions. Profile, mode and developer tools sit in two small menus at the bottom of the sidebar.
 
 Everything the user enters (profile, conversations) lives only in `st.session_state`, i.e. in server
 memory for this browser tab. It is gone when the tab closes (ADR-0007/0009: nothing is persisted).
@@ -43,22 +46,24 @@ ui.inject_css()
 sync_secrets_to_env()
 
 PREFER = "Prefer not to say"
+PLACEHOLDER = "Ask about Anmeldung, renting, Blue Card, Kindergeld…"
 
+# (pill label, full prompt that is sent)
 EXAMPLES = [
     (
-        ":material/home: Tenant",
-        "I rent a flat in Munich since 2021. If I give notice today, when does my tenancy end?",
-    ),
-    (
-        ":material/badge: New arrival",
+        ":material/how_to_reg: Anmeldung",
         "I just moved to Munich on a Blue Card. What do I need for the Anmeldung, and by when?",
     ),
     (
-        ":material/family_restroom: Young family",
+        ":material/key: End my lease",
+        "I rent a flat in Munich since 2021. If I give notice today, when does my tenancy end?",
+    ),
+    (
+        ":material/child_care: Kindergeld & Elterngeld",
         "We're expecting a baby in March. How much Kindergeld and Elterngeld can we get?",
     ),
     (
-        ":material/verified_user: Blue Card holder",
+        ":material/verified_user: Permanent residence",
         "When can I apply for a settlement permit (Niederlassungserlaubnis) with my Blue Card?",
     ),
 ]
@@ -101,6 +106,13 @@ PROFILE_UI: dict[str, tuple[str, dict[str, str]]] = {
     ),
 }
 
+ADMIN_PAGES = [
+    ("pages/1_🔎_Retrieval_Debugger.py", "Retrieval debugger", ":material/search_insights:"),
+    ("pages/2_📚_Collection_Browser.py", "Collection browser", ":material/library_books:"),
+    ("pages/3_📊_Evals.py", "Evaluation results", ":material/monitoring:"),
+    ("pages/4_⚙️_Ingestion_Status.py", "Ingestion status", ":material/sync:"),
+]
+
 
 # ------------------------------------------------------------------------------------------------
 # Session state ("the store"). `setdefault` only runs the first time in a browser session.
@@ -109,7 +121,7 @@ PROFILE_UI: dict[str, tuple[str, dict[str, str]]] = {
 
 def _new_conversation() -> str:
     conv_id = uuid.uuid4().hex[:8]
-    st.session_state.conversations[conv_id] = {"title": "New conversation", "messages": []}
+    st.session_state.conversations[conv_id] = {"title": "New chat", "messages": []}
     st.session_state.current = conv_id
     return conv_id
 
@@ -118,7 +130,6 @@ def init_state() -> None:
     st.session_state.setdefault("profile", UserProfile())
     st.session_state.setdefault("profile_saved", False)
     st.session_state.setdefault("conversations", {})
-    st.session_state.setdefault("seen_intro", False)
     if not st.session_state.get("current") or st.session_state.current not in st.session_state.conversations:
         _new_conversation()
 
@@ -156,7 +167,7 @@ def _on_retry() -> None:
 
 
 # ------------------------------------------------------------------------------------------------
-# Sidebar
+# Sidebar: brand, new chat, recents; profile + settings menus pinned at the bottom
 # ------------------------------------------------------------------------------------------------
 
 
@@ -174,106 +185,130 @@ def _select_profile_field(name: str, current: Any) -> Any:
     )
 
 
+def profile_short() -> str:
+    """Popover label: 'Blue Card · 2 kids · renting', or a call to action before the profile is set."""
+    if not st.session_state.profile_saved:
+        return "Personalise answers"
+    p: UserProfile = st.session_state.profile
+    bits: list[str] = []
+    if p.residence_status != ResidenceStatus.UNKNOWN:
+        bits.append(PROFILE_UI["residence_status"][1].get(p.residence_status, p.residence_status.value))
+    elif p.citizenship != Citizenship.UNKNOWN:
+        bits.append(PROFILE_UI["citizenship"][1].get(p.citizenship, p.citizenship.value))
+    if p.children_count:
+        bits.append(f"{p.children_count} kid{'s' if p.children_count > 1 else ''}")
+    if p.housing != Housing.UNKNOWN:
+        bits.append(p.housing.value)
+    return " · ".join(bits) or "Munich"
+
+
 def render_profile_form() -> None:
     profile: UserProfile = st.session_state.profile
-    with st.expander(":material/person: Your situation", expanded=not st.session_state.profile_saved):
-        st.caption("Optional. Helps me pick the rules that apply to you. Stored only in this browser session.")
-        # A form batches its widgets: changing a selectbox does NOT rerun the script, only the submit does.
-        with st.form("profile_form", border=False):
-            st.selectbox("City", ["Munich (Bavaria)"], disabled=True, help="The MVP covers Munich only.")
-            values: dict[str, Any] = {}
-            for name in UserProfile.model_fields:
-                if name in ("city", "state"):
-                    continue
-                if name == "children_count":
-                    kids = st.selectbox(
-                        "Children",
-                        [None, *range(0, 11)],
-                        index=0 if not st.session_state.profile_saved else profile.children_count + 1,
-                        format_func=lambda v: PREFER if v is None else str(v),
-                        key="pf_children_count",
-                    )
-                    values[name] = kids or 0
-                elif name == "youngest_child_age":
-                    ages = [None, *range(0, 26)]
-                    values[name] = st.selectbox(
-                        "Youngest child's age",
-                        ages,
-                        index=ages.index(profile.youngest_child_age),
-                        format_func=lambda v: PREFER if v is None else f"{v} years",
-                        help="Only used when you have children (Kindergeld, Elterngeld, Kita).",
-                        key="pf_youngest_child_age",
-                    )
-                elif name == "answer_language":
-                    langs = ["en", "de"]
-                    values[name] = st.selectbox(
-                        "Answer language",
-                        langs,
-                        index=langs.index(profile.answer_language),
-                        format_func={"en": "English", "de": "Deutsch"}.get,
-                        key="pf_answer_language",
-                    )
-                else:
-                    values[name] = _select_profile_field(name, getattr(profile, name))  # enum fields
-            if st.form_submit_button("Save profile", type="primary", width="stretch"):
-                if not values["children_count"]:
-                    values["youngest_child_age"] = None
-                st.session_state.profile = UserProfile(**values)
-                st.session_state.profile_saved = True
-                st.toast("Profile saved for this session", icon=":material/check:")
-    if st.session_state.profile_saved:
-        st.caption(f":material/badge: {st.session_state.profile.summary()}")
+    st.markdown("**Your situation**")
+    st.caption("Optional. Lets me apply the rules that fit you. Kept only in this browser tab.")
+    # A form batches its widgets: changing a selectbox does NOT rerun the script, only the submit does.
+    with st.form("profile_form", border=False):
+        st.selectbox("City", ["Munich (Bavaria)"], disabled=True, help="The MVP covers Munich only.")
+        values: dict[str, Any] = {}
+        for name in UserProfile.model_fields:
+            if name in ("city", "state"):
+                continue
+            if name == "children_count":
+                # -1 = "prefer not to say". (A None option would render as an empty "Choose an option".)
+                kids = st.selectbox(
+                    "Children",
+                    [-1, *range(0, 11)],
+                    index=0 if not st.session_state.profile_saved else profile.children_count + 1,
+                    format_func=lambda v: PREFER if v < 0 else str(v),
+                    key="pf_children_count",
+                )
+                values[name] = max(kids, 0)
+            elif name == "youngest_child_age":
+                ages = [-1, *range(0, 26)]
+                age = st.selectbox(
+                    "Youngest child's age",
+                    ages,
+                    index=ages.index(-1 if profile.youngest_child_age is None else profile.youngest_child_age),
+                    format_func=lambda v: PREFER if v < 0 else f"{v} years",
+                    help="Only used when you have children (Kindergeld, Elterngeld, Kita).",
+                    key="pf_youngest_child_age",
+                )
+                values[name] = None if age < 0 else age
+            elif name == "answer_language":
+                langs = ["en", "de"]
+                values[name] = st.selectbox(
+                    "Answer language",
+                    langs,
+                    index=langs.index(profile.answer_language),
+                    format_func={"en": "English", "de": "Deutsch"}.get,
+                    key="pf_answer_language",
+                )
+            else:
+                values[name] = _select_profile_field(name, getattr(profile, name))  # enum fields
+        if st.form_submit_button("Save profile", type="primary", width="stretch"):
+            if not values["children_count"]:
+                values["youngest_child_age"] = None
+            st.session_state.profile = UserProfile(**values)
+            st.session_state.profile_saved = True
+            st.toast("Saved. Answers now take your situation into account.", icon=":material/check:")
+            st.rerun()  # refresh the popover label
 
 
-def render_conversation_list() -> None:
-    st.button(
-        "New conversation",
-        icon=":material/add_comment:",
-        width="stretch",
-        on_click=_on_new_conversation,
-    )
-    convs = st.session_state.conversations
-    started = [(cid, c) for cid, c in reversed(convs.items()) if c["messages"]]
-    if started:
-        st.caption("Conversations (this session)")
-    for cid, conv in started:
-        st.button(
-            conv["title"],
-            key=f"conv-{cid}",
-            icon=":material/chat_bubble:",
-            type="primary" if cid == st.session_state.current else "tertiary",
-            width="stretch",
-            on_click=_on_select_conversation,
-            args=(cid,),
-        )
-
-
-def render_mode_toggle() -> str:
+def render_settings() -> str:
     available, reason = live_status()
+    st.markdown("**Settings**")
     live = st.toggle(
-        "Live mode",
+        "Live answers",
         value=available,
         disabled=not available,
         key="live_toggle",
-        help="Live calls the real RAG pipeline via OpenRouter. Demo replays scripted answers offline."
-        + ("" if available else f"\n\n{reason}"),
+        help="On: real search over official sources + AI answer (OpenRouter). "
+        "Off: demo mode with scripted answers, no API calls." + ("" if available else f"\n\n{reason}"),
     )
-    mode = LIVE if (live and available) else DEMO
-    if mode == DEMO:
-        st.caption(":material/science: **Demo mode**: scripted answers, no API calls.")
-    return mode
+    st.caption("Developer tools")
+    for path, label, icon in ADMIN_PAGES:
+        st.page_link(path, label=label, icon=icon)
+    st.divider()
+    st.caption(f":material/gavel: {ui.DISCLAIMER} Your profile and chats live only in this browser tab.")
+    return LIVE if (live and available) else DEMO
+
+
+def render_conversation_list() -> None:
+    started = [(cid, c) for cid, c in reversed(st.session_state.conversations.items()) if c["messages"]]
+    if not started:
+        return
+    st.caption("Recents")
+    with st.container(key="recents", gap=None):
+        for cid, conv in started:
+            st.button(
+                conv["title"],
+                key=f"conv-{cid}",
+                type="secondary" if cid == st.session_state.current else "tertiary",
+                width="stretch",
+                on_click=_on_select_conversation,
+                args=(cid,),
+            )
 
 
 def render_sidebar() -> str:
     with st.sidebar:
-        st.markdown("### :material/travel_explore: Expat Germany Assistant")
+        with st.container(key="brand"):
+            st.markdown(":primary[:material/travel_explore:] Expat Assistant")
+            st.caption("Munich · official sources")
+        with st.container(key="new-chat"):
+            st.button(
+                "New chat",
+                icon=":material/edit_square:",
+                type="tertiary",
+                width="stretch",
+                on_click=_on_new_conversation,
+            )
         render_conversation_list()
-        st.divider()
-        render_profile_form()
-        st.divider()
-        mode = render_mode_toggle()
-        st.divider()
-        st.caption(f":material/gavel: {ui.DISCLAIMER}")
+        with st.container(key="sidebar-bottom"):
+            with st.popover(profile_short(), icon=":material/person:", width="stretch"):
+                render_profile_form()
+            with st.popover("Settings", icon=":material/tune:", width="stretch"):
+                mode = render_settings()
     return mode
 
 
@@ -282,33 +317,19 @@ def render_sidebar() -> str:
 # ------------------------------------------------------------------------------------------------
 
 
-@st.dialog("Welcome to the Expat Germany Assistant")
-def first_run_notice() -> None:
-    st.markdown(
-        "I answer questions about **registration (Anmeldung), residence permits, renting and family "
-        "benefits in Munich**, using official German sources only.\n\n"
-        "- Every statement cites its source; click a chip to see the original text.\n"
-        "- **General information, not legal or tax advice.** For your specific case, ask a Mieterverein, "
-        "a migration counselling service (MBE) or a lawyer.\n"
-        "- Your profile and chats live only in this browser session. Nothing is stored."
-    )
-    if st.button("Got it", type="primary", width="stretch"):
-        st.rerun()  # closes the dialog
-
-
-def render_empty_state() -> None:
-    st.markdown("## How can I help you settle in? :material/waving_hand:")
-    st.caption("Ask in English or German. Pick an example to see how answers are grounded in official sources.")
-    cols = st.columns(2)
-    for i, (persona, prompt) in enumerate(EXAMPLES):
-        with cols[i % 2]:
-            st.button(
-                f"**{persona}**\n\n{prompt}",
-                key=f"example-{i}",
-                width="stretch",
-                on_click=_on_example,
-                args=(prompt,),
-            )
+def render_empty_state() -> str | None:
+    """Greeting + composer in the middle of the page + suggestion pills. Returns a submitted prompt."""
+    with st.container(key="hero"):
+        st.title("How can I help you settle in?", anchor=False, text_alignment="center")
+        st.caption("Registration, residence permits, renting and family benefits in Munich, in English or German.")
+    # Inside a container, st.chat_input renders inline (here: centred) instead of pinned to the bottom.
+    with st.container():
+        prompt = st.chat_input(PLACEHOLDER, key="composer")
+    with st.container(horizontal=True, horizontal_alignment="center", gap="small", key="suggestions"):
+        for i, (label, full_prompt) in enumerate(EXAMPLES):
+            st.button(label, key=f"example-{i}", on_click=_on_example, args=(full_prompt,), help=full_prompt)
+    ui.disclaimer_footer()
+    return prompt
 
 
 def render_history(conv: dict[str, Any]) -> None:
@@ -324,7 +345,7 @@ def render_history(conv: dict[str, Any]) -> None:
             is_last = i == len(messages) - 1
             error = next((e for e in msg["events"] if isinstance(e, ErrorEvent)), None)
             if is_last and error and error.retryable:
-                st.button("Retry", icon=":material/refresh:", key=f"retry-{i}", on_click=_on_retry)
+                st.button("Try again", icon=":material/refresh:", key=f"retry-{i}", on_click=_on_retry)
 
 
 def _history_for_pipeline(messages: list[dict[str, Any]]) -> list[dict[str, str]]:
@@ -336,7 +357,7 @@ def handle_prompt(prompt: str, mode: str) -> None:
     conv = current_conversation()
     history = _history_for_pipeline(conv["messages"])
     conv["messages"].append({"role": "user", "content": prompt})
-    if conv["title"] == "New conversation":
+    if conv["title"] == "New chat":
         conv["title"] = prompt if len(prompt) <= 42 else prompt[:40].rstrip() + "…"
 
     with st.chat_message("user"):
@@ -344,72 +365,63 @@ def handle_prompt(prompt: str, mode: str) -> None:
 
     with st.chat_message("assistant"):
         # Containers are created up-front, then filled while the generator runs (like refs to DOM nodes).
-        status = st.status("Understanding your question…", expanded=False)
+        status = st.status("Thinking…", expanded=False)
         tool_area = st.container()
         events: list[PipelineEvent] = []
         tool_slots: dict[str, Any] = {}
         calls: dict[str, ToolCallEvent] = {}
 
         def token_stream():
-            """Route events: tokens go to st.write_stream, everything else updates the other containers."""
+            """Route events: tokens go to st.write_stream, everything else updates the progress line."""
             for ev in run_pipeline(mode, prompt, history, st.session_state.profile):
                 events.append(ev)
                 if isinstance(ev, TokenEvent):
                     yield ev.text
-                elif isinstance(ev, StepEvent):
+                elif isinstance(ev, StepEvent) and ev.status == "started":
                     _, label = ui.STEP_LABELS.get(ev.name, ("", ev.name))
-                    if ev.status == "started":
-                        status.update(label=f"{label}…", state="running")
-                    else:
-                        with status:
-                            ui.render_step(ev)
+                    status.update(label=f"{label}…", state="running")
                 elif isinstance(ev, ToolCallEvent):
                     calls[ev.call_id] = ev
                     tool_slots[ev.call_id] = tool_area.empty()
                     with tool_slots[ev.call_id].container():
-                        ui.render_tool_card(ev, None)
+                        ui.render_tool_line(ev, None)
                 elif isinstance(ev, ToolResultEvent) and ev.call_id in calls:
                     with tool_slots[ev.call_id].container():
-                        ui.render_tool_card(calls[ev.call_id], ev)
+                        ui.render_tool_line(calls[ev.call_id], ev)
 
         # write_stream pulls from the generator and renders text as it arrives (typewriter effect).
-        # The st.status box above already shows progress, so no extra spinner is needed.
         answer = st.write_stream(token_stream())
-
-        parts = ui.split_events(events)
-        status.update(
-            label=ui.timeline_label(len(parts["steps"]), parts["done"]),
-            state="error" if "error" in parts else "complete",
-            expanded=False,
-        )
+        status.update(label="Done", state="complete")
 
     # Persist the post-checked text (invalid citations stripped) rather than the raw streamed tokens.
     final = next((ev.final_answer for ev in events if isinstance(ev, AnswerMetaEvent) and ev.final_answer), None)
     content = final if final is not None else (answer if isinstance(answer, str) else "")
     conv["messages"].append({"role": "assistant", "content": content, "events": events, "mode": mode})
-    # Redraw everything from state: citation chips, banners, retry button, sidebar title.
+    # Redraw everything from state: the progress line disappears, source pills and the details fold appear.
     st.rerun()
 
 
 def main() -> None:
     init_state()
     mode = render_sidebar()
-
-    if not st.session_state.seen_intro:
-        st.session_state.seen_intro = True
-        first_run_notice()
-
-    # `st.chat_input` is pinned to the bottom of the page wherever it is called.
-    prompt = st.chat_input("Ask about Anmeldung, renting, Blue Card, Kindergeld…")
-    prompt = prompt or st.session_state.pop("pending_prompt", None)
+    if mode == DEMO:
+        st.badge("Demo mode · scripted answers", icon=":material/science:", color="orange")
 
     conv = current_conversation()
-    if not conv["messages"] and not prompt:
-        render_empty_state()
+    pending = st.session_state.pop("pending_prompt", None)  # from a suggestion, retry or the hero composer
+    if not conv["messages"] and not pending:
+        prompt = render_empty_state()
+        if prompt:
+            # Switch to the chat layout first, so the greeting doesn't stay above the streaming answer.
+            st.session_state.pending_prompt = prompt
+            st.rerun()
+        return
+
     render_history(conv)
+    # Called at the top level, st.chat_input is pinned to the bottom of the page.
+    prompt = st.chat_input(PLACEHOLDER, key="composer") or pending
     if prompt:
         handle_prompt(prompt, mode)
-    ui.disclaimer_footer()
 
 
 main()

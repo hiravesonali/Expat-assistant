@@ -56,35 +56,87 @@ TOOL_LABELS = {
 
 _CSS = """
 <style>
-/* Compact citation chips: Streamlit buttons inside a container with the `citation-chips` key. */
-.st-key-citation-chips button, [class*="st-key-chips-"] button {
-    border-radius: 999px;
-    padding: 0.1rem 0.75rem;
-    min-height: 1.9rem;
-    font-size: 0.82rem;
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap");
+/* ---- Page frame: a narrow reading column, no Streamlit chrome ---------------------------------- */
+[data-testid="stMainBlockContainer"], [data-testid="stBottomBlockContainer"] { max-width: 760px; }
+[data-testid="stMainBlockContainer"] { padding-top: 2.5rem; padding-bottom: 2rem; }
+[data-testid="stHeader"] { background: transparent; }
+[data-testid="stAppDeployButton"], [data-testid="stMainMenu"] { display: none; }
+
+/* ---- Chat messages: no avatars; user = right-aligned bubble, assistant = plain text ------------- */
+[data-testid="stChatMessageAvatarUser"], [data-testid="stChatMessageAvatarAssistant"],
+[data-testid="stChatMessage"] > img { display: none; }
+[data-testid="stChatMessage"] { background: transparent; padding: 0.35rem 0; }
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) { justify-content: flex-end; }
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
+    flex: 0 1 auto; max-width: 85%;
+    background: #EDEAE2; border-radius: 1.25rem; padding: 0.55rem 1.05rem;
 }
-/* Sticky-ish footer caption for the disclaimer. */
-.st-key-disclaimer-footer p { font-size: 0.8rem; color: #6b7785; text-align: center; }
-/* Example prompt cards on the empty state. */
+[data-testid="stChatMessageContent"] p { line-height: 1.65; }
+
+/* ---- The composer: a soft floating card -------------------------------------------------------- */
+[data-testid="stChatInput"], [data-testid="stChatInput"] > div, [data-testid="stChatInputTextArea"] {
+    background: #FFFFFF !important;
+}
+[data-testid="stChatInput"] {
+    border-radius: 1.4rem;
+    box-shadow: 0 1px 2px rgba(38, 37, 31, .04), 0 6px 24px rgba(38, 37, 31, .07);
+}
+[data-testid="stBottom"] > div { background: #FAF9F6; }
+
+/* ---- Empty state --------------------------------------------------------------------------------- */
+.st-key-hero { margin-top: 14vh; }
+.st-key-hero h1, .st-key-hero h1 span {
+    font-family: "Source Serif 4", Georgia, serif !important; font-weight: 400 !important;
+    font-size: 2.4rem; letter-spacing: -0.01em; padding-bottom: 0.2rem;
+}
+.st-key-hero [data-testid="stCaptionContainer"] p { text-align: center; font-size: 0.95rem; }
+.st-key-suggestions { justify-content: center; }
 [class*="st-key-example-"] button {
-    min-height: 5.2rem;
-    text-align: left;
-    justify-content: flex-start;
-    align-items: flex-start;
-    white-space: normal;
+    background: #FFFFFF; border: 1px solid #E4E1D8; color: #4A483F;
+    padding: 0.3rem 0.95rem; min-height: 2.1rem; font-size: 0.88rem;
+}
+[class*="st-key-example-"] button:hover { border-color: #1F6F64; color: #1F6F64; }
+.st-key-fineprint p { text-align: center; font-size: 0.78rem; color: #8A877C; }
+
+/* ---- Sidebar ------------------------------------------------------------------------------------- */
+.st-key-brand p { font-family: "Source Serif 4", Georgia, serif !important; font-size: 1.25rem; margin: 0; }
+.st-key-brand [data-testid="stCaptionContainer"] p {
+    font-family: Inter, sans-serif !important; font-size: 0.8rem; color: #8A877C;
+}
+.st-key-recents button, .st-key-new-chat button { justify-content: flex-start !important; text-align: left; }
+.st-key-recents button > div, .st-key-new-chat button > div { justify-content: flex-start !important; }
+.st-key-recents [data-testid="stBaseButton-secondary"] { background: #E6E3DA; border-color: transparent; }
+[data-testid="stPopoverBody"] { width: 330px !important; max-width: 330px !important; }
+.st-key-recents button p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-key-recents button { min-height: 2rem; padding: 0.2rem 0.75rem; }
+.st-key-sidebar-bottom { position: fixed; bottom: 1rem; width: calc(var(--sidebar-width, 18rem) - 2.5rem); }
+
+/* ---- Under an answer: small source pills, quiet details ----------------------------------------- */
+[class*="st-key-chips-"] button {
+    background: #F2F0EA; border: none; color: #4A483F;
+    padding: 0.05rem 0.7rem; min-height: 1.75rem; font-size: 0.8rem;
+}
+[class*="st-key-chips-"] button:hover { background: #E3EFEC; color: #1F6F64; }
+[data-testid="stChatMessageContent"] [data-testid="stExpander"] details {
+    border: none; background: transparent;
+}
+[data-testid="stChatMessageContent"] [data-testid="stExpander"] summary {
+    font-size: 0.82rem; color: #8A877C; padding-left: 0;
 }
 </style>
 """
 
 
 def inject_css() -> None:
-    """Small CSS touch-ups. Streamlit exposes `.st-key-<key>` classes on keyed elements, which we target."""
+    """Visual polish. Streamlit exposes `.st-key-<key>` classes on keyed elements and stable `data-testid`
+    attributes on its own elements; the CSS above targets only those, so it survives Streamlit updates."""
     st.html(_CSS)
 
 
 def disclaimer_footer() -> None:
-    with st.container(key="disclaimer-footer"):
-        st.caption(f":material/gavel: {DISCLAIMER}")
+    with st.container(key="fineprint"):
+        st.caption(f"Answers cite official German sources. {DISCLAIMER}")
 
 
 # ------------------------------------------------------------------------------------------------
@@ -102,13 +154,21 @@ def format_date(iso: str) -> str:
 
 
 def citation_label(c: Citation) -> str:
-    """'[S1] § 573c BGB · Gesetze im Internet · verified 18 Nov 2026'."""
+    """Full label, used as the hover text: '[S1] § 573c BGB · Gesetze im Internet · verified 18 Nov 2026'."""
     parts = [f"[{c.id}]", c.legal_reference or c.title]
     if c.source_name:
         parts.append(c.source_name)
     if c.last_verified:
         parts.append(f"verified {format_date(c.last_verified)}")
     return " · ".join([parts[0] + " " + parts[1], *parts[2:]])
+
+
+def chip_label(c: Citation, max_len: int = 34) -> str:
+    """Short pill text: 'S1 · § 573c BGB' or 'S3 · Wohnsitzanmeldung'. Details live in the dialog."""
+    name = TOOL_LABELS.get(c.title, c.title) if c.kind == "tool" else (c.legal_reference or c.title or c.source_name)
+    if len(name) > max_len:
+        name = name[: max_len - 1].rstrip() + "…"
+    return f"{c.id} · {name}"
 
 
 _MARKER_RE = re.compile(r"\[(S|T)(\d+)\]")
@@ -199,16 +259,24 @@ def _render_retrieval(d: dict[str, Any], top_n: int = 5) -> None:
             st.caption("No hits.")
 
 
-def render_tool_card(call: ToolCallEvent, result: ToolResultEvent | None) -> None:
-    """A tool card: args -> result. Collapsed by default so the answer stays the hero."""
-    title = TOOL_LABELS.get(call.name, call.name)
+def _tool_state(result: ToolResultEvent | None) -> str:
     if result is None:
-        state = ":material/hourglass_top: running…"
-    elif result.error:
-        state = ":red[:material/error: failed]"
-    else:
-        state = ":green[:material/check_circle: done]"
-    with st.expander(f":material/calculate: **{title}** · {state}", expanded=False):
+        return ":material/hourglass_top: running…"
+    if result.error:
+        return ":red[:material/error: failed]"
+    return ":green[:material/check_circle: done]"
+
+
+def render_tool_line(call: ToolCallEvent, result: ToolResultEvent | None) -> None:
+    """One quiet line while the answer streams: 'Family benefits estimator · done'."""
+    st.caption(f":material/calculate: {TOOL_LABELS.get(call.name, call.name)} · {_tool_state(result)}")
+
+
+def render_tool_card(call: ToolCallEvent, result: ToolResultEvent | None) -> None:
+    """A tool card: args -> result. Rendered inside the "How I got this answer" fold (no nested expander)."""
+    title = TOOL_LABELS.get(call.name, call.name)
+    with st.container(border=True):
+        st.markdown(f":material/calculate: **{title}** · {_tool_state(result)}")
         c1, c2 = st.columns(2)
         with c1:
             st.caption("Input")
@@ -252,12 +320,11 @@ def citation_dialog(c: Citation) -> None:
 def render_citations(citations: list[Citation], key_prefix: str) -> None:
     if not citations:
         return
-    st.caption("Sources")
-    # A horizontal flex container: the chips wrap like inline tags.
+    # A horizontal flex container: the pills wrap like inline tags. Click = source details dialog.
     with st.container(horizontal=True, gap="small", key=f"chips-{key_prefix}"):
         for c in citations:
-            icon = ":material/calculate:" if c.kind == "tool" else ":material/menu_book:"
-            if st.button(citation_label(c), key=f"{key_prefix}-{c.id}", icon=icon, help=c.title):
+            icon = ":material/calculate:" if c.kind == "tool" else ":material/description:"
+            if st.button(chip_label(c), key=f"{key_prefix}-{c.id}", icon=icon, help=citation_label(c)):
                 citation_dialog(c)
 
 
@@ -330,23 +397,27 @@ def timeline_label(n_steps: int, done: DoneEvent | None) -> str:
 
 
 def render_assistant_message(events: list[PipelineEvent], content: str, key_prefix: str, mode: str) -> None:
-    """Render a stored assistant turn: timeline, tool cards, answer, citations, banners."""
+    """Render a stored assistant turn. The answer is the hero; everything technical is folded away.
+
+    Order: answer -> warnings -> source pills -> one quiet "How I got this answer" fold that holds the
+    step timeline, tool inputs/outputs and the latency/token numbers (for curious users and reviewers).
+    """
     parts = split_events(events)
-    if parts["steps"]:
-        with st.status(timeline_label(len(parts["steps"]), parts["done"]), state="complete", expanded=False):
-            for step in parts["steps"]:
-                render_step(step)
-    for call in parts["calls"]:
-        render_tool_card(call, parts["results"].get(call.call_id))
     if content:
         st.markdown(decorate_markers(content))
     if parts.get("error"):
         render_error(parts["error"])
-    render_citations(parts["citations"], key_prefix)
     if parts["meta"]:
         render_answer_meta(parts["meta"])
-    if parts["done"]:
-        render_done(parts["done"], mode)
+    render_citations(parts["citations"], key_prefix)
+    if parts["steps"] or parts["calls"]:
+        with st.expander(timeline_label(len(parts["steps"]), parts["done"]), icon=":material/manage_search:"):
+            for step in parts["steps"]:
+                render_step(step)
+            for call in parts["calls"]:
+                render_tool_card(call, parts["results"].get(call.call_id))
+            if parts["done"]:
+                render_done(parts["done"], mode)
 
 
 def pretty_json(obj: Any) -> str:
