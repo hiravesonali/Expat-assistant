@@ -22,6 +22,14 @@
     - range: "535-580a"
       domain: tenancy
       subtopic: rental_law
+    # Keyword-only ranges: everyday / English terms the statute itself does not use.
+    - {range: "536-536d", domain: tenancy, keywords: [Mietminderung, rent reduction, defects]}
+    - {range: "551", domain: tenancy, keywords: [Kaution, security deposit]}
+    - {range: "553", domain: tenancy, keywords: [Untervermietung, sublet, subletting]}
+    - {range: "556-556c", domain: tenancy, keywords: [Nebenkosten, Betriebskostenabrechnung, utility costs]}
+    - {range: "556d-556g", domain: tenancy, keywords: [Mietpreisbremse, rent cap, rent control]}
+    - {range: "557-561", domain: tenancy, keywords: [Mieterhöhung, rent increase]}
+    - {range: "568-576b", domain: tenancy, keywords: [Kündigung, notice, terminate tenancy, move out]}
   include_ranges: ["186-193", "535-580a"]
   language: de
   jurisdiction: federal
@@ -42,6 +50,11 @@
     - range: "27-36a"
       domain: bureaucracy
       subtopic: family_reunification
+      keywords: [family reunification, spouse visa]
+    - {range: "9-9c", domain: bureaucracy, keywords: [permanent residence, settlement permit]}
+    - {range: "18c", domain: bureaucracy, keywords: [permanent residence, settlement permit, Blue Card]}
+    - {range: "18g", domain: bureaucracy, keywords: [EU Blue Card, minimum salary]}
+    - {range: "81", domain: bureaucracy, keywords: [apply, application, Ausländerbehörde]}
   # Residence titles, employment (§ 18g Blue Card), settlement (§ 9, § 18c), family reunion,
   # integration course, expiry, application procedure (§ 81).
   include_ranges: ["4-9c", "18-21", "27-36a", "43-45a", "51-52", "81-82"]
@@ -61,6 +74,7 @@
   law_abbrev: BMG
   domain: bureaucracy
   subtopic: anmeldung
+  keywords: [address registration, register address, Anmeldung]
   include_ranges: ["17-31", "54"]
   language: de
   jurisdiction: federal
@@ -77,10 +91,12 @@
   law_abbrev: BEEG
   domain: family
   subtopic: elterngeld
+  keywords: [parental allowance, Elterngeld]
   domain_map:
     - range: "15-21"
       domain: family
       subtopic: elternzeit
+      keywords: [parental leave]
   language: de
   jurisdiction: federal
   fetch_method: http
@@ -96,6 +112,7 @@
   law_abbrev: EStG
   domain: family
   subtopic: kindergeld
+  keywords: [Kindergeld, child benefit]
   include_ranges: ["62-78"]
   language: de
   jurisdiction: federal
@@ -114,6 +131,7 @@
   law_abbrev: MiSchuV
   domain: tenancy
   subtopic: mietpreisbremse
+  keywords: [Mietpreisbremse, rent cap, Kappungsgrenze, München, Munich]
   language: de
   jurisdiction: state
   state: BY

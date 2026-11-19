@@ -21,6 +21,7 @@ packed into numbered source blocks [S1]..[Sn] within the token budget.
 from __future__ import annotations
 
 import logging
+import re
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
@@ -138,6 +139,32 @@ def select_variants(sub: SubQuery, config: RetrievalConfig) -> list[QueryVariant
     return variants
 
 
+_LEGAL_REF_NOISE = re.compile(r"§+|\b(?:abs|absatz|satz|nr|s)\b\.?", re.IGNORECASE)
+
+
+def bm25_queries(sub: SubQuery, variants: list[QueryVariant], config: RetrievalConfig) -> list[tuple[str, str]]:
+    """(label, query) pairs for the keyword retriever.
+
+    "all": every variant, as dense search gets them. "german": only the German rewrites (the corpus
+    is mostly German, so English paraphrases only match by accident: English pages that repeat the
+    query words, or English words that happen to stem like German ones). If there is no German
+    rewrite, the standalone question is used so BM25 never silently drops out.
+    `bm25_legal_refs` adds one query made of the extracted references ("§ 573c BGB" -> "573c BGB"):
+    exact identifiers are what BM25 is for.
+    """
+    if config.bm25_queries == "all":
+        pairs = [(v.label, v.text) for v in variants]
+    else:
+        pairs = [(v.label, v.text) for v in variants if v.label.startswith("de:")] or [
+            (variants[0].label, variants[0].text)
+        ]
+    if config.bm25_legal_refs and sub.legal_references:
+        refs = " ".join(_LEGAL_REF_NOISE.sub(" ", r) for r in sub.legal_references)
+        if refs.split():
+            pairs.append(("ref:0", " ".join(refs.split())))
+    return pairs
+
+
 # ------------------------------------------------------------------------------------- retriever
 
 
@@ -226,7 +253,11 @@ class HybridRetriever:
         sub_results: list[SubQuestionResult] = []
         debugs: list[SubQuestionDebug] = []
         for (sub, variants, where), (lists, candidates) in zip(plans, lists_per_sub, strict=True):
-            fused = reciprocal_rank_fusion({lst.name: lst.chunk_ids for lst in lists}, c=cfg.rrf_c)
+            fused = reciprocal_rank_fusion(
+                {lst.name: lst.chunk_ids for lst in lists},
+                c=cfg.rrf_c,
+                weights={lst.name: cfg.bm25_weight for lst in lists if lst.name.startswith("bm25:")},
+            )
             # Soft boosts belong to "structured retrieval" (R5): off together with the hard filters,
             # so the R4 -> R5 delta measures both.
             boosts = {
@@ -281,11 +312,12 @@ class HybridRetriever:
         in submission order, so the output is deterministic regardless of thread timing.
         """
         jobs: list[tuple[int, str, str, Where | None, str]] = []  # (sub_idx, retriever, label, where, query)
-        for i, (_, variants, where) in enumerate(plans):
+        for i, (sub, variants, where) in enumerate(plans):
             for v in variants:
                 jobs.append((i, "dense", v.label, where, v.text))
-                if cfg.use_bm25:
-                    jobs.append((i, "bm25", v.label, where, v.text))
+            if cfg.use_bm25:
+                for label, query in bm25_queries(sub, variants, cfg):
+                    jobs.append((i, "bm25", label, where, query))
 
         def run(job: tuple[int, str, str, Where | None, str]) -> tuple[RankedList, dict[str, _Candidate]]:
             _, retriever, label, where, query = job

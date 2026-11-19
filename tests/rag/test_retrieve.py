@@ -141,3 +141,43 @@ def test_all_doc_keys_ranked(retriever: HybridRetriever) -> None:
     keys = retriever.retrieve(_plan(), UserProfile(), RetrievalConfig()).all_doc_keys()
     assert keys[0] == "bgb#573c"
     assert len(keys) == len(set(keys))
+
+
+def _sub_and_variants():
+    from expat.rag.retrieve import QueryVariant
+
+    sub = SubQuery(
+        text="When does my tenancy end?",
+        queries_de=["Kündigungsfrist Mieter"],
+        queries_en=["tenant notice period"],
+        legal_references=["§ 573c Abs. 1 BGB"],
+    )
+    variants = [
+        QueryVariant(label="en:0", text=sub.text),
+        QueryVariant(label="de:0", text="Kündigungsfrist Mieter"),
+        QueryVariant(label="en:1", text="tenant notice period"),
+    ]
+    return sub, variants
+
+
+def test_bm25_queries_all_mirrors_dense_variants() -> None:
+    from expat.rag.retrieve import bm25_queries
+
+    sub, variants = _sub_and_variants()
+    assert [label for label, _ in bm25_queries(sub, variants, RetrievalConfig())] == ["en:0", "de:0", "en:1"]
+
+
+def test_bm25_queries_german_only_plus_legal_reference_query() -> None:
+    from expat.rag.retrieve import bm25_queries
+
+    sub, variants = _sub_and_variants()
+    cfg = RetrievalConfig(bm25_queries="german", bm25_legal_refs=True)
+    assert bm25_queries(sub, variants, cfg) == [("de:0", "Kündigungsfrist Mieter"), ("ref:0", "573c 1 BGB")]
+
+
+def test_bm25_queries_german_falls_back_to_the_question_without_rewrites() -> None:
+    from expat.rag.retrieve import QueryVariant, bm25_queries
+
+    sub = SubQuery(text="Wie lang ist die Kündigungsfrist?")
+    only = [QueryVariant(label="en:0", text=sub.text)]
+    assert bm25_queries(sub, only, RetrievalConfig(bm25_queries="german")) == [("en:0", sub.text)]

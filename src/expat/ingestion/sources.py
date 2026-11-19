@@ -67,6 +67,7 @@ class DomainRange(BaseModel):
     range: str
     domain: Domain
     subtopic: str = ""
+    keywords: list[str] = Field(default_factory=list)  # everyday terms for these §§ (see SourceConfig.keywords)
 
     def contains(self, paragraph: str) -> bool:
         return ParagraphRange.parse(self.range).contains(paragraph)
@@ -101,6 +102,9 @@ class SourceConfig(BaseModel):
     city: str = ""
     applies_to: list[Audience] = Field(default_factory=lambda: [Audience.ALL], min_length=1)
     alt_lang_urls: dict[str, str] = Field(default_factory=dict)
+    # Everyday / English terms users search with that the official text does not contain
+    # ("Mietpreisbremse" for § 556d BGB). Added to the contextual header, so dense AND BM25 see them.
+    keywords: list[str] = Field(default_factory=list)
     is_machine_translated: bool = False
     fetch_method: Literal["http", "manual"] = "http"
     manual_path: str | None = None  # relative to the repo root, e.g. data/manual/miig-blue-card.html
@@ -142,6 +146,15 @@ class SourceConfig(BaseModel):
             return self.domain, self.subtopic
         # Only a domain_map was given and nothing matched: use its first entry as the default.
         return self.domain_map[0].domain, self.domain_map[0].subtopic or self.subtopic
+
+    def keywords_for(self, paragraph: str | None = None) -> list[str]:
+        """Source-wide keywords plus those of every § range that contains `paragraph`."""
+        words = list(self.keywords)
+        if paragraph:
+            for entry in self.domain_map:
+                if entry.keywords and entry.contains(paragraph):
+                    words += entry.keywords
+        return list(dict.fromkeys(words))
 
     def manual_file(self, repo_root: Path = REPO_ROOT) -> Path | None:
         return repo_root / self.manual_path if self.manual_path else None

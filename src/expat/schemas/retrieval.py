@@ -4,7 +4,7 @@ The SAME `retrieve()` implementation is used by the Streamlit chat, the debugger
 eval harness (docs/PLAN.md, "one retrieval code path").
 """
 
-from typing import Protocol
+from typing import Literal, Protocol
 
 from pydantic import BaseModel, Field
 
@@ -61,6 +61,10 @@ class RetrievalConfig(BaseModel):
     use_rerank: bool = False  # R6 (stretch)
     use_hyde: bool = False  # R7 (stretch)
     use_step_back: bool = True
+    # BM25 tuning (only used when use_bm25). See docs/evaluation-plan.md, "BM25 investigation".
+    bm25_queries: Literal["all", "german"] = "all"  # which query variants also go to BM25
+    bm25_weight: float = Field(default=1.0, ge=0.0)  # vote of a BM25 list in RRF (dense lists = 1.0)
+    bm25_legal_refs: bool = False  # extra BM25 query from the extracted legal references ("573c BGB")
     k_dense: int = 20
     k_sparse: int = 20
     k_final: int = 8

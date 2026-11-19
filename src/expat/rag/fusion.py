@@ -14,10 +14,14 @@ from __future__ import annotations
 FusedItem = tuple[str, float, dict[str, int]]
 
 
-def reciprocal_rank_fusion(ranked_lists: dict[str, list[str]], c: int = 60) -> list[FusedItem]:
+def reciprocal_rank_fusion(
+    ranked_lists: dict[str, list[str]], c: int = 60, weights: dict[str, float] | None = None
+) -> list[FusedItem]:
     """Fuse named rankings into one list of `(id, fused_score, {list_name: rank})`.
 
     `ranked_lists` maps a list label (e.g. "dense:de:0", "bm25:en:1") to ids in rank order.
+    `weights` (optional, default 1.0 per list) scales a list's vote: weighted RRF, used to give the
+    keyword lists less say than the dense lists (see RetrievalConfig.bm25_weight).
     The per-list ranks are returned so the debugger can show *why* a chunk ranked where it did.
     Duplicate ids inside one list count once, at their best (first) position.
 
@@ -27,12 +31,13 @@ def reciprocal_rank_fusion(ranked_lists: dict[str, list[str]], c: int = 60) -> l
     scores: dict[str, float] = {}
     ranks: dict[str, dict[str, int]] = {}
     for name, ids in ranked_lists.items():
+        weight = (weights or {}).get(name, 1.0)
         seen: set[str] = set()
         for position, doc_id in enumerate(ids, start=1):
             if doc_id in seen:
                 continue
             seen.add(doc_id)
-            scores[doc_id] = scores.get(doc_id, 0.0) + 1.0 / (c + position)
+            scores[doc_id] = scores.get(doc_id, 0.0) + weight / (c + position)
             ranks.setdefault(doc_id, {})[name] = position
 
     def sort_key(doc_id: str) -> tuple[float, int, str]:

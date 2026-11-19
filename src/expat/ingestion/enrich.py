@@ -20,17 +20,21 @@ from expat.ingestion.sources import SourceConfig
 from expat.ingestion.text import count_tokens
 from expat.schemas import ChunkMetadata, ChunkRecord, ParentRecord
 
+LAW_PARSERS = ("law_xml", "bayern_recht_html")  # doc_key = "<source>#<paragraph>" for these
 
-def contextual_header(draft: ChunkDraft, domain: str) -> str:
-    """`[BGB › § 573c Kündigungsfristen › Abs. 1] [tenancy]`.
+
+def contextual_header(draft: ChunkDraft, domain: str, keywords: list[str] | None = None) -> str:
+    """`[BGB › § 556d Zulässige Miethöhe bei Mietbeginn] [tenancy] [Mietpreisbremse, rent cap]`.
 
     The heading path tells the embedding model *which* law/page/section a short Absatz belongs to;
-    the legal reference is added only when the path does not already contain it.
+    the legal reference is added only when the path does not already contain it. Keywords bridge
+    the vocabulary gap between how people ask and how the law is worded.
     """
     path = draft.heading_path or draft.title
     if draft.legal_reference and draft.legal_reference not in path:
         path = f"{path} ({draft.legal_reference})"
-    return f"[{path}] [{domain}]"
+    header = f"[{path}] [{domain}]"
+    return f"{header} [{', '.join(keywords)}]" if keywords else header
 
 
 @dataclass
@@ -64,7 +68,10 @@ def enrich(doc: ChunkedDocument, source: SourceConfig, verified: date) -> Enrich
 
     for draft in doc.chunks:
         domain, subtopic = (draft.domain, draft.subtopic) if draft.domain else source.domain_for(None)
-        header = contextual_header(draft, domain.value)
+        is_law = source.parser in LAW_PARSERS and "#" in draft.doc_key
+        paragraph = draft.doc_key.split("#", 1)[1] if is_law else None
+        header = contextual_header(draft, domain.value, source.keywords_for(paragraph))
+        embed_text = f"{header}\n{draft.text}"
         try:
             metadata = ChunkMetadata(
                 chunk_id=short_hash(doc_id, draft.structural_path),
@@ -72,7 +79,7 @@ def enrich(doc: ChunkedDocument, source: SourceConfig, verified: date) -> Enrich
                 doc_id=doc_id,
                 doc_key=draft.doc_key,
                 doc_version=doc_version,
-                content_hash=short_hash(draft.text),
+                content_hash=short_hash(embed_text),  # what is embedded: a header change re-embeds
                 domain=domain,
                 subtopic=subtopic or source.subtopic,
                 source_type=draft.source_type,
@@ -100,12 +107,12 @@ def enrich(doc: ChunkedDocument, source: SourceConfig, verified: date) -> Enrich
                 {"source_id": source.id, "doc_key": draft.doc_key, "path": draft.structural_path, "error": str(exc)}
             )
             continue
-        result.chunks.append(ChunkRecord(text=draft.text, embed_text=f"{header}\n{draft.text}", metadata=metadata))
+        result.chunks.append(ChunkRecord(text=draft.text, embed_text=embed_text, metadata=metadata))
     return result
 
 
 def deduplicate(chunks: list[ChunkRecord]) -> tuple[list[ChunkRecord], int]:
-    """Drop exact duplicate texts (same content_hash) and duplicate ids; keep the first occurrence.
+    """Drop exact duplicate texts and duplicate ids; keep the first occurrence.
 
     The same sentence can appear on several pages (e.g. a BayernPortal and a city page). Embedding
     it twice only fills the top-k with copies.
@@ -115,9 +122,10 @@ def deduplicate(chunks: list[ChunkRecord]) -> tuple[list[ChunkRecord], int]:
     kept: list[ChunkRecord] = []
     for chunk in chunks:
         m = chunk.metadata
-        if m.content_hash in seen_hash or m.chunk_id in seen_id:
+        text_hash = short_hash(chunk.text)  # not content_hash: that includes the per-page header
+        if text_hash in seen_hash or m.chunk_id in seen_id:
             continue
-        seen_hash.add(m.content_hash)
+        seen_hash.add(text_hash)
         seen_id.add(m.chunk_id)
         kept.append(chunk)
     return kept, len(chunks) - len(kept)

@@ -34,3 +34,8 @@ def test_rrf_empty_and_tie_break_deterministic() -> None:
     assert reciprocal_rank_fusion({"l1": [], "l2": []}) == []
     fused = reciprocal_rank_fusion({"l1": ["b"], "l2": ["a"]})
     assert [d for d, _, _ in fused] == ["a", "b"]
+
+
+def test_rrf_weights_scale_a_lists_vote() -> None:
+    fused = reciprocal_rank_fusion({"dense": ["a"], "bm25:de:0": ["b"]}, c=0, weights={"bm25:de:0": 0.5})
+    assert dict((d, s) for d, s, _ in fused) == {"a": 1.0, "b": 0.5}
