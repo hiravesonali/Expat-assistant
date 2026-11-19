@@ -74,6 +74,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--split", default="dev", choices=["dev", "holdout", "all"])
     ap.add_argument("--show", help="golden id: print variants and ranked lists for R5")
+    ap.add_argument("--rows", help="comma-separated subset of rows, e.g. R0,R5 (default: all)")
+    ap.add_argument("--json", type=Path, help="also write the row metrics (incl. per language) to this file")
     args = ap.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -82,7 +84,9 @@ def main() -> int:
     cache_dir.mkdir(parents=True, exist_ok=True)
     pipeline = build_default_pipeline()
     retriever = pipeline.retriever
-    emb = CachedEmbeddings(retriever.vector_store.embeddings, cache_dir / "query_embeddings.json")
+    # One cache per embedding model: vectors of different models must never be mixed.
+    slug = retriever.vector_store.embeddings.model_name.replace("/", "__")
+    emb = CachedEmbeddings(retriever.vector_store.embeddings, cache_dir / f"query_embeddings__{slug}.json")
     retriever.vector_store.embeddings = emb
 
     examples = retrieval_examples(load_golden(split=None if args.split == "all" else args.split))
@@ -109,8 +113,12 @@ def main() -> int:
 
     rows = []
     per_q: dict[str, dict[str, float]] = {}
+    wanted = set(args.rows.split(",")) if args.rows else None
     for name, cfg in EXPERIMENTS.items():
+        if wanted and name not in wanted:
+            continue
         scores = []
+        by_lang: dict[str, list[float]] = {}
         for ex in examples:
             # Same rule as expat-eval: R0 gets the RAW question (no analysis), every other row the cached plan.
             plan = (
@@ -122,11 +130,17 @@ def main() -> int:
             s = score_retrieval(ex, result.all_doc_keys())
             scores.append(s)
             per_q.setdefault(ex.id, {})[name] = s["mrr@10"] or 0.0
+            by_lang.setdefault(ex.language, []).append(s["mrr@10"] or 0.0)
         avg = {m: statistics.mean(s[m] or 0.0 for s in scores) for m in ("hit@5", "recall@10", "mrr@10")}
+        avg |= {f"mrr@10_{lang}": statistics.mean(v) for lang, v in by_lang.items()}
         rows.append((name, avg))
-        print(f"{name:22} hit@5 {avg['hit@5']:.2f}  recall@10 {avg['recall@10']:.2f}  MRR@10 {avg['mrr@10']:.2f}")
+        langs = "  ".join(f"MRR[{k[7:]}] {v:.2f}" for k, v in avg.items() if k.startswith("mrr@10_"))
+        metrics = f"hit@5 {avg['hit@5']:.2f}  recall@10 {avg['recall@10']:.2f}  MRR@10 {avg['mrr@10']:.2f}"
+        print(f"{name:22} {metrics}  {langs}")
     emb.save()
     (cache_dir / "last_bench.json").write_text(json.dumps({"rows": rows, "per_question_mrr": per_q}, indent=1))
+    if args.json:
+        args.json.write_text(json.dumps({"model": slug, "split": args.split, "rows": rows}, indent=1))
     return 0
 
 
