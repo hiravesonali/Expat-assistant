@@ -101,6 +101,7 @@ def enrich(doc: ChunkedDocument, source: SourceConfig, verified: date) -> Enrich
                 valid_from=doc.valid_from,
                 valid_until=doc.valid_until,
                 token_count=count_tokens(draft.text),
+                context_header=header,
             )
         except ValidationError as exc:
             result.quarantine.append(

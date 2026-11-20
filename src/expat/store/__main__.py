@@ -5,6 +5,7 @@ Examples:
     uv run python -m expat.store --collection-model baai/bge-m3   # bake-off: second collection
     uv run python -m expat.store --rebuild                        # drop + re-embed everything
     uv run python -m expat.store --fake-embeddings                # offline smoke run, no API key
+    uv run expat-index --publish                                  # index, then upload (ADR-0010)
 """
 
 from __future__ import annotations
@@ -34,6 +35,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fake-embeddings", action="store_true", help="offline: deterministic hash vectors")
     parser.add_argument("--chunks", type=Path, help="default: data/processed/chunks.jsonl")
     parser.add_argument("--parents", type=Path, help="default: data/processed/parents.jsonl")
+    parser.add_argument("--publish", action="store_true", help="afterwards, upload the index to INDEX_REPO")
     args = parser.parse_args(argv)
 
     settings = get_settings()
@@ -66,6 +68,14 @@ def main(argv: list[str] | None = None) -> int:
         bm25_dir=settings.bm25_dir,
     )
     print(summary.render())
+    if args.publish:
+        if args.fake_embeddings or model != get_settings().embedding_model:
+            print("Refusing to publish: only the production embedding model is deployed.", file=sys.stderr)
+            return 1
+        from expat.store.bundle import publish_bundle
+
+        url = publish_bundle(settings, chunks=summary.collection_count, parents=summary.docstore_count)
+        print(f"Published the index to {settings.index_repo}: {url}")
     return 0
 
 

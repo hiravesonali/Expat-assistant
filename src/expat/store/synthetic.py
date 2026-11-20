@@ -53,9 +53,10 @@ def make_chunk(
         doc_version=doc_version,
         content_hash=_sha(text, 40),
         source_id=source_id,
+        context_header=header,
         **defaults,  # type: ignore[arg-type]
     )
-    return ChunkRecord(text=text, embed_text=f"{header} {text}", metadata=metadata)
+    return ChunkRecord(text=text, embed_text=f"{header}\n{text}", metadata=metadata)
 
 
 def synthetic_chunks() -> list[ChunkRecord]:

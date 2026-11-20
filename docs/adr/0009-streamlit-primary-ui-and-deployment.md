@@ -17,7 +17,7 @@ The pipeline is a **generator of typed events** (`expat.schemas.events`). The UI
 
 ## Deployment
 - **Target:** Streamlit Community Cloud (free, deploys from GitHub). Fallback: Hugging Face Spaces (Streamlit SDK). Secrets go in Streamlit secrets, not `.env`.
-- **Open sub-decision (Day 9): where the deployed index lives.** The filesystem is ephemeral and we don't commit scraped content.
+- **Sub-decision resolved by [ADR-0010](0010-deployed-index-bundle.md): embedded Chroma + index bundle downloaded at startup (Chroma Cloud is shutting down).** Original question: where the deployed index lives. The filesystem is ephemeral and we don't commit scraped content.
   - a. **Chroma Cloud** for the deployed index (same `langchain-chroma` API, config switch). *Recommended if the free tier fits.*
   - b. Build the index at first boot from `sources.yaml` (slow, depends on government sites being reachable from US servers).
   - c. Download a pre-built index artifact at startup (simple, but redistributes chunks).

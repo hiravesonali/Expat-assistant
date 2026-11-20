@@ -43,7 +43,7 @@ def sync_secrets_to_env() -> None:
     """
     for name in ("OPENROUTER_API_KEY", "LANGSMITH_API_KEY", "LANGSMITH_TRACING", "LANGSMITH_PROJECT",
                  "LANGSMITH_ENDPOINT", "MODEL_ANALYSIS", "MODEL_ANSWER", "EMBEDDING_MODEL",
-                 "CHROMA_API_KEY", "CHROMA_TENANT", "CHROMA_DATABASE"):  # fmt: skip
+                 "INDEX_REPO", "INDEX_REVISION", "HF_TOKEN"):  # fmt: skip
         if not os.environ.get(name) and (value := _secret(name)):
             os.environ[name] = value
 
@@ -88,6 +88,11 @@ def get_live_pipeline() -> Any:
     builder, reason = _import_builder()
     if builder is None:
         raise RuntimeError(reason)
+    from expat.config import get_settings
+    from expat.store.bundle import ensure_index
+
+    get_settings.cache_clear()  # secrets were just copied into os.environ
+    ensure_index()  # Community Cloud starts empty: download the index bundle once (ADR-0010)
     return builder()
 
 

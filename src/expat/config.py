@@ -32,6 +32,11 @@ class Settings(BaseSettings):
     # --- Storage ---
     data_dir: Path = REPO_ROOT / "data"
     schema_version: int = 1
+    # Deployed index (ADR-0010): a private Hugging Face dataset repo holding data/chroma, data/bm25 and
+    # docstore.sqlite. The app downloads it at startup when the files are missing (Community Cloud).
+    index_repo: str | None = None  # e.g. "your-hf-name/expat-index"
+    index_revision: str | None = None  # pin a commit/tag; None = latest
+    hf_token: SecretStr | None = None
 
     # --- Retrieval defaults (overridable per call via RetrievalConfig) ---
     k_dense: int = 20

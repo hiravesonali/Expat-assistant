@@ -50,18 +50,22 @@ deployed app silently runs older versions than your local one.
    - Open a citation chip, the "How I got this answer" timeline, and "simulate error" → Retry.
    - Open an admin page: it must ask for the admin password.
 
-## Where the deployed index lives (ADR-0009 open sub-decision, decide on Day 9)
+## Where the deployed index lives: a private Hugging Face dataset ([ADR-0010](adr/0010-deployed-index-bundle.md))
 
-The Community Cloud filesystem is **ephemeral** (it is reset on reboot/redeploy), and we don't commit
-scraped content (`data/` is git-ignored). Options:
+The Community Cloud filesystem is **ephemeral** (reset on reboot/redeploy), and we don't commit scraped content
+(`data/` is git-ignored). Chroma Cloud was the first choice but is shutting down (Dec 2026), so Chroma runs
+**embedded** in the app and its files are shipped as a versioned bundle:
 
-| Option | How | Pros | Cons |
-|---|---|---|---|
-| **a. Chroma Cloud** (recommended if the free tier fits) | Set `CHROMA_API_KEY`/`CHROMA_TENANT`/`CHROMA_DATABASE` in secrets; the store module switches from `PersistentClient` to `CloudClient` by config | Same `langchain-chroma` API, fast cold start, no content in git | BM25 index + parent docstore still need a home (e.g. rebuilt from the Chroma documents at startup, cached with `st.cache_resource`) |
-| b. Build at first boot | Run ingestion + indexing from `sources.yaml` on startup | Nothing to host | Slow cold start; government sites may block or throttle US cloud IPs; costs embedding calls on every reboot |
-| c. Download a pre-built artifact | Zip `data/chroma`, `data/bm25`, `docstore.sqlite`; download at startup (e.g. a private release asset) | Simple, deterministic | Redistributes scraped chunks (licence check needed per source) |
+1. **One-time:** create a free account at <https://huggingface.co>, then two tokens under *Settings → Access Tokens*:
+   a **write** token for your laptop and a **read** token for the deployed app.
+2. **Laptop `.env`:** `INDEX_REPO=<your-hf-name>/expat-index` and `HF_TOKEN=<write token>`.
+3. **Publish:** `uv run expat-index --publish`. It creates the private dataset repo (first time), uploads
+   `data/chroma`, `data/bm25`, `data/docstore.sqlite` + `index_manifest.json` (~45 MB). Re-run after every data change.
+4. **App secrets:** `INDEX_REPO` and `HF_TOKEN` (the **read** token). On the first Live question after a (re)boot,
+   `ensure_index()` downloads the bundle once (a few seconds), then everything is read locally.
+5. **Pin / roll back** (optional): `INDEX_REVISION = "<commit sha of the dataset repo>"`.
 
-Whatever we choose, the heavy objects are built **once per server process** via `st.cache_resource`
+The heavy objects are built **once per server process** via `st.cache_resource`
 (`get_live_pipeline()` in `app/pipeline_adapter.py`).
 
 Until the index exists in the deployment, the app runs in **Demo mode**, so the deployed URL always works.

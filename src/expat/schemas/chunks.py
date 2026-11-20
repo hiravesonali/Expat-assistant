@@ -100,6 +100,9 @@ class ChunkMetadata(BaseModel):
     valid_until: date | None = None
 
     token_count: int = 0
+    # The contextual header (`[BGB › § 573c …] [tenancy] [keywords]`) that was prepended for embedding/BM25.
+    # Stored so the exact embedded/BM25 text can be reconstructed from the vector DB alone (debugging, admin).
+    context_header: str = ""
     embedding_model: str = ""
     schema_version: int = 1
 

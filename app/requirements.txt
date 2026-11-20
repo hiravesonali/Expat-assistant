@@ -47,9 +47,7 @@ certifi==2026.10.23
 charset-normalizer==3.5.2
     # via requests
 chromadb==1.5.9
-    # via
-    #   expat
-    #   langchain-chroma
+    # via expat
 click==8.5.1
     # via
     #   huggingface-hub
@@ -112,7 +110,9 @@ httpx2==2.16.2
 httpx2-jsfetch==1.0 ; sys_platform == 'emscripten'
     # via httpx2
 huggingface-hub==2.4.0
-    # via tokenizers
+    # via
+    #   expat
+    #   tokenizers
 idna==3.20
     # via
     #   anyio
@@ -148,13 +148,10 @@ langchain==1.5.0
     # via
     #   expat
     #   openevals
-langchain-chroma==1.1.0
-    # via expat
 langchain-core==1.8.1
     # via
     #   expat
     #   langchain
-    #   langchain-chroma
     #   langchain-openai
     #   langchain-openrouter
     #   langgraph
@@ -213,7 +210,6 @@ numpy==2.5.5
     # via
     #   bm25s
     #   chromadb
-    #   langchain-chroma
     #   onnxruntime
     #   pandas
     #   pydeck
