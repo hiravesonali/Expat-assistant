@@ -2,6 +2,8 @@
 
 An English-language assistant that helps expats in **Munich** (MVP persona: a non-EU Blue Card family) deal with registration, residence permits, renting and family benefits. It answers **only from official German sources**, with clickable citations and "last verified" dates, and does date and benefit calculations with tested tools instead of guessing.
 
+> **Live demo:** https://expat-assistant.streamlit.app/
+>
 > Turing College AI Engineering, Sprint 2: advanced RAG with query translation, structured retrieval and tool calling.
 > ⚠️ General information only. **Not legal or tax advice.**
 

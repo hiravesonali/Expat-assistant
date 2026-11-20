@@ -1,6 +1,6 @@
 # Deployment: Streamlit Community Cloud
 
-> Status: prepared, not deployed yet (2026-11-17). Target and fallback are set in ADR-0009.
+> Status: **deployed** (2026-11-20) at https://expat-assistant.streamlit.app/ from `hiravesonali/Expat-assistant` (`main`, `app/Home.py`, Python 3.12). Code is pushed to both the personal and the Turing College repo (`origin` has two push URLs).
 
 ## How Community Cloud installs this repo (checked against the docs, Nov 2026)
 
