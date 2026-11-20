@@ -114,7 +114,7 @@ def run(
         analysis_llm=analysis_llm,
         answer_llm=answer_llm,
         tools=tools,
-        config=config,
+        retrieval_config=config,  # NOT `config`: @traceable reads that name as a RunnableConfig
         answer_agent=answer_agent,
         pending_changes=tuple(pending_changes),
         today=today or date.today(),
@@ -159,7 +159,7 @@ def _run_traced(
     analysis_llm: BaseChatModel,
     answer_llm: BaseChatModel | None,
     tools: Sequence[BaseTool],
-    config: RetrievalConfig | None,
+    retrieval_config: RetrievalConfig | None,
     answer_agent: AnswerAgent | None,
     pending_changes: tuple[str, ...],
     today: date,
@@ -209,7 +209,7 @@ def _run_traced(
         # 2. Structured hybrid retrieval (deterministic, always runs for in-scope questions).
         stage = "retrieval"
         yield StepEvent(name="retrieval", status="started")
-        result = _retrieve(retriever, plan, profile, config)
+        result = _retrieve(retriever, plan, profile, retrieval_config)
         sources = result.parents
         yield StepEvent(name="retrieval", status="completed", detail=_retrieval_detail(result))
 
@@ -282,9 +282,9 @@ def _short_circuit(category: SafetyCategory, language: str, *, trigger: str) -> 
 
 @traceable(name="retrieval", run_type="chain")
 def _retrieve(
-    retriever: Retriever, plan: RetrievalPlan, profile: UserProfile | None, config: RetrievalConfig | None
+    retriever: Retriever, plan: RetrievalPlan, profile: UserProfile | None, retrieval_config: RetrievalConfig | None
 ) -> RetrievalResult:
-    return retriever.retrieve(plan, profile, config)
+    return retriever.retrieve(plan, profile, retrieval_config)
 
 
 def _stream_answer(

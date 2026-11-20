@@ -8,10 +8,16 @@ Usage:
 from functools import lru_cache
 from pathlib import Path
 
+from dotenv import load_dotenv
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+# pydantic-settings reads .env into `Settings` only. Libraries that read os.environ themselves (LangSmith:
+# LANGSMITH_API_KEY/ENDPOINT/TRACING/PROJECT) would not see it, so export it once at import time.
+# override=False: real environment variables (Streamlit secrets, CI, tests/conftest.py) always win.
+load_dotenv(REPO_ROOT / ".env", override=False)
 
 
 class Settings(BaseSettings):

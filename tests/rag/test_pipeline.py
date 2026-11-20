@@ -245,3 +245,16 @@ def test_load_pending_changes(tmp_path):
 
 def test_build_default_pipeline_is_importable():
     assert callable(pipeline.build_default_pipeline)
+
+
+def test_explicit_retrieval_config_reaches_the_retriever():
+    """Regression: @traceable treats a kwarg named `config` as a LangChain RunnableConfig and called
+    `.get()` on our RetrievalConfig. The eval runner always passes one; the app never did."""
+    from expat.schemas import RetrievalConfig
+
+    retriever = FakeRetriever()
+    answer_llm = ScriptedChatModel(script=[AIMessage("Three months [S1].")])
+    config = RetrievalConfig(use_bm25=False)
+    events = _run("Question?", FakeAnalysisModel(_analysis(1)), answer_llm, retriever, config=config)
+    assert not [e for e in events if type(e).__name__ == "ErrorEvent"]
+    assert retriever.calls[0][2] == config

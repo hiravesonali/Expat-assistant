@@ -119,3 +119,44 @@ def test_run_answer_eval_local_writes_json(tmp_path: Path) -> None:
     assert data["per_slice"]["out_of_scope"]["refusal_accuracy"] == 1.0  # fake judge says correct
     assert data["per_slice"]["out_of_scope"]["groundedness"] is None
     assert result.config["judges"] is True
+
+
+def test_fold_events_scores_the_citation_validated_answer_the_ui_shows() -> None:
+    events = [
+        TokenEvent(text="Three months [S1][S9]."),
+        AnswerMetaEvent(confidence="grounded", final_answer="Three months [S1]."),
+    ]
+    assert fold_events(events).answer == "Three months [S1]."
+    assert fold_events([TokenEvent(text="raw")]).answer == "raw"  # no meta event: fall back to the tokens
+
+
+def test_failing_judge_keeps_the_free_metrics_and_records_the_error() -> None:
+    """Regression: a judge blocked by the OpenRouter guardrail used to wipe the whole example's score."""
+
+    def blocked(**kwargs):
+        raise RuntimeError("Model blocked by guardrail")
+
+    ok = _fake_judges()
+    judges = JudgeSet(groundedness=blocked, correctness=ok.correctness, refusal=ok.refusal)
+    output = AnswerOutput(
+        answer="Your landlord must give 6 months' notice (§ 573c BGB) [S1].", contexts=[_ctx("S1", "bgb#573c")]
+    )
+    score = score_answer(EXAMPLES["ten-001"], output, judges)
+    assert score.metrics["groundedness"] is None  # only the failing judge's metric is missing
+    assert score.metrics["correctness"] == 1.0 and score.metrics["citation_validity"] == 1.0
+    assert score.details["judge_errors"] == ["groundedness: RuntimeError: Model blocked by guardrail"]
+
+
+def test_groundedness_judge_sees_question_and_profile() -> None:
+    seen: dict[str, str] = {}
+
+    def grounded(**kwargs):
+        seen.update(kwargs)
+        return JudgeVerdict(key="g", score=True)
+
+    ok = _fake_judges()
+    judges = JudgeSet(groundedness=grounded, correctness=ok.correctness, refusal=ok.refusal)
+    output = AnswerOutput(answer="As a tenant in Munich: 6 months [S1].", contexts=[_ctx("S1", "bgb#573c")])
+    score_answer(EXAMPLES["ten-001"], output, judges)
+    assert seen["context"].startswith("[USER QUESTION]\n" + EXAMPLES["ten-001"].question)
+    assert "[USER PROFILE]" in seen["context"] and "[S1]" in seen["context"]

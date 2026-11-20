@@ -14,6 +14,13 @@ from expat.safety import SafetyCategory, category_for_intent, precheck, safety_r
         ("Will they deport me if I lose my job?", SafetyCategory.RESIDENCE_RISK),
         ("Mein Vermieter hat eine Räumungsklage eingereicht", SafetyCategory.LEGAL_DISPUTE),
         ("I received an eviction lawsuit", SafetyCategory.LEGAL_DISPUTE),
+        (
+            "Caught without a ticket, now a letter from the police. Will this kill my Blue Card?",
+            SafetyCategory.CRIMINAL,
+        ),
+        ("Ich habe einen Anhörungsbogen von der Polizei bekommen", SafetyCategory.CRIMINAL),
+        ("My kid has a fever of 39.5, which medicine should I give him?", SafetyCategory.MEDICAL),
+        ("Mein Kind hat seit heute Fieber", SafetyCategory.MEDICAL),
     ],
 )
 def test_precheck_flags_sensitive_questions(question, expected):
@@ -27,6 +34,8 @@ def test_precheck_flags_sensitive_questions(question, expected):
         "How do I register my address in Munich?",
         "Wie viel Kindergeld bekomme ich?",
         "Can my Blue Card family join me?",
+        "Do I need a criminal record certificate (Führungszeugnis) for my job?",  # paperwork, in scope
+        "Which Krankenkasse should I choose as a Blue Card holder?",  # health INSURANCE is not medical advice
     ],
 )
 def test_precheck_ignores_normal_questions(question):
@@ -57,3 +66,14 @@ def test_intent_mapping():
     assert category_for_intent("sensitive") is SafetyCategory.SENSITIVE
     assert category_for_intent("chitchat") is SafetyCategory.CHITCHAT
     assert category_for_intent("info") is None
+
+
+def test_medical_response_points_to_doctor_on_call_service_and_emergency():
+    text = safety_response(SafetyCategory.MEDICAL, "en")
+    assert "116117" in text and "112" in text and "paediatrician" in text
+    assert "legal advice" not in text
+
+
+def test_criminal_response_points_to_a_lawyer_before_replying():
+    text = safety_response(SafetyCategory.CRIMINAL, "de")
+    assert "Strafrecht" in text and "bamf-navi" in text

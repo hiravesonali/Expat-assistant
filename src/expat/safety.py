@@ -22,6 +22,8 @@ class SafetyCategory(StrEnum):
     EMERGENCY = "emergency"  # violence or self-harm: emergency numbers first
     RESIDENCE_RISK = "residence_risk"  # asylum, deportation, Duldung, obligation to leave
     LEGAL_DISPUTE = "legal_dispute"  # court case with deadlines, e.g. eviction lawsuit
+    CRIMINAL = "criminal"  # police letter / criminal proceedings (often with residence consequences)
+    MEDICAL = "medical"  # health / medication questions: doctor, 116117, 112
     SENSITIVE = "sensitive"  # flagged by the LLM intent without a more specific keyword
     OUT_OF_SCOPE = "out_of_scope"
     CHITCHAT = "chitchat"
@@ -53,6 +55,23 @@ _KEYWORDS: list[tuple[SafetyCategory, re.Pattern[str]]] = [
         re.compile(
             r"\b(räumungsklage|zwangsräumung|eviction (lawsuit|suit|notice from (the )?court)|"
             r"court[- ]ordered eviction|bailiff|gerichtsvollzieher|sued me|verklagt)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        SafetyCategory.CRIMINAL,
+        re.compile(
+            r"\b(letter from the police|police letter|polizei\w* (brief|schreiben)|brief von der polizei|"
+            r"anhörungsbogen|strafanzeige|strafbefehl|strafverfahren|ermittlungsverfahren|vorstrafe|"
+            r"criminal (charge|case|proceeding|complaint)|charged with|pressed charges)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        SafetyCategory.MEDICAL,
+        re.compile(
+            r"\b(fever|fieber|which medicine|what medicine|medication|medikament|dosage|dosierung|painkiller|"
+            r"schmerzmittel|ibuprofen|paracetamol|symptom)",
             re.IGNORECASE,
         ),
     ),
@@ -107,6 +126,22 @@ _MIETERVEREIN = {
     "en": "- **Mieterverein München** (tenants' association, legal advice for members) – https://www.mieterverein-muenchen.de",
     "de": "- **Mieterverein München** (Rechtsberatung für Mitglieder) – https://www.mieterverein-muenchen.de",
 }
+_CRIMINAL_LAWYER = {
+    "en": "- **A lawyer for criminal law (Strafrecht) and migration law** – before you reply to the police; "
+    "search: https://anwaltauskunft.de (low-income? ask the local court about Beratungshilfe)",
+    "de": "- **Eine Anwältin / ein Anwalt für Strafrecht und Migrationsrecht** – bevor Sie der Polizei antworten; "
+    "Suche: https://anwaltauskunft.de (geringes Einkommen? Beratungshilfeschein beim Amtsgericht)",
+}
+_MEDICAL_LINES = {
+    "en": "- **Emergency:** call **112** (free, 24/7)\n"
+    "- **Medical on-call service (ärztlicher Bereitschaftsdienst):** **116117** (free, 24/7, when your doctor's "
+    "practice is closed) – https://www.116117.de\n"
+    "- **Your doctor or paediatrician (Kinderarzt)**, or a pharmacy (Apotheke) for advice on medicines",
+    "de": "- **Notfall:** **112** (kostenlos, rund um die Uhr)\n"
+    "- **Ärztlicher Bereitschaftsdienst:** **116117** (kostenlos, rund um die Uhr, wenn die Praxis geschlossen "
+    "ist) – https://www.116117.de\n"
+    "- **Ihre Hausarzt- oder Kinderarztpraxis**, oder eine Apotheke zur Beratung über Medikamente",
+}
 _REFUGEE_COUNCIL = {
     "en": "- **Bayerischer Flüchtlingsrat** (refugee council Bavaria) – https://www.fluechtlingsrat-bayern.de",
     "de": "- **Bayerischer Flüchtlingsrat** – https://www.fluechtlingsrat-bayern.de",
@@ -129,6 +164,16 @@ _INTRO = {
         "de": "Ein Gerichtsverfahren (z. B. eine Räumungsklage) hat strenge Fristen – bitte holen Sie schnell "
         "professionelle Hilfe. Zu einem laufenden Streit kann ich nicht beraten, aber diese Stellen schon:",
     },
+    SafetyCategory.CRIMINAL: {
+        "en": "A police letter or criminal proceedings, and whether they affect your residence permit, depend on "
+        "your individual case. I can't advise on this, so please get advice before you respond:",
+        "de": "Ein Schreiben der Polizei oder ein Strafverfahren, und ob es Ihren Aufenthaltstitel berührt, hängt "
+        "vom Einzelfall ab. Dazu kann ich nicht beraten – bitte holen Sie Rat ein, bevor Sie antworten:",
+    },
+    SafetyCategory.MEDICAL: {
+        "en": "I can't give medical advice. Please get help from a professional:",
+        "de": "Medizinische Ratschläge kann ich nicht geben. Bitte wenden Sie sich an:",
+    },
     SafetyCategory.SENSITIVE: {
         "en": "This sounds like a situation that needs individual, professional advice. I can't give reliable "
         "advice on it, but these services can help:",
@@ -141,6 +186,8 @@ _REFERRALS = {
     SafetyCategory.EMERGENCY: [_EMERGENCY_LINES, _MBE],
     SafetyCategory.RESIDENCE_RISK: [_MBE, _REFUGEE_COUNCIL, _LAWYER],
     SafetyCategory.LEGAL_DISPUTE: [_MIETERVEREIN, _LAWYER, _MBE],
+    SafetyCategory.CRIMINAL: [_CRIMINAL_LAWYER, _MBE],
+    SafetyCategory.MEDICAL: [_MEDICAL_LINES],
     SafetyCategory.SENSITIVE: [_MBE, _LAWYER, _MIETERVEREIN],
 }
 
@@ -173,6 +220,8 @@ def safety_response(category: SafetyCategory, language: str = "en") -> str:
     if category is SafetyCategory.CHITCHAT:
         return _CHITCHAT[lang]
     referrals = "\n".join(block[lang] for block in _REFERRALS[category])
+    if category is SafetyCategory.MEDICAL:  # "not legal advice" would be an odd footer under medical referrals
+        return f"{_INTRO[category][lang]}\n\n{referrals}"
     return f"{_INTRO[category][lang]}\n\n{referrals}\n\n{_DISCLAIMER[lang]}"
 
 

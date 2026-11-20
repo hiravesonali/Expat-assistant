@@ -52,6 +52,7 @@ def build_parser() -> argparse.ArgumentParser:
     answers.add_argument("--no-judge", action="store_true", help="deterministic metrics only (free)")
     answers.add_argument("--price-in", type=float, help="USD per 1M input tokens (enables cost_usd)")
     answers.add_argument("--price-out", type=float, help="USD per 1M output tokens")
+    answers.add_argument("--ids", help="comma-separated golden ids, for a cheap smoke run (local mode)")
 
     report = sub.add_parser("report", help="render evals/results/*.json to REPORT.md")
     report.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR)
@@ -103,17 +104,32 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         all_variants = ablation_variants(include_stretch=True)
         variants = _select(all_variants, args.variants) if args.variants else default_answer_variants()
+        from expat.config import get_settings
+
         price = (args.price_in, args.price_out) if args.price_in is not None and args.price_out is not None else None
+        judges, judge_model = None, None
+        if not args.no_judge:
+            model = default_judge_model()
+            judge_model = get_settings().model_judge
+            try:  # pre-flight: a blocked/unknown judge must fail in seconds, not after N paid pipeline runs
+                model.invoke("Reply with OK.")
+            except Exception as exc:
+                print(f"Judge model {judge_model!r} is not usable: {exc}", file=sys.stderr)
+                print("Set MODEL_JUDGE to an allowed model, or run with --no-judge.", file=sys.stderr)
+                return 2
+            judges = JudgeSet.from_model(model)
         run_answer_eval(
             default_answer_target_factory(),
             variants,
             split=args.split,
             mode=args.mode,
-            judges=None if args.no_judge else JudgeSet.from_model(default_judge_model()),
+            judges=judges,
+            judge_model=judge_model,
             price_per_mtok=price,
             results_dir=args.results_dir,
             dataset_name=args.dataset,
             max_concurrency=args.max_concurrency,
+            ids=[i.strip() for i in args.ids.split(",")] if args.ids else None,
         )
     _print_report(args.results_dir)
     return 0

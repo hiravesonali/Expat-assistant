@@ -14,7 +14,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 from expat.evals.dataset import DEFAULT_DATASET_NAME, DEFAULT_GOLDEN_PATH, GoldenExample, Split, by_id, load_golden
-from expat.evals.judges import JudgeSet
+from expat.evals.judges import JudgeSet, JudgeVerdict
 from expat.evals.metrics import (
     citation_correctness,
     citation_validity,
@@ -115,6 +115,7 @@ def fold_events(events: Iterable[PipelineEvent], contexts: list[ContextSource] |
     """
     out = AnswerOutput(contexts=list(contexts or []))
     tokens: list[str] = []
+    final_answer: str | None = None  # citation-validated text: what the UI actually shows (app/Home.py)
     for event in events:
         match event:
             case TokenEvent():
@@ -127,6 +128,7 @@ def fold_events(events: Iterable[PipelineEvent], contexts: list[ContextSource] |
                 out.citations = list(event.citations)
             case AnswerMetaEvent():
                 out.confidence = event.confidence
+                final_answer = event.final_answer or final_answer
             case DoneEvent():
                 out.latency_ms = float(event.latency_ms) if event.latency_ms else None
                 out.input_tokens = event.input_tokens
@@ -137,7 +139,7 @@ def fold_events(events: Iterable[PipelineEvent], contexts: list[ContextSource] |
                 out.contexts = [ContextSource.model_validate(s) for s in event.detail.get("sources", [])]
             case _:
                 pass
-    out.answer = "".join(tokens)
+    out.answer = final_answer or "".join(tokens)
     return out
 
 
@@ -195,10 +197,25 @@ def score_answer(
     metrics["must_not_include"] = float(must_not_include_ok(output.answer, example.must_not_include))
     metrics["tool_selection"] = float(tool_selection_correct(expected_tool, output.tool_calls))
 
+    def judge(metric: str, fn: Callable[..., JudgeVerdict], **kwargs: Any) -> None:
+        """One judge call. A failing judge leaves only ITS metric empty (None) and records why; the free,
+        deterministic metrics of the example survive. Counted in `details["judge_errors"]`."""
+        try:
+            verdict = fn(**kwargs)
+        except Exception as exc:
+            details.setdefault("judge_errors", []).append(f"{metric}: {type(exc).__name__}: {str(exc)[:200]}")
+            return
+        metrics[metric] = float(verdict.score)
+        details[f"{metric}_reasoning"] = verdict.reasoning
+
     if judges is not None:
-        verdict = judges.refusal(question=example.question, answer=output.answer, should_refuse=example.should_refuse)
-        metrics["refusal_accuracy"] = float(verdict.score)
-        details["refusal_reasoning"] = verdict.reasoning
+        judge(
+            "refusal_accuracy",
+            judges.refusal,
+            question=example.question,
+            answer=output.answer,
+            should_refuse=example.should_refuse,
+        )
     else:
         metrics["refusal_accuracy"] = float(refusal_correct(example.should_refuse, looks_like_refusal(output.answer)))
 
@@ -211,14 +228,20 @@ def score_answer(
         if judges is not None:
             context = output.context_text()
             if context:
-                grounded = judges.groundedness(answer=output.answer, context=context)
-                metrics["groundedness"] = float(grounded.score)
-                details["groundedness_reasoning"] = grounded.reasoning
-            correct = judges.correctness(
-                question=example.question, answer=output.answer, reference=example.reference_answer
+                # The answer may legitimately use the question and the user's profile ("as a Blue Card holder
+                # in Munich ..."). Without them the judge flagged such sentences as invented (first dev run).
+                user = (
+                    f"[USER QUESTION]\n{example.question}\n\n"
+                    f"[USER PROFILE]\n{example.profile.model_dump_json(exclude_none=True)}\n\n"
+                )
+                judge("groundedness", judges.groundedness, answer=output.answer, context=user + context)
+            judge(
+                "correctness",
+                judges.correctness,
+                question=example.question,
+                answer=output.answer,
+                reference=example.reference_answer,
             )
-            metrics["correctness"] = float(correct.score)
-            details["correctness_reasoning"] = correct.reasoning
 
     if output.input_tokens is not None and output.output_tokens is not None:
         metrics["total_tokens"] = float(output.input_tokens + output.output_tokens)
@@ -300,6 +323,8 @@ def run_answer_eval(
     dataset_name: str = DEFAULT_DATASET_NAME,
     client: Any = None,
     max_concurrency: int = 4,
+    ids: list[str] | None = None,
+    judge_model: str | None = None,
 ) -> list[ExperimentResult]:
     """Run the full pipeline per variant and write `evals/results/answers-<variant>-<split>-<ts>.json`.
 
@@ -308,6 +333,11 @@ def run_answer_eval(
     """
     variants = variants if variants is not None else default_answer_variants()
     examples = load_golden(golden_path, split=split)
+    if ids:  # cheap smoke runs on a few questions before a full (paid) run
+        unknown = set(ids) - {e.id for e in examples}
+        if unknown:
+            raise ValueError(f"unknown example id(s) for split {split!r}: {sorted(unknown)}")
+        examples = [e for e in examples if e.id in ids]
     split_label = split or "all"
     if mode == "langsmith" and client is None:
         from langsmith import Client
@@ -342,7 +372,7 @@ def run_answer_eval(
             kind="answers",
             variant=variant,
             split=split_label,
-            config={**config.model_dump(), "judges": judges is not None},
+            config={**config.model_dump(), "judges": judges is not None, "judge_model": judge_model},
             metrics=metrics,
             per_slice=per_slice,
             n=len(scores),

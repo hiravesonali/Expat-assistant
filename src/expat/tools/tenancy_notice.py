@@ -25,7 +25,13 @@ ContractType = Literal["unlimited", "fixed_term", "furnished_room_in_landlord_fl
 class NoticeInput(BaseModel):
     """Arguments the answer model fills in. Descriptions are shown to the model in the tool schema."""
 
-    party: Literal["tenant", "landlord"] = Field(description="Who gives notice: 'tenant' or 'landlord'.")
+    party: Literal["tenant", "landlord"] = Field(
+        description=(
+            "Who GIVES (sends) the notice, not who the user is. 'landlord' if the landlord terminates the lease "
+            "(e.g. 'my landlord gave me notice', Eigenbedarf), even though the user is the tenant. 'tenant' if the "
+            "user wants to move out. The two notice periods differ (landlord: 3/6/9 months by tenancy length)."
+        )
+    )
     tenancy_start: date = Field(description="Date the tenant got the flat (handover / start of the lease).")
     notice_date: date | None = Field(
         default=None, description="Date the notice letter is RECEIVED by the other party. Defaults to today."
@@ -205,7 +211,9 @@ calculate_tenancy_notice_tool = make_tool(
         "Compute German residential tenancy notice dates (§ 573c BGB): the notice period in months, the "
         "3rd-working-day receipt deadline and the tenancy end date, for a tenant or a landlord. Use whenever "
         "the user asks when a tenancy ends, how long the notice period is, or by when a notice must arrive. "
-        "Never compute these dates yourself. If the tenancy start date is unknown, ask the user."
+        "Never compute these dates yourself. If the tenancy start date is unknown, ask the user. "
+        "Set party to whoever SENDS the notice: a question like 'my landlord gave me notice' means "
+        "party='landlord', even though the user is the tenant."
     ),
     args_schema=NoticeInput,
     fn=calculate_tenancy_notice,
