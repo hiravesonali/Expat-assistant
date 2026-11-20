@@ -1,0 +1,572 @@
+{
+  "experiment": "answers-R0-holdout-20261120T114129Z",
+  "kind": "answers",
+  "variant": "R0",
+  "split": "holdout",
+  "config": {
+    "use_german_rewrite": false,
+    "use_multi_query": false,
+    "use_decomposition": false,
+    "use_bm25": false,
+    "use_filters": false,
+    "use_rerank": false,
+    "use_hyde": false,
+    "use_step_back": false,
+    "bm25_queries": "all",
+    "bm25_weight": 1.0,
+    "bm25_legal_refs": false,
+    "k_dense": 20,
+    "k_sparse": 20,
+    "k_final": 8,
+    "rrf_c": 60,
+    "judges": true,
+    "judge_model": "anthropic/claude-haiku-4.5"
+  },
+  "metrics": {
+    "groundedness": 0.9,
+    "correctness": 0.7,
+    "citation_validity": 1.0,
+    "citation_coverage": 0.3716666666666667,
+    "citation_correctness": 0.8,
+    "must_include": 0.6,
+    "must_not_include": 1.0,
+    "tool_selection": 0.9166666666666666,
+    "refusal_accuracy": 1.0,
+    "total_tokens": 9683.0,
+    "cost_usd": 0.0045093,
+    "latency_p50_ms": 7237.0,
+    "latency_p95_ms": 10923.849999999999
+  },
+  "per_slice": {
+    "bureaucracy": {
+      "groundedness": 1.0,
+      "correctness": 0.6666666666666666,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5277777777777778,
+      "citation_correctness": 0.8888888888888888,
+      "must_include": 0.3333333333333333,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 12890.333333333334,
+      "cost_usd": 0.005737733333333332,
+      "latency_p50_ms": 6859.0,
+      "latency_p95_ms": 7413.4,
+      "n": 3.0
+    },
+    "category:legal_lookup": {
+      "groundedness": 1.0,
+      "correctness": 0.8,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.42000000000000004,
+      "citation_correctness": 0.8,
+      "must_include": 0.6,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 9725.4,
+      "cost_usd": 0.00453504,
+      "latency_p50_ms": 6859.0,
+      "latency_p95_ms": 8903.0,
+      "n": 5.0
+    },
+    "category:multi_domain": {
+      "groundedness": 1.0,
+      "correctness": 0.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.3333333333333333,
+      "citation_correctness": 0.6666666666666666,
+      "must_include": 0.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 11636.0,
+      "cost_usd": 0.0054668,
+      "latency_p50_ms": 7846.0,
+      "latency_p95_ms": 7846.0,
+      "n": 1.0
+    },
+    "category:numeric": {
+      "groundedness": 0.5,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.225,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 9656.0,
+      "cost_usd": 0.0047168,
+      "latency_p50_ms": 8176.5,
+      "latency_p95_ms": 8286.75,
+      "n": 2.0
+    },
+    "category:out_of_scope": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 8574.0,
+      "cost_usd": 0.0039648,
+      "latency_p50_ms": 12812.0,
+      "latency_p95_ms": 12812.0,
+      "n": 1.0
+    },
+    "category:sensitive": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": 0.0,
+      "latency_p50_ms": 0.9824000007938594,
+      "latency_p95_ms": 0.9824000007938594,
+      "n": 1.0
+    },
+    "category:tool": {
+      "groundedness": 1.0,
+      "correctness": 0.5,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.41666666666666663,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 0.5,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 14023.5,
+      "cost_usd": 0.0062856000000000006,
+      "latency_p50_ms": 7104.0,
+      "latency_p95_ms": 7437.9,
+      "n": 2.0
+    },
+    "family": {
+      "groundedness": 1.0,
+      "correctness": 0.6666666666666666,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.3,
+      "citation_correctness": 0.6666666666666666,
+      "must_include": 0.6666666666666666,
+      "must_not_include": 1.0,
+      "tool_selection": 0.6666666666666666,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 10157.333333333334,
+      "cost_usd": 0.004802933333333335,
+      "latency_p50_ms": 6733.0,
+      "latency_p95_ms": 8142.4,
+      "n": 3.0
+    },
+    "lang:de": {
+      "groundedness": 1.0,
+      "correctness": 0.5,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.41666666666666663,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 0.6666666666666666,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 9349.0,
+      "cost_usd": 0.0041904,
+      "latency_p50_ms": 6733.0,
+      "latency_p95_ms": 7400.8,
+      "n": 3.0
+    },
+    "lang:en": {
+      "groundedness": 0.875,
+      "correctness": 0.75,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.36041666666666666,
+      "citation_correctness": 0.7916666666666666,
+      "must_include": 0.625,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 9794.333333333334,
+      "cost_usd": 0.004615600000000001,
+      "latency_p50_ms": 7846.0,
+      "latency_p95_ms": 11438.8,
+      "n": 9.0
+    },
+    "multi_domain": {
+      "groundedness": 1.0,
+      "correctness": 0.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.3333333333333333,
+      "citation_correctness": 0.6666666666666666,
+      "must_include": 0.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 11636.0,
+      "cost_usd": 0.0054668,
+      "latency_p50_ms": 7846.0,
+      "latency_p95_ms": 7846.0,
+      "n": 1.0
+    },
+    "out_of_scope": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 4287.0,
+      "cost_usd": 0.0019824,
+      "latency_p50_ms": 6406.491200000397,
+      "latency_p95_ms": 12171.44912000004,
+      "n": 2.0
+    },
+    "tenancy": {
+      "groundedness": 0.6666666666666666,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.3,
+      "citation_correctness": 0.8888888888888888,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 8947.666666666666,
+      "cost_usd": 0.004352666666666667,
+      "latency_p50_ms": 8054.0,
+      "latency_p95_ms": 9246.5,
+      "n": 3.0
+    },
+    "tool": {
+      "groundedness": 1.0,
+      "correctness": 0.5,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.41666666666666663,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 0.5,
+      "refusal_accuracy": 1.0,
+      "total_tokens": 14023.5,
+      "cost_usd": 0.0062856000000000006,
+      "latency_p50_ms": 7104.0,
+      "latency_p95_ms": 7437.9,
+      "n": 2.0
+    }
+  },
+  "n": 12,
+  "errors": 0,
+  "created_at": "2026-11-20T11:41:29.001539Z",
+  "mode": "langsmith",
+  "dataset": "expat-golden-v1",
+  "langsmith_experiment": "R0-answers-4fc49189",
+  "per_example": [
+    {
+      "id": "bur-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 10736.0,
+        "cost_usd": 0.0048764
+      },
+      "latency_ms": 6111.0,
+      "error": null,
+      "details": {
+        "answer": "You generally need the confirmation from your landlord (Wohnungsgeberbestätigung) to register your residence (Anmeldung) in Munich, as it is a legal requirement for the registration process [S1][S3]. This confirmation must include the landlord's name and address, the move-in date, the address of the apartment, and the names of the persons registering.\n\nHowever, if your landlord refuses or you do not receive this confirmation in time, you must inform the registration authority (Meldebehörde) immediately about this situation [S3]. You cannot simply register without any confirmation, but the authority can provide guidance or alternative steps if the landlord does not cooperate.\n\nYour next steps:\n- Contact your landlord again and request the confirmation in writing.\n- If the landlord still refuses, notify the registration office about the refusal immediately.\n- The registration office may advise you on how to proceed or intervene to obtain the confirmation [S3].\n- Meanwhile, gather other required documents for registration such as your ID and rental agreement [S1][S5].\n\nThis is important because the landlord's confirmation is a legal obligation for them and a key document for your registration [S3].",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asks a general question about whether they can register without a landlord confirmation (Wohnungsgeberbestätigung), which is a common procedural question for expats in Germany. The should_refuse parameter is false, meaning this is general information that should be answered substantively. The response appropriately provides general information about the registration process, explains the legal requirement for the confirmation, and gives practical guidance on what to do if the landlord refuses to provide it. Importantly, it directs the user to contact the registration authority (Meldebehörde) for guidance on alternative steps, which is the appropriate authority for this procedural matter. The response does not decline to answer the question and provides substantive, helpful information with sources cited. It avoids giving specific legal strategy or advice that would require a lawyer, instead offering general procedural information and pointing to the competent authority. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several claims about the landlord confirmation (Wohnungsgeberbestätigung) and the registration process. Let me verify each claim against the context:\n\n1. **Claim: \"You generally need the confirmation from your landlord to register\"** - SUPPORTED. S1 states under \"Benötigte Unterlagen\" (Required Documents): \"Bestätigung des Wohnungsgebers/Eigentümers über den Bezug der Wohnung\" (Confirmation from landlord/owner about occupancy). S6 also requires \"der Bestätigung des Wohnungsgebers\" (confirmation from landlord).\n\n2. **Claim: \"This confirmation must include landlord's name and address, move-in date, apartment address, and names of persons registering\"** - SUPPORTED. S3 (§ 19 Abs. 3 BMG) explicitly lists these exact requirements: \"Name und Anschrift des Wohnungsgebers,\" \"Einzugsdatum,\" \"Anschrift der Wohnung,\" and \"Namen der nach § 17 Absatz 1 meldepflichtigen Personen.\"\n\n3. **Claim: \"If your landlord refuses or you do not receive this confirmation in time, you must inform the registration authority immediately\"** - SUPPORTED. S3 (§ 19 Abs. 2 BMG) states: \"Verweigert der Wohnungsgeber oder eine von ihm beauftragte Person die Bestätigung oder erhält die meldepflichtige Person sie aus anderen Gründen nicht rechtzeitig, so hat die meldepflichtige Person dies der Meldebehörde unverzüglich mitzuteilen\" (If the landlord refuses the confirmation or the person does not receive it in time for other reasons, they must notify the registration authority immediately).\n\n4. **Claim: \"You cannot simply register without any confirmation\"** - PARTIALLY SUPPORTED but INCOMPLETE. While the context shows confirmation is required, S1 also states: \"Sollte Ihnen die Wohnungsgeberbestätigung nicht oder noch nicht vorliegen, können Sie eine Erklärung zur fehlenden Wohnungsgeberbestätigung abgeben\" (If you do not have or have not yet received the landlord confirmation, you can submit a declaration about the missing confirmation). This is a critical alternative that the output does not mention.\n\n5. **Claim: \"The registration office may advise you on how to proceed or intervene to obtain the confirmation\"** - INFERRED but NOT EXPLICITLY STATED. The context does not explicitly state that the registration office will \"intervene to obtain the confirmation.\" The context only requires the person to notify the authority about the refusal.\n\n6. **Claim: \"The landlord's confirmation is a legal obligation for them\"** - SUPPORTED. S3 (§ 19 Abs. 1 BMG) states: \"Der Wohnungsgeber ist verpflichtet, bei der Anmeldung mitzuwirken\" (The landlord is obligated to cooperate in the registration).\n\n**Critical omission:** The output fails to mention the most important piece of information for the user's situation - that they can submit a \"Erklärung zur fehlenden Wohnungsgeberbestätigung\" (declaration about missing landlord confirmation) if the landlord refuses to provide it. This is explicitly stated in both S1 and S2 and directly answers the user's question about whether they can register without the confirmation.\n\nThe output is generally grounded but incomplete and somewhat misleading because it suggests the user cannot register without the confirmation, when in fact the context provides an alternative procedure for exactly this situation.\n\nThus, the score should be: FALSE",
+        "correctness_reasoning": "The output provides accurate and largely complete information about registering without a landlord's confirmation in Munich. Let me evaluate against the rubric:\n\n**Strengths:**\n1. **Factual Accuracy**: The response correctly identifies that the Wohnungsgeberbestätigung (landlord confirmation) is a legal requirement for Anmeldung (registration) in Munich.\n2. **Completeness**: The answer addresses the core question - whether registration is possible without the confirmation - and explains that it generally cannot be done without it.\n3. **Practical Guidance**: The response provides actionable next steps including contacting the landlord in writing, notifying the registration office, and gathering other required documents.\n4. **Legal Framework**: The response correctly identifies that the landlord has a legal obligation to provide this confirmation and that the registration authority (Meldebehörde) can intervene.\n5. **Logical Consistency**: The advice flows logically from the problem to potential solutions.\n\n**Verification Against Reference:**\nThe reference output states: \"The landlord (Wohnungsgeber) is legally obliged to confirm your move-in in writing or electronically within two weeks (§ 19 (1) BMG); refusing is an administrative offence. Tell the Bürgerbüro that the landlord refuses; the registration office can then pursue the landlord.\"\n\nThe output aligns with this reference by:\n- Confirming the landlord's legal obligation\n- Advising to notify the registration office (Meldebehörde/Bürgerbüro)\n- Indicating the office can intervene\n\n**Minor Considerations:**\n- The output doesn't explicitly mention the two-week timeframe or the specific legal reference (§ 19 (1) BMG), but this level of detail may not be necessary for a practical answer.\n- The output doesn't explicitly state that refusing is an \"administrative offence,\" but it does convey that it's a legal obligation and the authority can pursue the landlord.\n- The response appropriately emphasizes that you cannot simply register without confirmation, which is accurate.\n\nThe response is accurate, complete, addresses all parts of the question, is logically consistent, and uses appropriate terminology. Thus, the score should be: TRUE."
+      }
+    },
+    {
+      "id": "bur-007",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 18498.0,
+        "cost_usd": 0.0080556
+      },
+      "latency_ms": 7475.0,
+      "error": null,
+      "details": {
+        "answer": "Sie sollten die Verlängerung Ihrer Blauen Karte EU spätestens etwa 8 Wochen vor Ablauf im März beantragen, also idealerweise bis Anfang Januar 2027. Durch die rechtzeitige Antragstellung bleibt Ihr Aufenthaltstitel während der Bearbeitung weiterhin gültig (Fiktionsbescheinigung) [S1][S2][T1].\n\nDetails:\n- Ihre Blaue Karte läuft im März 2027 ab.\n- Die Ausländerbehörde empfiehlt, den Verlängerungsantrag mindestens 8 Wochen vor Ablauf zu stellen.\n- Die Bearbeitung kann mehrere Monate dauern, daher ist eine frühzeitige Antragstellung wichtig.\n- Wenn Sie den Antrag rechtzeitig stellen, dürfen Sie bis zur Entscheidung weiterhin legal in Deutschland bleiben und arbeiten.\n\nIhre nächsten Schritte:\n- Bereiten Sie die erforderlichen Unterlagen für die Verlängerung vor (z.B. gültiger Pass, aktueller Arbeitsvertrag, Nachweise zum Lebensunterhalt).\n- Reichen Sie den Antrag online oder persönlich bei der Ausländerbehörde München ein.\n- Speichern Sie die Bestätigung der Antragstellung als Nachweis.\n- Planen Sie ggf. einen Termin bei der Ausländerbehörde ein, wenn weitere Unterlagen benötigt werden.",
+        "tool_calls": [
+          "calculate_deadline"
+        ],
+        "refusal_accuracy_reasoning": "The user is asking a general procedural question about when to apply for Blue Card EU renewal—this is general information about administrative timelines and processes, not individual legal advice. The should_refuse parameter is false, meaning the assistant should substantively answer the question. The response does exactly this: it provides concrete, sourced information about the recommended timeline (8 weeks before expiry), explains the legal consequence of timely filing (Fiktionsbescheinigung), and gives practical next steps. The response does not decline the question or deflect it; instead, it directly addresses the user's concern with helpful general guidance. A short disclaimer or tip to seek professional advice would be acceptable but is not necessary here since this is general procedural information, not individual legal strategy. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output provides guidance on when to apply for Blue Card EU extension and is well-grounded in the provided context. Here's my analysis:\n\n**Grounded Claims:**\n\n1. \"Verlängerung spätestens etwa 8 Wochen vor Ablauf im März beantragen\" - This is directly supported by [T1], which states \"Apply at least 8 weeks before expiry\" and recommends applying by \"2027-01-04\" (approximately 8 weeks before the March 2027 expiry).\n\n2. \"Fiktionsbescheinigung\" and \"Aufenthaltstitel während der Bearbeitung weiterhin gültig\" - This is explicitly stated in [S1]: \"In dieser Bestätigung steht, dass Ihr aktueller Aufenthalt über das bisherige Gültigkeitsdatum hinaus in Deutschland weiterhin gültig ist und Sie im bisherigen Umfang arbeiten können (Legalfiktion).\" This is also confirmed in [S2] § 81 Abs. 4, which states the previous residence permit remains valid until the decision.\n\n3. \"Bearbeitung kann mehrere Monate dauern\" - [S3] mentions processing times \"Bis zu 12 Monate\" for settlement permits, and [T1] notes \"Processing at the Munich Ausländerbehörde can take up to 7 months.\"\n\n4. \"Antrag online oder persönlich bei der Ausländerbehörde München einreichen\" - [S1] states: \"Sie können Ihren Antrag und die benötigten Unterlagen online einreichen.\"\n\n5. \"Speichern Sie die Bestätigung der Antragstellung als Nachweis\" - [S1] explicitly states: \"Diese können Sie als PDF-Datei für Ihre Unterlagen speichern.\"\n\n6. The recommended next steps regarding required documents (gültiger Pass, Arbeitsvertrag, Nachweise zum Lebensunterhalt) are reasonable inferences from the context, though specific document requirements for Blue Card extension are not exhaustively detailed in the provided context.\n\n**Potential Issues:**\n\nThe output does not explicitly state that the user should apply \"before\" the expiry date (as emphasized in [S2] § 81 Abs. 4), though this is implied. The output also doesn't mention the consequence of late application (loss of Fiktionswirkung), which is noted in [T1]: \"Applying after expiry loses the Fiktionswirkung; the stay may become unlawful.\" However, the emphasis on timely application mitigates this omission.\n\n**Overall Assessment:**\n\nThe output stays within the scope of the provided context, makes claims directly supported by the sources, and maintains the meaning and intent of the source material. The advice is practical and grounded in the legal framework presented in the context.\n\nThus, the score should be: true",
+        "correctness_reasoning": "The response addresses the user's question about when to apply for an extension of their Blue Card (Blaue Karte EU) before it expires in March.\n\nStrengths of the response:\n1. Provides a specific timeline recommendation: 8 weeks before expiration (approximately early January)\n2. Correctly explains the legal concept of \"Fiktionsbescheinigung\" (fictional continuation of validity) - that the residence permit remains valid during processing if applied for in time\n3. Addresses all parts of the question about when to apply\n4. Provides practical next steps and required documents\n5. Mentions that processing can take several months, justifying early application\n6. Correctly states that the applicant can continue to work legally while the application is being processed\n7. Uses accurate terminology (Aufenthaltstitel, Fiktionsbescheinigung)\n\nVerification against reference output:\n- The reference confirms that the application must be submitted before expiration\n- The reference confirms the \"Fiktionswirkung\" (fictional effect) concept, which the response correctly translates as \"Fiktionsbescheinigung\"\n- The reference mentions that processing in Munich can take a long time, which aligns with the response's recommendation for early application\n- The reference cites § 81 Abs. 4 AufenthG, which is the legal basis for the fictional continuation\n\nThe response is factually accurate, complete, logically consistent, and uses precise terminology. It goes beyond the reference output by providing additional practical guidance on required documents and next steps, which is helpful and not contradictory to the reference. The 8-week recommendation is a standard guideline for German immigration authorities.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "bur-010",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 0.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.25,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 9437.0,
+        "cost_usd": 0.0042812
+      },
+      "latency_ms": 6859.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, if you are leaving Germany for good, you must deregister (Abmeldung) your residence with the local registration office (Meldebehörde) within two weeks after moving out. This deregistration is required if you do not have a new residence in Germany. You can do this in person, in writing, or electronically. The deregistration can be done earliest one week before your move-out date, and the registration records will be updated to reflect your move-out date [S2].\n\nSince you live in Munich, you should contact the Munich registration office to complete this process.\n\nYour next steps:\n- Prepare your personal identification documents (e.g., passport or ID card).\n- Notify the Munich registration office of your planned move-out date.\n- Submit your deregistration either in person, by mail, or electronically within two weeks after leaving.\n- Keep the confirmation of deregistration for your records.\n\nIf you need detailed instructions or a checklist for deregistration in Munich, I can provide that as well.",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user is asking a general informational question about the deregistration (Abmeldung) process when leaving Germany permanently. This is not a request for individual legal advice, tax advice, medical advice, or asylum advice—it is a straightforward procedural question about a standard administrative requirement. The response appropriately provides general information about the deregistration requirement, the timeline (within two weeks after moving out), the relevant authority (Meldebehörde), and the methods available (in person, in writing, or electronically). The response substantively answers the question with practical steps and does not decline or deflect the entire question. A brief mention of keeping confirmation for records is helpful guidance rather than inappropriate legal advice. Since should_refuse is false, the response PASSES because it substantively answers the question with general information and does not inappropriately decline or deflect. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several claims about deregistration (Abmeldung) requirements for someone leaving Germany. Let me verify each claim against the provided context:\n\n1. **\"You must deregister (Abmeldung) your residence with the local registration office (Meldebehörde) within two weeks after moving out\"** - This is directly supported by S2 § 17 Absatz 2: \"Wer aus einer Wohnung auszieht und keine neue Wohnung im Inland bezieht, hat sich innerhalb von zwei Wochen nach dem Auszug bei der Meldebehörde abzumelden.\" The user is leaving Germany for good and will not have a new residence in Germany, so this applies.\n\n2. **\"This deregistration is required if you do not have a new residence in Germany\"** - Directly supported by the same passage in S2.\n\n3. **\"You can do this in person, in writing, or electronically\"** - Supported by S1 § 23 Absatz 6: \"Die Abmeldung in das Ausland kann schriftlich oder in entsprechender Anwendung des § 10 Absatz 2 und 3 elektronisch erfolgen.\" (Deregistration to abroad can be done in writing or electronically). The context also implies in-person registration is possible from other sections.\n\n4. **\"The deregistration can be done earliest one week before your move-out date\"** - Directly supported by S2 § 17 Absatz 2: \"Eine Abmeldung ist frühestens eine Woche vor Auszug möglich.\"\n\n5. **\"The registration records will be updated to reflect your move-out date\"** - Supported by S2 § 17 Absatz 2: \"die Fortschreibung des Melderegisters erfolgt zum Datum des Auszugs.\"\n\n6. **\"Since you live in Munich, you should contact the Munich registration office\"** - This is a reasonable practical application based on the user profile showing they live in Munich and the context discussing local registration offices.\n\n7. **\"Prepare your personal identification documents (e.g., passport or ID card)\"** - While the context discusses identification requirements for registration (S1 § 23 Absatz 1), it specifically mentions these for the registration process. For deregistration to abroad, S1 § 23 Absatz 6 states identity can be verified through \"die Angabe des Familiennamens, des Vornamens, des Geburtsdatums und der Seriennummer des zuletzt im Melderegister gespeicherten Ausweises oder Passes\" - so identification is relevant but the context doesn't explicitly require physical documents for deregistration abroad.\n\n8. **\"Notify the Munich registration office of your planned move-out date\"** - This is a reasonable practical step implied by the requirement to deregister, though not explicitly stated in the context.\n\n9. **\"Keep the confirmation of deregistration for your records\"** - This is practical advice not explicitly mentioned in the context but is a reasonable suggestion.\n\nAll major claims are either directly supported by the context or are reasonable practical applications of the information provided. The output stays within the scope of the provided information and does not introduce unsupported external facts. The advice is accurate and grounded in the legal provisions cited.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output contains both accurate and inaccurate information when compared against the reference material and general knowledge about German deregistration requirements.\n\nAccurate elements:\n- Correctly identifies that deregistration (Abmeldung) is required when leaving Germany for good\n- Correctly states the requirement to deregister with the local registration office (Meldebehörde)\n- Correctly mentions the two-week deadline after moving out\n- Correctly notes that deregistration can be done up to one week before moving out\n- Correctly identifies multiple methods (in person, in writing, electronically)\n- Provides reasonable practical steps\n\nCritical issues:\n1. **Unsubstantiated location reference**: The output states \"Since you live in Munich, you should contact the Munich registration office\" - however, the input contains NO information about the user living in Munich. This is a factual error and appears to be hallucinated information. The user only said they are \"leaving Germany\" with no mention of their current location.\n\n2. **Missing key information**: The output does not mention the legal basis (§ 17 (2) BMG) that is cited in the reference material, which would strengthen the answer's credibility.\n\n3. **Incomplete condition statement**: While the output mentions \"if you do not have a new residence in Germany,\" it could be clearer that this is the specific condition triggering the requirement.\n\nThe most significant problem is the unsupported claim about Munich, which represents a factual error and demonstrates the model making assumptions not supported by the input. This violates the rubric's requirement for \"accurate and complete information\" and \"contains no factual errors.\"\n\nThus, the score should be: false."
+      }
+    },
+    {
+      "id": "ten-004",
+      "metrics": {
+        "groundedness": 0.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.25,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 8806.0,
+        "cost_usd": 0.00439
+      },
+      "latency_ms": 8054.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a tenant renting in Munich, Bavaria, your landlord can only raise the rent up to the local comparative rent (ortsübliche Vergleichsmiete) under certain conditions. According to § 558 BGB, the landlord can request a rent increase if the rent has been unchanged for at least 15 months and the increase cannot exceed 20% within three years (the so-called \"cap\" or Kappungsgrenze). However, in areas with a particularly tight housing market, this cap is reduced to 15%. Munich is known to be such an area with a tight housing market, so the 15% cap likely applies here. Therefore, a 20% rent increase would generally not be allowed in Munich under these rules [S1].\n\nDetails:\n- The landlord must base the increase on the usual rents for comparable apartments in the municipality or a comparable municipality.\n- The rent increase can only be demanded at the earliest one year after the last rent increase.\n- The 20% cap within three years is reduced to 15% in areas with a housing shortage, which includes Munich.\n- Exceptions exist but are limited and specific.\n\nYour next steps:\n- Check if your rental contract or the landlord's notice mentions the local comparative rent and the basis for the increase.\n- Verify when your last rent increase was.\n- If the landlord insists on a 20% increase, you can request evidence that the increase complies with the local comparative rent and the legal cap.\n- Consider seeking advice from a tenants' association (Mieterverein) or legal counsel if needed.\n\nIf you want, I can help you understand the exact notice period or other details related to your tenancy. Just provide your tenancy start date or the date you received the rent increase notice.",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asked a general question about whether a 20% rent increase is allowed in Munich—this is a request for general information about tenancy law, not a request for individual legal advice on how to handle their specific case. Since should_refuse is false, the response should substantively answer the question with general information rather than decline it. The output does exactly this: it explains the relevant legal framework (§ 558 BGB, the 20% cap, the 15% cap in tight housing markets, and Munich's status), provides concrete but general information about how rent increases work, and includes appropriate next steps. Importantly, while the response does suggest consulting a Mieterverein or legal counsel \"if needed,\" this is a helpful tip rather than a deflection of the entire question. The response provides substantive, well-sourced general information without giving individual legal strategy or concrete advice on how to fight the specific increase. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several claims about rent increase regulations in Munich, but contains a significant ungrounded assertion:\n\nGROUNDED CLAIMS:\n1. \"The landlord can request a rent increase if the rent has been unchanged for at least 15 months\" - SUPPORTED by S1, § 558(1): \"wenn die Miete in dem Zeitpunkt, zu dem die Erhöhung eintreten soll, seit 15 Monaten unverändert ist\"\n\n2. \"The increase cannot exceed 20% within three years (Kappungsgrenze)\" - SUPPORTED by S1, § 558(3): \"darf sich die Miete innerhalb von drei Jahren...nicht um mehr als 20 vom Hundert erhöhen\"\n\n3. \"In areas with a particularly tight housing market, this cap is reduced to 15%\" - SUPPORTED by S1, § 558(3): \"Der Prozentsatz nach Satz 1 beträgt 15 vom Hundert, wenn die ausreichende Versorgung der Bevölkerung mit Mietwohnungen zu angemessenen Bedingungen in einer Gemeinde oder einem Teil einer Gemeinde besonders gefährdet ist\"\n\n4. \"The landlord must base the increase on the usual rents for comparable apartments\" - SUPPORTED by S1, § 558(2)\n\n5. \"The rent increase can only be demanded at the earliest one year after the last rent increase\" - SUPPORTED by S1, § 558(1): \"Das Mieterhöhungsverlangen kann frühestens ein Jahr nach der letzten Mieterhöhung geltend gemacht werden\"\n\nUNGROUNDED CLAIM:\nThe output states: \"Munich is known to be such an area with a tight housing market, so the 15% cap likely applies here.\"\n\nThis is NOT supported by the provided context. While S5 (§ 556d) discusses how state governments can designate areas with tight housing markets through legal ordinance, the context does NOT explicitly state that Munich has been designated as such an area. The output makes an external assertion based on general knowledge about Munich's housing market, which violates the instruction to stay within the scope of information provided in the context and not introduce external facts.\n\nThe output then concludes: \"Therefore, a 20% rent increase would generally not be allowed in Munich under these rules\" - but this conclusion is partially based on the ungrounded assumption that the 15% cap applies to Munich.\n\nThe output should have stated that IF Munich is designated as an area with a tight housing market (which would need to be verified), then the 15% cap would apply. Instead, it asserts this as fact without support from the context.\n\nThus, the score should be: FALSE",
+        "correctness_reasoning": "The output provides accurate and complete information about rent increase regulations in Munich. Let me verify the key claims against the reference output:\n\n1. **15% cap in Munich**: The output correctly states that Munich has a 15% cap within three years, not the standard 20% cap. This matches the reference output exactly.\n\n2. **Legal basis**: The output correctly cites § 558 BGB and mentions the Kappungsgrenze (capping limit). The reference confirms this is the correct legal framework and adds that the Bavarian Mieterschutzverordnung applies until 2029-12-31.\n\n3. **Comparative rent requirement**: The output correctly states that the increase must be based on the local comparative rent (ortsübliche Vergleichsmiete), which aligns with the reference mentioning the Mietspiegel.\n\n4. **15-month requirement**: The output correctly states that the rent must be unchanged for at least 15 months before a rent increase can be requested.\n\n5. **Conclusion**: The output correctly concludes that a 20% increase would not be allowed in Munich.\n\n6. **Practical advice**: The output provides helpful next steps including checking the rental contract, verifying the last rent increase date, and seeking advice from a tenants' association (Mieterverein).\n\nMinor observations:\n- The reference output mentions the specific end date of the Bavarian regulation (2029-12-31), which the output does not include, but this is not essential information for answering the question.\n- The reference mentions the response period (end of second month after receiving the request per § 558b BGB), which the output does not explicitly state, though it does mention \"notice period\" as a potential follow-up topic.\n- The output is slightly more verbose than necessary but provides helpful context and practical guidance.\n\nThe core factual claims are all accurate and complete. The answer directly addresses the question, provides the correct legal framework, and gives practical guidance. Thus, the score should be: TRUE."
+      }
+    },
+    {
+      "id": "ten-008",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.25,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 8817.0,
+        "cost_usd": 0.0042084
+      },
+      "latency_ms": 9379.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, you can pay less rent if the heating has been broken for 3 weeks and the landlord does nothing to fix it.\n\nDetails:\nAccording to German law (§ 536 BGB), if the rented property has a defect that impairs its suitability for contractual use, such as a broken heating in winter, the tenant is entitled to a reduction in rent for the period during which the defect exists. If the defect completely removes the property's usability, the tenant may be exempt from paying rent for that time. A heating failure in January would typically be considered a significant impairment. The landlord is responsible for fixing such defects. If the landlord is in delay with the repair, you may also claim damages or cover the repair costs yourself and demand reimbursement (§ 536a BGB). You must notify the landlord immediately about the defect (§ 536c BGB). If the landlord does not act, you can reduce the rent accordingly until the heating is fixed [S1][S2][S4].\n\nYour next steps:\n- Notify your landlord immediately in writing about the broken heating if you haven't done so already.\n- Keep records of your communication and the duration of the defect.\n- Calculate a reasonable rent reduction for the period without heating.\n- Pay the reduced rent amount until the heating is repaired.\n- If the landlord still does not act, consider seeking legal advice or tenant support organizations.\n\nAssuming you are renting in Munich, Bavaria, and the heating defect occurred in January, this applies to you. If you want, I can help you with a template for the notification or further details.",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asked a general question about tenant rights regarding rent reduction for a broken heating system, which is a common tenancy issue. Since should_refuse is false, the assistant should provide substantive general information rather than decline. The response appropriately does this by: (1) directly answering the question with a clear \"yes\" and explaining the general legal principle, (2) citing relevant German law (§ 536 BGB and § 536a BGB) with proper legal references, (3) providing practical next steps and guidance on how to proceed, and (4) offering to help with templates or further details. The response does not decline or deflect the question, and while it mentions seeking legal advice as a final option if needed, this is presented as one possible next step rather than as a refusal to answer. The information provided is general guidance about tenant rights in Germany, which is exactly what the assistant is designed to provide. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several key claims about rent reduction rights for a broken heating system. Let me evaluate each against the provided context:\n\n1. **Main claim: Tenant can pay less rent for broken heating** - This is directly supported by § 536 BGB (S1), which states that if a defect impairs the property's suitability for contractual use, the tenant can pay reduced rent for the period the defect exists.\n\n2. **Claim: Broken heating in January is a significant impairment** - The context does not explicitly state what constitutes a \"significant\" defect, but § 536(1) does reference \"unerhebliche Minderung\" (insignificant impairment) being disregarded. The output's characterization of heating failure as significant is a reasonable inference, though not explicitly stated in the context.\n\n3. **Claim: Landlord is responsible for fixing defects** - This is implicit in § 536 BGB and explicit in § 536a BGB (S2), which discusses the landlord's responsibility and delays in repair.\n\n4. **Claim: If landlord is in delay, tenant may claim damages or cover costs themselves** - This is directly supported by § 536a BGB (S2), which states the tenant can claim damages if the landlord is in delay, and can self-repair and demand reimbursement.\n\n5. **Claim: Tenant must notify landlord immediately** - This is directly supported by § 536c BGB (S4), which requires immediate notification of defects.\n\n6. **Claim: If landlord doesn't act, tenant can reduce rent accordingly** - This is supported by § 536 BGB (S1).\n\n7. **Claim about calculating \"reasonable rent reduction\"** - The context states the tenant must pay \"angemessen herabgesetzte Miete\" (appropriately reduced rent) but does not provide guidance on how to calculate this. The output's suggestion to calculate a reasonable reduction is a practical inference but goes slightly beyond what the context specifies.\n\n8. **Claim: § 536d applies regarding contractual exclusions** - The output doesn't explicitly mention this, but the context shows that landlords cannot exclude tenant rights regarding defects (S6).\n\nThe output stays well within the scope of the provided legal context. All major claims are either directly supported or are reasonable inferences from the German law provisions cited. The practical advice (notify in writing, keep records, etc.) is consistent with the legal requirements outlined in the context. The output correctly cites the relevant sections and accurately represents their content.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and complete information addressing the tenant's question about rent reduction due to broken heating. \n\nStrengths of the response:\n1. Correctly answers \"yes\" to the main question\n2. Accurately cites German law (§ 536 BGB) regarding rent reduction (Mietminderung) for defects that impair the property's suitability\n3. Correctly identifies that heating failure in January is a significant impairment\n4. Accurately states the landlord's responsibility to fix defects\n5. Correctly references § 536a BGB regarding repair cost reimbursement options\n6. Correctly cites § 536c BGB regarding the requirement to notify the landlord immediately\n7. Provides practical next steps that align with legal requirements\n8. Advises keeping records and seeking legal advice if needed\n9. Uses precise legal terminology (Mietminderung, defect, impairment of suitability)\n\nComparison with reference output:\n- Both correctly identify § 536 BGB as the legal basis\n- Both correctly state the requirement to notify the landlord (§ 536c BGB)\n- Both acknowledge that the appropriate reduction depends on the case\n- The output goes further by providing additional legal references (§ 536a BGB) and practical guidance\n- The output mentions seeking advice from tenant associations, which aligns with the reference's suggestion\n\nMinor considerations:\n- The output makes an assumption about the location (Munich, Bavaria) which is reasonable given the German law context, though the original question doesn't specify location\n- The response is more detailed than the reference, but this adds value rather than detracting from accuracy\n\nThe response is factually accurate, logically consistent, complete in addressing the question, and uses correct legal terminology. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "ten-011",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.4,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 9220.0,
+        "cost_usd": 0.0044596
+      },
+      "latency_ms": 6999.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you have a rental contract with a staffelmiete (graduated rent) in Munich, Bavaria:\n\nNo, the landlord cannot apply the normal rent increase (Mieterhöhung) on top of the agreed staffelmiete increases during the fixed periods of the staffelmiete. According to § 557a BGB, the rent must remain unchanged for at least one year during each step of the staffelmiete, and during this period, increases according to §§ 558 to 559b BGB (which cover normal rent increases and increases after modernization) are excluded. This means the landlord cannot additionally raise the rent by the usual legal rent increase methods while the staffelmiete is in effect for that period [S1].\n\nDetails:\n- The staffelmiete contract specifies fixed rent amounts or increases for certain periods in writing.\n- Each rent level must remain unchanged for at least one year.\n- During the staffelmiete period, normal rent increases under §§ 558 to 559b BGB are excluded.\n- The tenant's right to terminate the contract can be excluded for up to four years after the staffelmiete agreement.\n- Any agreement disadvantaging the tenant is invalid [S1].\n\nYour next steps:\n- Review your rental contract to confirm the staffelmiete terms.\n- Check the dates when the rent increases according to the staffelmiete.\n- If your landlord tries to increase rent additionally during the staffelmiete period, you can refer to § 557a BGB to contest it.\n- For further advice or disputes, consider contacting a tenant association (Mieterverein) in Munich.\n\nIf you want, I can help you understand the exact timing of your rent increases if you provide the tenancy start date and the dates of the staffelmiete steps.",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asked a general question about whether landlords can apply normal rent increases on top of staffelmiete (graduated rent) increases - this is a general tenancy law question, not a request for individual legal advice. Since should_refuse is false, the response should substantively answer the question with general information.\n\nThe response does exactly this: it provides a clear, well-sourced answer explaining that normal rent increases (Mieterhöhung) cannot be applied during staffelmiete periods, citing the relevant legal provisions (§ 557a BGB and §§ 558-559b BGB). The response includes helpful context about how staffelmiete works, what the legal requirements are, and practical next steps. It appropriately suggests contacting a Mieterverein for disputes but does not decline to answer the general question. The response includes a source reference [S1] and offers further assistance if needed. This is exactly the type of substantive general information the assistant should provide without deflecting the question.\n\nThus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several key claims about staffelmiete and whether landlords can apply normal rent increases on top of it. Let me verify each claim against the provided context:\n\n1. **Main claim: \"No, the landlord cannot apply the normal rent increase on top of the agreed staffelmiete increases\"** - This is directly supported by § 557a BGB (S1), specifically subsection (2) which states: \"Während der Laufzeit einer Staffelmiete ist eine Erhöhung nach den §§ 558 bis 559b ausgeschlossen\" (During the term of a staffelmiete, an increase according to §§ 558 to 559b is excluded).\n\n2. **Claim: \"the rent must remain unchanged for at least one year during each step\"** - Directly supported by § 557a(2): \"Die Miete muss jeweils mindestens ein Jahr unverändert bleiben\" (The rent must remain unchanged for at least one year).\n\n3. **Claim: \"during this period, increases according to §§ 558 to 559b BGB (which cover normal rent increases and increases after modernization) are excluded\"** - This is accurate. § 558 covers normal rent increases to market rates, and § 559 covers modernization increases. The context confirms these are excluded during staffelmiete.\n\n4. **Claim: \"The tenant's right to terminate the contract can be excluded for up to four years\"** - Directly supported by § 557a(3): \"Das Kündigungsrecht des Mieters kann für höchstens vier Jahre seit Abschluss der Staffelmietvereinbarung ausgeschlossen werden\" (The tenant's right to terminate can be excluded for at most four years from the conclusion of the staffelmiete agreement).\n\n5. **Claim: \"Any agreement disadvantaging the tenant is invalid\"** - Directly supported by § 557a(5): \"Eine zum Nachteil des Mieters abweichende Vereinbarung ist unwirksam\" (An agreement to the disadvantage of the tenant is invalid).\n\n6. **Claim: \"The staffelmiete contract specifies fixed rent amounts or increases for certain periods in writing\"** - Supported by § 557a(1): \"Die Miete kann für bestimmte Zeiträume in unterschiedlicher Höhe schriftlich vereinbart werden\" (The rent can be agreed in writing for certain periods at different amounts).\n\nAll major claims in the output are directly supported by the legal text provided in the context. The output stays within the scope of the information provided, maintains the meaning of the source material, and does not introduce unsupported external facts. The practical advice given (reviewing the contract, checking dates, contacting a tenant association) is reasonable guidance that flows logically from the legal information but is not contradicted by the context.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides an accurate and complete answer to the question about whether a landlord can apply normal rent increases on top of a staffelmiete (graduated rent).\n\nStrengths of the response:\n1. **Factual Accuracy**: The core answer is correct - the landlord cannot apply normal rent increases (Mieterhöhung) on top of staffelmiete increases. This aligns with the reference output.\n2. **Legal Citations**: The response correctly cites § 557a BGB and references §§ 558-559b BGB, which are the relevant legal provisions governing this situation.\n3. **Complete Information**: The response explains:\n   - That normal rent increases under §§ 558-559b BGB are excluded during staffelmiete periods\n   - That each rent level must remain unchanged for at least one year\n   - That the tenant's right to terminate can be excluded for up to four years\n   - That disadvantageous agreements are invalid\n4. **Logical Consistency**: The explanation flows logically and is internally consistent.\n5. **Practical Guidance**: The response provides helpful next steps for the tenant, including reviewing their contract and contacting a tenant association.\n6. **Precise Terminology**: Uses correct German legal terms (Staffelmiete, Mieterhöhung, Mieterverein) and proper legal citations.\n\nThe response goes beyond the reference output by providing additional context and practical advice, but this is supplementary and does not contradict the core legal principle. The reference output confirms the main legal point: during a staffelmiete, the landlord cannot additionally raise rent according to § 558 (local comparative rent) or § 559 (modernization), and each step must remain unchanged for at least one year per § 557a BGB.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "fam-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.2,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 10417.0,
+        "cost_usd": 0.004849600000000001
+      },
+      "latency_ms": 6468.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, as a non-EU national holding a Blue Card EU, you can be eligible for Kindergeld (child benefit) in Germany under certain conditions.\n\nDetails:\n- According to the law, non-EU foreigners receive Kindergeld if they hold a Blue Card EU or a residence permit that allows employment for at least six months, among other residence titles [S1].\n- You must be employed and have a valid Blue Card EU residence permit that permits you to work in Germany [S2].\n- Your children must have their residence or habitual abode in Germany or another EU/EWR country or Switzerland [S3].\n- You must meet the general eligibility criteria for Kindergeld, including being subject to unlimited income tax liability in Germany or being treated as such [S3].\n- The Blue Card EU is explicitly mentioned as a qualifying residence title for Kindergeld eligibility for non-EU nationals [S1, S2].\n\nAssuming you are a non-EU Blue Card holder employed in Germany with children living in Germany, you should be eligible for Kindergeld.\n\nYour next steps:\n- Gather your Blue Card EU residence permit and proof of employment.\n- Prepare documents proving your children's residence status.\n- Apply for Kindergeld at the Familienkasse (family benefits office) responsible for your area.\n- If needed, consult the Familienkasse or local authorities for detailed application requirements.\n\nIf you want, I can help you with a checklist of documents needed for the Kindergeld application. Would you like that?",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asked a general information question about whether a non-EU Blue Card holder can receive Kindergeld in Germany. Since should_refuse is false, the assistant should substantively answer the question with general information rather than decline it. The response does exactly this: it provides a clear \"yes\" answer, explains the eligibility conditions for non-EU Blue Card holders to receive Kindergeld, cites sources, and gives practical next steps for applying. The response includes general information about the requirements (employment, residence permit type, children's residence location, tax liability) without providing individual legal advice or a concrete legal strategy tailored to the user's specific situation. The assistant also appropriately suggests consulting the Familienkasse for detailed application requirements, which is helpful guidance rather than a deflection. The response meets the standard for passing when should_refuse is false: it substantively answers the question with general information and does not decline the whole question. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several claims about Kindergeld eligibility for non-EU Blue Card holders. Let me verify each against the context:\n\n1. **\"Non-EU nationals with Blue Card EU can be eligible for Kindergeld\"** - SUPPORTED. S1 (§ 62 EStG (2)) explicitly states: \"Ein nicht freizügigkeitsberechtigter Ausländer erhält Kindergeld nur, wenn er... 2. eine Blaue Karte EU... besitzt, die für einen Zeitraum von mindestens sechs Monaten zur Ausübung einer Erwerbstätigkeit berechtigen...\" S2 also confirms this: \"You have a valid... Blaue Karte EU... or they possess a residence permit, with which you can work in Germany for at least six months.\"\n\n2. **\"Blue Card EU is a qualifying residence title\"** - SUPPORTED. Both S1 and S2 explicitly list \"Blaue Karte EU\" as a qualifying residence title.\n\n3. **\"Must be employed\"** - SUPPORTED. S1 (§ 62 EStG (2)) specifies the Blue Card must permit employment for at least six months. S3 confirms employment-related requirements for non-EU nationals.\n\n4. **\"Children must have residence in Germany or EU/EWR/Switzerland\"** - SUPPORTED. S3 states: \"Your child must have its residence or habitual abode basically in Germany or in another EU- or EWR-state or in Switzerland.\"\n\n5. **\"Must meet general eligibility criteria including unlimited income tax liability\"** - SUPPORTED. S3 states: \"You are subject to unlimited income tax liability in Germany or are assessed as such.\"\n\n6. **\"Blue Card EU explicitly mentioned as qualifying residence title\"** - SUPPORTED. S1 and S2 both explicitly mention \"Blaue Karte EU.\"\n\nThe output stays within the scope of the provided context, makes no unsupported claims, and accurately reflects the legal requirements. The advice to gather documents and apply at Familienkasse is reasonable practical guidance that follows logically from the legal information provided. The output does not introduce external facts beyond what is supported by the context.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and complete information about Kindergeld eligibility for non-EU Blue Card holders in Germany. \n\nStrengths of the response:\n1. **Factually accurate**: The core claim that non-EU Blue Card holders can receive Kindergeld is correct and aligns with the reference output citing § 62 (2) EStG.\n2. **Comprehensive**: The response goes beyond the reference by providing detailed conditions and requirements (employment requirement, children's residence requirements, tax liability conditions).\n3. **Addresses the question**: Directly answers \"yes\" to the question and explains why.\n4. **Practical guidance**: Provides actionable next steps including where to apply (Familienkasse) and what documents to prepare.\n5. **Logically consistent**: All statements follow logically from the premise that Blue Card holders qualify.\n6. **Correct terminology**: Uses proper German terms (Kindergeld, Familienkasse, Blue Card EU) and legal references appropriately.\n\nVerification against reference:\n- ✓ Confirms non-EU citizens with residence titles allowing employment are eligible\n- ✓ Specifically mentions EU Blue Card as qualifying\n- ✓ References the legal basis (though uses [S1], [S2], [S3] notation rather than specific statute numbers, the reference mentions § 62 (2) EStG)\n- ✓ Mentions Familienkasse as the application point\n\nMinor considerations:\n- The response uses citation markers [S1], [S2], [S3] without explicitly stating the legal references, whereas the reference output cites § 62 (2) EStG. However, this is a stylistic difference rather than a factual error.\n- The response provides additional helpful context about conditions and next steps, which enhances rather than detracts from accuracy.\n\nThe response is accurate, complete, and addresses all parts of the question with no factual errors. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "fam-006",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.2,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 10506.0,
+        "cost_usd": 0.0050436000000000005
+      },
+      "latency_ms": 8299.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you and your wife are non-EU Blue Card holders living and working in Munich, Bavaria, and you expect a baby next year (2027), here is the relevant information about Elterngeld (parental allowance):\n\nFor births from April 1, 2025, the income limit for Elterngeld eligibility is a combined taxable income of up to €175,000 for couples. If your combined taxable income is about €190,000, this exceeds the current income threshold for receiving Elterngeld for births after April 1, 2025 [S1][S4][S5].\n\nTherefore, with a combined taxable income of €190,000, you would not be eligible for Elterngeld for a baby born next year under the current rules.\n\nYour next steps:\n- Confirm the expected birth date of your child.\n- Consider consulting your local Elterngeld office for any specific questions or exceptions.\n- Plan your family finances accordingly, as Elterngeld may not be available due to your income level.\n\nIf you want, I can also help you estimate Kindergeld eligibility or other family benefits.",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asked a general question about Elterngeld eligibility based on income level, which is a factual question about family benefits policy—not a request for individual tax or legal advice. The rubric specifies that should_refuse is false, meaning the assistant should substantively answer the question with general information.\n\nThe response appropriately provides general information about Elterngeld income thresholds (€175,000 limit for births after April 1, 2025), explains that the user's €190,000 income exceeds this threshold, and therefore they would not be eligible. The response includes sources [S1][S4][S5], suggests confirming the birth date, and recommends consulting the local Elterngeld office for specific questions—which is appropriate guidance without declining the question or providing individual tax advice.\n\nThe response does not decline to answer or deflect the question; it substantively addresses the eligibility question with general policy information and a reasonable disclaimer to consult the official office for specifics. Thus, the score should be: true.",
+        "groundedness_reasoning": "Let me carefully analyze the output against the provided context.\n\n**Claim 1: \"For births from April 1, 2025, the income limit for Elterngeld eligibility is a combined taxable income of up to €175,000 for couples.\"**\n\nThis is directly supported by the context. S1 (§ 1 Absatz 8 BEEG) states: \"Ein Anspruch entfällt, wenn die berechtigte Person im letzten abgeschlossenen Veranlagungszeitraum vor der Geburt des Kindes ein zu versteuerndes Einkommen nach § 2 Absatz 5 des Einkommensteuergesetzes in Höhe von mehr als 175 000 Euro erzielt hat.\" And S4 (§ 28 Absatz 5 BEEG) confirms this applies to children born from April 1, 2025 onwards. S5 also confirms: \"for Geburten ab dem 1. April 2025 auf 175.000 Euro zu versteuerndes Einkommen einheitlich für Paare und Alleinerziehende abgesenkt.\"\n\n**Claim 2: \"If your combined taxable income is about €190,000, this exceeds the current income threshold for receiving Elterngeld for births after April 1, 2025.\"**\n\nThis is a valid inference from the context. €190,000 > €175,000, so this exceeds the threshold. This is mathematically sound and directly supported.\n\n**Claim 3: \"Therefore, with a combined taxable income of €190,000, you would not be eligible for Elterngeld for a baby born next year under the current rules.\"**\n\nThis is a valid conclusion based on the context. S1 and S5 clearly state that eligibility is lost if income exceeds the threshold.\n\n**Claim 4: The user is a \"non-EU Blue Card holder\"**\n\nThe user profile states: citizenship: \"non_eu\", residence_status: \"blue_card\". The output correctly identifies this. S3 confirms that Blue Card holders can receive Elterngeld: \"mit einer Blauen Karte EU.\"\n\n**Claim 5: Eligibility based on Blue Card status**\n\nThe output assumes the user qualifies based on Blue Card status. S1 (§ 1 Absatz 7 Nummer 2) and S3 confirm that Blue Card holders are eligible for Elterngeld, provided other conditions are met. This is correct.\n\n**Potential Issues:**\n\n1. The output states \"Assuming you and your wife are non-EU Blue Card holders\" - but the context only shows the user has a Blue Card. The output assumes the wife also has a Blue Card, which is not explicitly stated in the user profile. However, the user profile shows \"family_status: married\" and the user question says \"my wife and I together earn about 190k taxable,\" suggesting both are earning. The context does address couples' combined income, so this assumption is reasonable given the user's question.\n\n2. The output correctly applies the income threshold rule to the couple's combined income, which is supported by S1 (§ 1 Absatz 8 Satz 2): \"Erfüllt auch eine andere Person die Voraussetzungen des Absatzes 1 Satz 1 Nummer 2 oder der Absätze 3 oder 4, entfällt abweichend von Satz 1 der Anspruch, wenn die Summe des zu versteuernden Einkommens beider Personen mehr als 175 000 Euro beträgt.\"\n\n3. The output mentions \"next year (2027)\" - the user said \"next year\" but we don't know the current year from the context. However, this is a reasonable inference and doesn't affect the grounding of the answer.\n\n4. The output correctly identifies that the income threshold applies and that €190,000 exceeds €175,000, making them ineligible.\n\n**Overall Assessment:**\n\nThe output is well-grounded in the provided context. All major claims are directly supported by the legal texts provided (S1, S4, S5). The reasoning is sound and follows logically from the context. The output correctly identifies the relevant income threshold, applies it to the user's situation, and reaches the correct conclusion that they would not be eligible due to exceeding the income limit.\n\nThe only minor assumption is that the wife also meets the eligibility criteria (which is reasonable given the user's question about \"we together\"), but this doesn't undermine the grounding since the context explicitly addresses couples' combined income scenarios.\n\nThus, the score should be: TRUE",
+        "correctness_reasoning": "The output provides accurate and complete information addressing the user's question about Elterngeld eligibility with a combined taxable income of €190,000.\n\nKey evaluation points:\n\n1. **Factual Accuracy**: The output correctly states that for births from April 1, 2025, the income limit for Elterngeld eligibility is €175,000 for couples. This matches the reference output which cites § 1 (8) BEEG.\n\n2. **Correct Conclusion**: The output correctly concludes that with €190,000 in combined taxable income, the couple exceeds the threshold and would NOT be eligible for Elterngeld. This directly aligns with the reference output.\n\n3. **Completeness**: The response addresses the core question asked by the user and provides the relevant income threshold information.\n\n4. **Terminology**: The output uses correct terminology (Elterngeld, taxable income, income threshold, etc.).\n\n5. **Logical Consistency**: The reasoning is sound - the income (€190,000) exceeds the limit (€175,000), therefore they are ineligible.\n\nMinor considerations:\n- The output includes some assumptions about location (Munich, Bavaria) and visa status (non-EU Blue Card holders) that weren't stated in the input. However, these assumptions don't affect the core answer about the income threshold, which is the critical information.\n- The output provides helpful next steps and offers additional assistance, which adds value without detracting from accuracy.\n\nThe core factual claim - that €190,000 exceeds the €175,000 threshold for births after April 1, 2025 - is accurate and directly supported by the reference output.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "fam-009",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 0.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 0.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 9549.0,
+        "cost_usd": 0.004515600000000001
+      },
+      "latency_ms": 6733.0,
+      "error": null,
+      "details": {
+        "answer": "Sie müssen den Antrag auf Elterngeld spätestens innerhalb der ersten drei Lebensmonate Ihres Kindes stellen, um Elterngeld rückwirkend für diese Monate zu erhalten. Da Ihr Kind am 10. Oktober 2026 geboren wurde, sollten Sie den Antrag bis spätestens Ende Januar 2027 stellen, um die rückwirkende Zahlung für Oktober, November und Dezember 2026 zu sichern [S1][S2][S3].\n\nDetails:\n- Elterngeld kann erst nach der Geburt beantragt werden.\n- Es wird rückwirkend nur für die letzten drei Lebensmonate vor Antragseingang gezahlt.\n- Der Antrag ist schriftlich zu stellen und kann auch online eingereicht werden.\n- Nach Ablauf der drei Monate erfolgt keine rückwirkende Zahlung mehr für die Monate vor Antragstellung.\n\nIhre nächsten Schritte:\n- Bereiten Sie die erforderlichen Unterlagen vor (Geburtsurkunde, Einkommensnachweise, Bescheinigungen über Mutterschaftsgeld und Arbeitgeberzuschuss).\n- Stellen Sie den Antrag schriftlich oder online beim Zentrum Bayern Familie und Soziales.\n- Reichen Sie den Antrag spätestens bis Ende Januar 2027 ein, um die volle rückwirkende Zahlung zu erhalten.\n- Informieren Sie sich über die verschiedenen Elterngeldvarianten (Basiselterngeld, ElterngeldPlus, Partnerschaftsbonus) und wählen Sie die für Sie passende Option [S3].\n\nFalls Sie Unterstützung bei der Antragstellung wünschen, kann ich Ihnen auch eine Checkliste der benötigten Dokumente zusammenstellen.",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asked a general informational question about the deadline for applying for Elterngeld (parental allowance) given a specific child's birth date. According to the rubric, since should_refuse is false, the response should substantively answer the question with general information and sources, without declining or deflecting the whole question.\n\nThe assistant's response does exactly this: it provides clear, accurate general information about the Elterngeld application deadline (within the first three months of the child's life for retroactive payment), calculates the specific deadline based on the birth date provided (end of January 2027), explains the key rules and details, and provides practical next steps with references to sources. The response includes helpful context about required documents and different Elterngeld variants. While the response goes beyond the minimum required, it remains within the scope of general information provision and does not constitute individual legal or tax advice—it simply explains how the general system works. The assistant appropriately offers further assistance without declining the question.\n\nThus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several key claims about the Elterngeld application deadline and related information. Let me verify each against the provided context:\n\n1. **Deadline claim - \"spätestens innerhalb der ersten drei Lebensmonate\"**: This is directly supported by S1, which states \"Den Antrag sollten Sie gleich nach der Geburt und innerhalb der ersten 3 Lebensmonate Ihres Kindes stellen.\" Also confirmed in S3: \"Rückwirkende Zahlungen werden nur für die letzten 3 Lebensmonate vor Antragseingang gewährt.\"\n\n2. **Specific date calculation - \"bis spätestens Ende Januar 2027\"**: The child was born October 10, 2026. The first three life months would be: October 2026 (1st month), November 2026 (2nd month), December 2026 (3rd month). The application must be submitted by the end of the 3rd life month, which would be the end of December 2026, not January 2027. This is an ERROR in the output.\n\n3. **Retroactive payment for three months**: Correctly supported by S1 and S2: \"Elterngeld wird maximal für 3 Lebensmonate rückwirkend gezahlt\" and \"Es wird rückwirkend nur für die letzten drei Lebensmonate vor Beginn des Lebensmonats geleistet, in dem der Antrag auf Elterngeld eingegangen ist.\"\n\n4. **Application can be submitted only after birth**: Supported by S1: \"Den Antrag auf Elterngeld können Sie erst nach der Geburt Ihres Kindes stellen.\"\n\n5. **Written or online submission**: Supported by S3: \"Das Elterngeld kann schriftlich oder online beantragt werden.\"\n\n6. **Required documents**: The listed documents (Geburtsurkunde, Einkommensnachweise, etc.) are directly from S3 under \"Erforderliche Unterlagen.\"\n\n7. **Application to Zentrum Bayern Familie und Soziales**: Supported by S3: \"Sie können Elterngeld online beim Zentrum Bayern Familie und Soziales beantragen.\"\n\n8. **Information about Elterngeldvarianten**: Supported by S3 and S5.\n\n**Critical Error**: The output states the deadline is \"Ende Januar 2027\" but based on the context, if the child was born October 10, 2026, the three life months would end in December 2026, making the deadline end of December 2026, not January 2027. This is a significant factual error in calculating the deadline.\n\nThus, the score should be: FALSE",
+        "correctness_reasoning": "The output contains a significant factual error regarding the deadline for Elterngeld application. \n\nAccording to the reference output and German law (§ 7 Abs. 1 BEEG), Elterngeld is paid retroactively only for the last three months before the month in which the application is received. For a child born on October 10, 2026, the application should be submitted by the fourth month of life (by February 9, 2027) to avoid losing any payments.\n\nHowever, the output states: \"Sie müssen den Antrag auf Elterngeld spätestens innerhalb der ersten drei Lebensmonate Ihres Kindes stellen\" (You must submit the application within the first three months of life) and \"sollten Sie den Antrag bis spätestens Ende Januar 2027 stellen\" (you should submit the application by the end of January 2027).\n\nThis is incorrect. The correct deadline is the fourth month of life (by February 9, 2027), not the end of the third month (January 31, 2027). The output's deadline is approximately one week too early.\n\nAdditionally, the output states \"Es wird rückwirkend nur für die letzten drei Lebensmonate vor Antragseingang gezahlt\" which is technically correct, but the application of this rule to the specific case is wrong due to the incorrect deadline calculation.\n\nThe output also mentions \"Zentrum Bayern Familie und Soziales\" as the responsible authority, which may be regionally specific and not universally applicable to all of Germany, though this is a minor issue compared to the deadline error.\n\nThe other information provided (required documents, application methods, Elterngeldvarianten) appears generally accurate, but the core answer to the main question contains a factual error that directly impacts the user's ability to receive full retroactive payment.\n\nThus, the score should be: false."
+      }
+    },
+    {
+      "id": "mul-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 0.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 11636.0,
+        "cost_usd": 0.0054668
+      },
+      "latency_ms": 7846.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card holder living in Munich, your wife can join you in Germany under family reunification rules for Blue Card holders.\n\n1. Work permission for your wife: As the spouse of a Blue Card holder, your wife is entitled to a residence permit that allows her to take up employment immediately without needing to prove German language skills first [S1][S7].\n\n2. Housing requirement: For family reunification with a Blue Card holder, the usual requirement of proving sufficient living space (Wohnraum) does not apply to your wife. This means you do not need to prove a certain flat size for her visa application [S3][S7].\n\nSummary:\n- Your wife can work immediately after joining you.\n- You do not need to prove a minimum flat size for her visa.\n\nYour next steps:\n- Apply for your wife's family reunification visa or residence permit at the German embassy or foreigners authority.\n- Provide proof of your Blue Card and your registration (Anmeldung) in Munich.\n- Provide proof of health insurance for your wife.\n- No need to prove flat size or German language skills for her work permit.\n\nIf you want, I can help you with a checklist of documents for the family reunification procedure.",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asked a general informational question about whether a spouse of a Blue Card holder can work in Germany and whether there are flat size requirements for family reunification. This is a request for general information about German immigration rules, not a request for individual legal advice tailored to a specific case strategy or legal representation.\n\nThe response appropriately:\n1. Provides substantive, general information about Blue Card family reunification rules (spouse work rights and housing requirements)\n2. Cites sources [S1][S3][S7] indicating the information is based on official guidance\n3. Gives practical next steps and mentions the need to apply through proper channels\n4. Does not decline or deflect the question\n5. Includes a brief offer to help with a document checklist, which is appropriate general guidance\n\nSince should_refuse is false, the response should substantively answer the question (which it does) and not decline the whole question (which it doesn't). The response meets the PASS criteria for this category. Thus, the score should be: true.",
+        "groundedness_reasoning": "Let me carefully analyze the output against the provided context.\n\n**Claim 1: \"Your wife can join you in Germany under family reunification rules for Blue Card holders\"**\n- S1 states: \"Relaxation of the conditions for family reunification: Your family members enjoy less stringent conditions pertaining to family reunification.\"\n- S3 (§ 29 AufenthG) confirms that family reunification to a Blue Card holder is possible if \"ausreichender Wohnraum zur Verfügung stehen\" (sufficient living space is available).\n- This claim is supported. ✓\n\n**Claim 2: \"As the spouse of a Blue Card holder, your wife is entitled to a residence permit that allows her to take up employment immediately without needing to prove German language skills first\"**\n- S1 explicitly states: \"Spouses are entitled to issuance of a residence title without requiring a knowledge of German, for example, and are granted immediate and unlimited permission to take up employment.\"\n- This is directly supported. ✓\n\n**Claim 3: \"For family reunification with a Blue Card holder, the usual requirement of proving sufficient living space (Wohnraum) does not apply to your wife\"**\n- S3 (§ 29 AufenthG) states: \"Satz 1 Nummer 2, § 5 Absatz 1 Nummer 1 mit Ausnahme des Bestehens ausreichenden Krankenversicherungsschutzes sowie § 27 Absatz 3 Satz 1 finden keine Anwendung, wenn 1. der Familiennachzug zu einem Inhaber einer Blauen Karte EU erfolgen soll...\"\n- This translates to: \"Sentence 1 Number 2 [which requires sufficient living space], § 5 Paragraph 1 Number 1 with the exception of health insurance coverage, and § 27 Paragraph 3 Sentence 1 do not apply if 1. family reunification to a holder of a Blue Card EU is to take place...\"\n- S5 (§ 31 AufenthG) also confirms: \"wird von der Voraussetzung des Absatzes 1 Nummer 2 abgesehen\" (the requirement of paragraph 1 number 2 [sufficient living space] is waived).\n- S7 states: \"Proof of sufficient living space is also not required.\"\n- This claim is directly and strongly supported. ✓\n\n**Claim 4: \"You do not need to prove a minimum flat size for her visa\"**\n- This is a restatement of Claim 3 and is supported by the same evidence. ✓\n\n**Claim 5: \"Your wife can work immediately after joining you\"**\n- S1 states: \"are granted immediate and unlimited permission to take up employment.\"\n- This is supported. ✓\n\n**Claim 6: \"No need to prove flat size or German language skills for her work permit\"**\n- German language skills: Supported by S1 (\"without requiring a knowledge of German\")\n- Flat size: Supported by S3 and S7\n- This is supported. ✓\n\n**Potential Issues:**\n\n1. The output states \"Proof of health insurance for your wife\" as a requirement. Let me check this:\n   - S3 mentions \"mit Ausnahme des Bestehens ausreichenden Krankenversicherungsschutzes\" (with the exception of health insurance coverage) - meaning health insurance IS still required even for Blue Card holders' spouses.\n   - S7 states: \"you only need to provide proof that you have health insurance cover in order to move to join them\" - this applies to those who have already spent time in another EU member state as relatives of Blue Card holders.\n   - The general requirement for health insurance appears to still apply for standard family reunification to Blue Card holders.\n   - The output correctly identifies this as a requirement. ✓\n\n2. The output mentions \"Provide proof of your Blue Card and your registration (Anmeldung) in Munich\" - this is reasonable practical advice that aligns with the context but is not explicitly stated. However, this is basic procedural knowledge that would be expected.\n\n3. The output states \"You do not need to prove a minimum flat size for her visa\" - but the context shows that while the requirement is waived for Blue Card holders' spouses, there is still a general requirement that \"ausreichender Wohnraum zur Verfügung stehen\" (sufficient living space must be available). The waiver means the spouse doesn't need to PROVE it, but the space must still exist. The output's phrasing could be slightly misleading, but it's technically accurate that no proof is needed.\n\nAll major claims in the output are directly supported by the context. The information is accurate, well-grounded, and stays within the scope of the provided materials.\n\nThus, the score should be: TRUE",
+        "correctness_reasoning": "The output contains a significant factual error regarding housing requirements for Blue Card holder family reunification. \n\nAccording to the reference output, spouses of Blue Card holders must have \"sufficient living space\" and the Ausländerbehörde (foreigners authority) checks the flat size against local standards. This is a requirement under § 29 (1) AufenthG.\n\nHowever, the model's output explicitly states: \"For family reunification with a Blue Card holder, the usual requirement of proving sufficient living space (Wohnraum) does not apply to your wife. This means you do not need to prove a certain flat size for her visa application.\"\n\nThis is directly contradictory to the reference material, which clearly indicates that flat size/living space IS a requirement that must be verified.\n\nThe output is correct on other points:\n- Spouses can work immediately without German language skills (correct per reference)\n- No German language skills requirement (correct per reference)\n\nHowever, the critical error regarding the housing requirement is a major factual inaccuracy that directly contradicts the reference output. The response also confidently states \"you do not need to prove a minimum flat size\" in the summary, which is misleading and incorrect.\n\nThis is a substantial error that would lead the user to incomplete preparation for their visa application, as they would not gather necessary documentation about their living space. Thus, the score should be: false."
+      }
+    },
+    {
+      "id": "oos-002",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 8574.0,
+        "cost_usd": 0.0039648
+      },
+      "latency_ms": 12812.0,
+      "error": null,
+      "details": {
+        "answer": "I couldn't find this in my official sources. Filling out Anlage N (the form for income from employment) in your tax return requires detailed personal and employment information that is not available here. It includes your gross income, taxes withheld, social security contributions, and other employment-related data.\n\nFor accurate completion, you should refer to your annual wage tax statement (Lohnsteuerbescheinigung) provided by your employer, which contains all the necessary figures to enter in Anlage N.\n\nYour next steps:\n- Obtain your Lohnsteuerbescheinigung from your employer.\n- Use the figures from this document to fill out Anlage N.\n- If you want detailed guidance or help with deductions, consider consulting a tax advisor or using official tax software.\n\nIf you want, I can guide you on what specific fields to look for on your Lohnsteuerbescheinigung to fill Anlage N correctly.",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user asked the assistant to fill out their tax return (Anlage N) with specific personal financial information. This is a request for individual tax advice, which the assistant should refuse according to its safety guidelines. The response appropriately: (1) declines to provide the specific tax advice requested (does not fill in concrete numbers or complete the form), and (2) redirects the user to appropriate professionals and resources (tax advisor, official tax software, employer's Lohnsteuerbescheinigung). The response also provides helpful general guidance on where to find the necessary information and what steps to take next, which is appropriate for general information provision. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "oos-004",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "total_tokens": 0.0,
+        "cost_usd": 0.0
+      },
+      "latency_ms": 0.9824000007938594,
+      "error": null,
+      "details": {
+        "answer": "Ein Gerichtsverfahren (z. B. eine Räumungsklage) hat strenge Fristen – bitte holen Sie schnell professionelle Hilfe. Zu einem laufenden Streit kann ich nicht beraten, aber diese Stellen schon:\n\n- **Mieterverein München** (Rechtsberatung für Mitglieder) – https://www.mieterverein-muenchen.de\n- **Eine Rechtsanwältin / ein Rechtsanwalt** mit passendem Fachgebiet – Suche: https://anwaltauskunft.de (geringes Einkommen? Beratungshilfeschein beim Amtsgericht)\n- **Migrationsberatung für Erwachsene (MBE)**: kostenlos und vertraulich; Beratungsstellen in Ihrer Nähe über BAMF-NAvI – https://bamf-navi.bamf.de\n\n_Allgemeine Information, keine Rechtsberatung._",
+        "tool_calls": [],
+        "refusal_accuracy_reasoning": "The user is asking for specific legal advice on how to respond to a court eviction case (\"Was soll ich dem Gericht schreiben?\"). According to the rubric, since should_refuse is true, the response PASSES only if it declines to give the specific advice asked for and points the user to appropriate professionals. The output correctly: (1) declines to provide concrete legal strategy or advice for the ongoing court case, and (2) redirects to multiple appropriate resources including a tenant association (Mieterverein), lawyers (Rechtsanwältin/Rechtsanwalt), and migration counselling services (MBE). The response also appropriately emphasizes the urgency of seeking professional help due to strict court deadlines. Thus, the score should be: true."
+      }
+    }
+  ]
+}

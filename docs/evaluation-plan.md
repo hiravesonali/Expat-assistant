@@ -154,6 +154,61 @@ ranks best (MRR 0.95 vs 0.81 for R5): these questions are easy for the embedding
 insurance for exact identifiers and rare German terms, which the golden set under-represents. Next step: add harder
 `legal_lookup` and German questions before claiming more.
 
+### Answer evaluation (2026-11-20)
+
+Full pipeline (query analysis → retrieval → answer agent with tools → citation check), naive retrieval **R0** vs the
+production config **R5**. Answer model `openai/gpt-4.1-mini`; judge `anthropic/claude-haiku-4.5` (different family;
+the planned Sonnet 4.5 is blocked by the OpenRouter workspace guardrail, see below). Binary judges, reasoning first.
+Commands: `uv run python -m expat.evals answers --split dev|holdout --mode langsmith`; LangSmith experiments are
+named in each `evals/results/answers-*.json`.
+
+**Headline (holdout, n = 12, never used for tuning):**
+
+| Variant | Faithful | Correct | Cit. valid | Cit. correct | Tool sel. | Refusal acc. | cost/answer |
+|---|---|---|---|---|---|---|---|
+| R0 naive | 0.90 | 0.70 | 1.00 | 0.80 | 0.92 | 1.00 | $0.0045 |
+| **R5 advanced** | **1.00** | **0.90** | 1.00 | 0.76 | 0.92 | 0.92 | $0.0048 |
+
+**Dev (n = 28), before and after fixing what run 1 revealed:**
+
+| Run | Variant | Faithful | Correct | Cit. valid | Must-incl. | Tool sel. | Refusal acc. |
+|---|---|---|---|---|---|---|---|
+| 1 | R0 | 0.64 | 0.72 | 0.96 | 0.76 | 0.82 | 0.86 |
+| 1 | R5 | 0.68 | 0.84 | 1.00 | 0.80 | 0.75 | 0.93 |
+| 2 | R0 | 0.84 | 0.76 | 0.96 | 0.80 | 0.82 | 1.00 |
+| 2 | **R5** | **0.88** | **0.92** | **1.00** | **0.90** | 0.82 | 0.96 |
+
+Run 1 failures, read one by one, and what changed for run 2:
+1. **Judge unfairness (eval bug).** The groundedness judge saw only the sources, so "Assuming you are a Blue Card
+   holder in Munich…" (taken from the user profile) was scored as invented in ≥ 4 answers. The judge now also gets
+   the question and profile. This, not a better model, explains most of the faithfulness jump (0.68 → 0.88).
+2. **Wrong legal answer.** "My landlord gave me notice after 10 years" → 6 months (correct: 9). The model passed
+   `party="tenant"` (who the user *is*) instead of `"landlord"` (who *gives* notice). Fixed in the tool schema
+   and description; now 9 months, ending 31.08.2027 for notice received 20.11.2026.
+3. **Police letter** ("caught without a ticket… will this kill my Blue Card?") got legal guesses → new
+   `CRIMINAL` safety category (keyword pre-check) redirecting to a criminal/migration lawyer and MBE.
+4. **Medical question** ("fever 39.5, which medicine?") got the generic out-of-scope text → new `MEDICAL`
+   category: paediatrician, 116117, 112.
+
+Because 2–4 were fixed after looking at dev failures, **dev run 2 is optimistic; quote the holdout numbers.**
+
+**Known issues (open):**
+- **Tax-form help (holdout `oos-002`).** "Fill out my Anlage N, I made 85k" is partly answered instead of redirected
+  to a Steuerberater / Lohnsteuerhilfeverein. Planned fix: a `TAX_ADVICE` safety category; to be validated on
+  new questions, since this holdout item is now "seen".
+- **Judge false negative (dev `ten-007`).** The refusal judge failed a correct, well-sourced answer as "too
+  specific legal advice" although `should_refuse = false`. Next step: hand-label ~15 answers and report
+  judge/human agreement (§2) before tightening the rubric.
+- **Tool selection 0.82:** the checklist and family-benefit tools are sometimes skipped when retrieved sources
+  already contain the information (answers still correct). Multi-domain questions remain the weakest slice
+  (correct 0.67, n = 3).
+- **Latency:** p50 10–20 s per answer on 2026-11-20, dominated by slow OpenRouter embedding calls that day
+  (single calls 8–48 s vs 0.7 s in the bake-off), not by the pipeline. Re-measure before quoting.
+
+**Guardrail note.** The OpenRouter workspace guardrail allows only a short model list (e.g. `gpt-4.1-mini`,
+`claude-haiku-4.5`, `gemini-2.5-flash`); `claude-sonnet-4.5`, `gemini-2.5-pro`, `gpt-4.1` are blocked. The eval CLI
+now pings the judge once before a paid run and fails fast, and a failing judge only empties its own metric.
+
 ## 4. Tooling (APIs verified 2026-11-17: `langsmith` 0.14.x, `openevals` 0.2.x)
 - **Datasets:** `Client().create_dataset(dataset_name="expat-golden-v1")` + `create_examples(...)` from the JSONL. Put the `dev`/`holdout` split in example metadata (or use LangSmith dataset splits).
 - **Experiments:** `Client().evaluate(target, data="expat-golden-v1", evaluators=[...], experiment_prefix="R4-hybrid", metadata={...config...}, max_concurrency=4)`, or `aevaluate` for the async pipeline. Evaluators are plain functions `(inputs, outputs, reference_outputs) -> bool | dict`. The deterministic metrics are simply Python.

@@ -14,6 +14,15 @@ An English-language assistant that helps expats in **Munich** (MVP persona: a no
 - **Tool calling:** tenancy notice periods (§ 573c BGB), statutory deadlines, Kindergeld/Elterngeld estimates, document checklists, Schengen 90/180
 - **Evaluated:** golden dataset + LangSmith experiments (ablation table below)
 
+## Results (holdout, 12 questions never used for tuning; judge: Claude Haiku 4.5)
+
+| | Faithful | Correct | Valid citations | Refusal accuracy | Cost / answer |
+|---|---|---|---|---|---|
+| Naive RAG (R0) | 0.90 | 0.70 | 1.00 | 1.00 | $0.005 |
+| **This system (R5)** | **1.00** | **0.90** | **1.00** | 0.92 | $0.005 |
+
+Retrieval ablation, before/after runs, failure analysis and known issues: [`docs/evaluation-plan.md`](docs/evaluation-plan.md).
+
 ## Status
 🚧 Sprint in progress. See [`docs/PLAN.md`](docs/PLAN.md) and [`docs/milestones.md`](docs/milestones.md).
 
