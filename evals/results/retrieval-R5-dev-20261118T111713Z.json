@@ -1,0 +1,687 @@
+{
+  "experiment": "retrieval-R5-dev-20261118T111713Z",
+  "kind": "retrieval",
+  "variant": "R5",
+  "split": "dev",
+  "config": {
+    "use_german_rewrite": true,
+    "use_multi_query": true,
+    "use_decomposition": true,
+    "use_bm25": true,
+    "use_filters": true,
+    "use_rerank": false,
+    "use_hyde": false,
+    "use_step_back": true,
+    "k_dense": 20,
+    "k_sparse": 20,
+    "k_final": 8,
+    "rrf_c": 60
+  },
+  "metrics": {
+    "hit@5": 0.88,
+    "recall@10": 0.8866666666666667,
+    "mrr@10": 0.699047619047619,
+    "latency_p50_ms": 4302.584800000659,
+    "latency_p95_ms": 18518.864119999853
+  },
+  "per_slice": {
+    "bureaucracy": {
+      "hit@5": 0.875,
+      "recall@10": 0.9375,
+      "mrr@10": 0.6458333333333334,
+      "latency_p50_ms": 2691.0617499997898,
+      "latency_p95_ms": 6406.0974549996445,
+      "n": 8.0
+    },
+    "category:legal_lookup": {
+      "hit@5": 0.8571428571428571,
+      "recall@10": 0.9285714285714286,
+      "mrr@10": 0.5952380952380952,
+      "latency_p50_ms": 4272.544299999936,
+      "latency_p95_ms": 14288.548869999706,
+      "n": 7.0
+    },
+    "category:multi_domain": {
+      "hit@5": 0.6666666666666666,
+      "recall@10": 0.38888888888888884,
+      "mrr@10": 0.5476190476190476,
+      "latency_p50_ms": 18521.396099999947,
+      "latency_p95_ms": 20766.038039999785,
+      "n": 3.0
+    },
+    "category:numeric": {
+      "hit@5": 0.6666666666666666,
+      "recall@10": 1.0,
+      "mrr@10": 0.47222222222222227,
+      "latency_p50_ms": 2275.4893999999695,
+      "latency_p95_ms": 5126.817739999569,
+      "n": 3.0
+    },
+    "category:single_domain": {
+      "hit@5": 1.0,
+      "recall@10": 0.875,
+      "mrr@10": 1.0,
+      "latency_p50_ms": 6216.281349999917,
+      "latency_p95_ms": 12753.795055000046,
+      "n": 4.0
+    },
+    "category:tool": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.78125,
+      "latency_p50_ms": 3186.6383999999925,
+      "latency_p95_ms": 13814.21063999974,
+      "n": 8.0
+    },
+    "family": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.7083333333333334,
+      "latency_p50_ms": 11946.107250000296,
+      "latency_p95_ms": 17835.128949999445,
+      "n": 6.0
+    },
+    "lang:de": {
+      "hit@5": 0.8,
+      "recall@10": 0.8666666666666666,
+      "mrr@10": 0.7285714285714285,
+      "latency_p50_ms": 4272.544299999936,
+      "latency_p95_ms": 16837.06600000005,
+      "n": 5.0
+    },
+    "lang:en": {
+      "hit@5": 0.9,
+      "recall@10": 0.8916666666666666,
+      "mrr@10": 0.6916666666666667,
+      "latency_p50_ms": 4372.014950000448,
+      "latency_p95_ms": 18634.07152499949,
+      "n": 20.0
+    },
+    "multi_domain": {
+      "hit@5": 0.6666666666666666,
+      "recall@10": 0.38888888888888884,
+      "mrr@10": 0.5476190476190476,
+      "latency_p50_ms": 18521.396099999947,
+      "latency_p95_ms": 20766.038039999785,
+      "n": 3.0
+    },
+    "tenancy": {
+      "hit@5": 0.875,
+      "recall@10": 0.9375,
+      "mrr@10": 0.8020833333333334,
+      "latency_p50_ms": 3901.4800999998442,
+      "latency_p95_ms": 5171.486750000258,
+      "n": 8.0
+    },
+    "tool": {
+      "hit@5": 1.0,
+      "recall@10": 0.9444444444444444,
+      "mrr@10": 0.8055555555555556,
+      "latency_p50_ms": 3329.3296000001646,
+      "latency_p95_ms": 14919.245279999632,
+      "n": 9.0
+    }
+  },
+  "n": 25,
+  "errors": 0,
+  "created_at": "2026-11-18T11:17:13.317389Z",
+  "mode": "local",
+  "dataset": "golden_v1.jsonl",
+  "langsmith_experiment": null,
+  "per_example": [
+    {
+      "id": "bur-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 5548.321899999792,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung-familie#requirements",
+          "muc-anmeldung-familie#overview",
+          "muc-anmeldung#requirements",
+          "muc-anmeldung#overview",
+          "bp-wohnsitz-anmeldung#overview",
+          "muc-anmeldung-familie#documents",
+          "bp-wohnsitz-anmeldung#steps",
+          "bp-wohnsitz-anmeldung#deadlines",
+          "bmg#17"
+        ]
+      }
+    },
+    {
+      "id": "bur-002",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25
+      },
+      "latency_ms": 2105.535900000177,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bp-wohnsitz-anmeldung#deadlines",
+          "muc-anmeldung-familie#requirements",
+          "muc-anmeldung-familie#overview",
+          "bmg#17",
+          "muc-anmeldung#requirements",
+          "bp-wohnsitz-anmeldung#overview",
+          "muc-anmeldung-familie#documents"
+        ]
+      }
+    },
+    {
+      "id": "bur-004",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 3329.3296000001646,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung-familie#requirements",
+          "muc-anmeldung#requirements",
+          "muc-anmeldung-familie#overview",
+          "muc-anmeldung-familie#documents",
+          "bp-wohnsitz-anmeldung#steps",
+          "muc-anmeldung#documents",
+          "bp-wohnsitz-anmeldung#documents"
+        ]
+      }
+    },
+    {
+      "id": "bur-005",
+      "metrics": {
+        "hit@5": 0.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.16666666666666666
+      },
+      "latency_ms": 2047.8845000006913,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "miig-blue-card#eu-blue-card",
+          "muc-aufenthaltstitel-fachkraefte#requirements",
+          "bamf-blue-card#conditions",
+          "bp-blaue-karte#requirements",
+          "bp-blaue-karte#overview",
+          "aufenthg#18g"
+        ]
+      }
+    },
+    {
+      "id": "bur-006",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5
+      },
+      "latency_ms": 2509.47719999931,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "miig-blue-card#eu-blue-card",
+          "aufenthg#18c",
+          "muc-niederlassung-blaue-karte#overview",
+          "muc-niederlassung-blaue-karte#requirements",
+          "bamf-blue-card#validity-of-the-eu-blue-card",
+          "bamf-blue-card#benefits-of-the-residence-title",
+          "bamf-blue-card#purpose-and-target-group",
+          "bamf-blue-card-mobility#mobility-with-the-eu-blue-card-date-18-11-2023-format-articl"
+        ]
+      }
+    },
+    {
+      "id": "bur-008",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25
+      },
+      "latency_ms": 2275.4893999999695,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "rb-payment#informationen-zur-zahlung",
+          "rb-payment#zahlungsrueckstand",
+          "rb-payment#insolvenzverfahren",
+          "rb-fee#the-licence-fee",
+          "rb-payment#widerspruch",
+          "rb-fee#exemption-and-reduction",
+          "rb-fee#the-contribution-service-of-ard-zdf-and-deutschlandradio",
+          "rb-payment#zahlungsaufforderung-rechnung"
+        ]
+      }
+    },
+    {
+      "id": "bur-009",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 2872.6463000002695,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "aufenthg#18g",
+          "aufenthg#82",
+          "miig-blue-card#eu-blue-card",
+          "bamf-blue-card#validity-of-the-eu-blue-card",
+          "aufenthg#18i",
+          "bamf-blue-card-mobility#mobility-with-the-eu-blue-card-date-18-11-2023-format-articl",
+          "bp-blaue-karte#overview",
+          "aufenthg#52"
+        ]
+      }
+    },
+    {
+      "id": "bur-011",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.5,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 6867.976599999565,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung#requirements",
+          "muc-anmeldung#overview",
+          "muc-anmeldung-familie#requirements",
+          "muc-anmeldung-familie#overview",
+          "muc-anmeldung#documents",
+          "muc-anmeldung#kann-ich-in-muenchen-meinen-nebenwohnsitz-anmelden-wenn-ich",
+          "bp-wohnsitz-anmeldung#steps",
+          "bp-wohnsitz-anmeldung#overview"
+        ]
+      }
+    },
+    {
+      "id": "ten-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 3043.9471999998204,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#573c",
+          "bgb#544",
+          "bgb#573a",
+          "bgb#580a",
+          "bgb#550",
+          "bgb#577a",
+          "bgb#576"
+        ]
+      }
+    },
+    {
+      "id": "ten-002",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 1127.0574000000124,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#573c",
+          "bgb#580a",
+          "bgb#573a",
+          "bgb#573d",
+          "bgb#575a"
+        ]
+      }
+    },
+    {
+      "id": "ten-003",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 4272.544299999936,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#551",
+          "bgb#562c",
+          "bgb#569",
+          "bgb#556g",
+          "bgb#549",
+          "bgb#556b",
+          "bgb#579",
+          "bgb#547"
+        ]
+      }
+    },
+    {
+      "id": "ten-005",
+      "metrics": {
+        "hit@5": 0.0,
+        "recall@10": 0.5,
+        "mrr@10": 0.16666666666666666
+      },
+      "latency_ms": 4302.584800000659,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-mietspiegel#funktion-eines-qualifizierten-mietspiegels",
+          "muc-mietspiegel#mietspiegel-fuer-muenchen",
+          "muc-mietspiegel#durchschnittsmiete-gegenueber-dem-mietspiegel-2023",
+          "muc-mietspiegel#mietspiegel-fuer-muenchen-2025",
+          "muc-mietspiegel#online-mietspiegel-fuer-muenchen-2025-berechnungsprogramm",
+          "bgb#556d",
+          "muc-mietspiegel#neuberechnung-und-indexfortschreibung",
+          "muc-mietspiegel#mietspiegel-fuer-muenchen-2023-im-internet",
+          "muc-mietspiegel#ueberblick-ueber-die-durchschnittsmieten-der-letzten-mietspi",
+          "bgb#558"
+        ]
+      }
+    },
+    {
+      "id": "ten-006",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 4441.445100000237,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#556",
+          "bgb#556b",
+          "bgb#579",
+          "bgb#556g",
+          "bgb#560",
+          "bgb#556a",
+          "bgb#559b",
+          "bgb#571"
+        ]
+      }
+    },
+    {
+      "id": "ten-007",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 2413.7444000007235,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#573c",
+          "bgb#573a",
+          "bgb#580a",
+          "bgb#544",
+          "bgb#573",
+          "bgb#577a",
+          "bgb#573d"
+        ]
+      }
+    },
+    {
+      "id": "ten-009",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25
+      },
+      "latency_ms": 3530.4158999997526,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#540",
+          "bgb#563a",
+          "bgb#567",
+          "bgb#553",
+          "bgb#565",
+          "bgb#567a",
+          "bgb#549",
+          "bgb#566e",
+          "bgb#573b",
+          "bgb#577a"
+        ]
+      }
+    },
+    {
+      "id": "ten-010",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 5564.58610000027,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-mietspiegel#mietspiegel-fuer-muenchen",
+          "muc-mietspiegel#funktion-eines-qualifizierten-mietspiegels",
+          "muc-mietspiegel#ueberblick-ueber-die-durchschnittsmieten-der-letzten-mietspi",
+          "muc-mietspiegel#veroeffentlichung",
+          "muc-mietspiegel#mietspiegel-fuer-muenchen-2023-im-internet",
+          "bgb#558c",
+          "bgb#558d",
+          "muc-mietspiegel#durchschnittsmiete-gegenueber-dem-mietspiegel-2023",
+          "muc-mietspiegel#online-mietspiegel-fuer-muenchen-2025-berechnungsprogramm"
+        ]
+      }
+    },
+    {
+      "id": "fam-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 5443.631999999525,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "estg#66",
+          "bp-kindergeld#overview",
+          "fp-kindergeld#was-ist-kindergeld",
+          "estg#70",
+          "estg#64",
+          "fp-kindergeld#fuer-welche-kinder-kann-ich-kindergeld-bekommen",
+          "fp-kindergeld#wie-wird-kindergeld-beantragt-und-ausgezahlt"
+        ]
+      }
+    },
+    {
+      "id": "fam-002",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 3377.00760000007,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "estg#66",
+          "bp-kindergeld#overview",
+          "fp-kindergeld#was-ist-kindergeld",
+          "estg#70",
+          "fp-kindergeld#wie-wird-kindergeld-beantragt-und-ausgezahlt",
+          "estg#64",
+          "fp-kindergeld#fuer-welche-kinder-kann-ich-kindergeld-bekommen"
+        ]
+      }
+    },
+    {
+      "id": "fam-004",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5
+      },
+      "latency_ms": 10099.74560000046,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bp-kindergeld#deadlines",
+          "estg#70",
+          "fp-kindergeld#wie-wird-kindergeld-beantragt-und-ausgezahlt",
+          "bp-kindergeld#overview",
+          "estg#66",
+          "bp-elterngeld#deadlines",
+          "estg#67",
+          "fp-elterngeld#wie-kann-ich-elterngeld-beantragen"
+        ]
+      }
+    },
+    {
+      "id": "fam-005",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5
+      },
+      "latency_ms": 15814.307199999348,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "beeg#4a",
+          "fp-elterngeld#wie-viel-elterngeld-kann-ich-bekommen",
+          "beeg#2",
+          "fp-elterngeld#kann-ich-elterngeld-bekommen",
+          "fp-elterngeld-neuregelungen#wer-bekommt-elterngeld",
+          "fp-elterngeld#mindestbetrag-und-hoechstbetrag-des-elterngeldes",
+          "beeg#1",
+          "fp-elterngeld#gibt-es-elterngeld-auch-fuer-auslaendische-eltern",
+          "beeg#4d",
+          "bp-elterngeld#requirements"
+        ]
+      }
+    },
+    {
+      "id": "fam-007",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25
+      },
+      "latency_ms": 18508.736199999476,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bp-elterngeld#overview",
+          "fp-elterngeld#was-ist-elterngeld",
+          "fp-elterngeld#kann-ich-elterngeld-bekommen",
+          "beeg#4",
+          "fp-elterngeld#unterschiedliche-dauer-je-nach-elterngeld-variante",
+          "fp-elterngeld-neuregelungen#was-bedeutet-die-neuregelung-des-parallelen-bezugs",
+          "fp-elterngeld-neuregelungen#neuregelung-des-parallelen-bezugs-von-basiselterngeld"
+        ]
+      }
+    },
+    {
+      "id": "fam-008",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 13792.46890000013,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-kita#overview",
+          "muc-kita#other",
+          "muc-kita#contact",
+          "muc-kita#fees",
+          "muc-kita#documents",
+          "muc-kita#legal_basis",
+          "muc-kita#requirements",
+          "bp-elterngeld#other",
+          "bp-kindergeld#steps",
+          "bp-kindergeld#other"
+        ]
+      }
+    },
+    {
+      "id": "mul-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.3333333333333333,
+        "mrr@10": 0.5
+      },
+      "latency_ms": 21015.442699999767,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bp-wohnsitz-anmeldung#steps",
+          "muc-anmeldung-familie#documents",
+          "bp-wohnsitz-anmeldung#documents",
+          "muc-anmeldung-familie#requirements",
+          "muc-anmeldung-familie#overview",
+          "bp-wohnsitz-anmeldung#deadlines",
+          "muc-anmeldung#requirements",
+          "bamf-blue-card#benefits-of-the-residence-title",
+          "miig-blue-card#eu-blue-card",
+          "bp-blaue-karte#overview"
+        ]
+      }
+    },
+    {
+      "id": "mul-002",
+      "metrics": {
+        "hit@5": 0.0,
+        "recall@10": 0.3333333333333333,
+        "mrr@10": 0.14285714285714285
+      },
+      "latency_ms": 18521.396099999947,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung-familie#requirements",
+          "muc-anmeldung-familie#documents",
+          "muc-anmeldung#requirements",
+          "muc-anmeldung-familie#overview",
+          "bp-wohnsitz-anmeldung#steps",
+          "muc-anmeldung#documents",
+          "bmg#17",
+          "bp-wohnsitz-anmeldung#documents",
+          "estg#62",
+          "bp-kindergeld#overview"
+        ]
+      }
+    },
+    {
+      "id": "mul-004",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.5,
+        "mrr@10": 1.0
+      },
+      "latency_ms": 13576.652400000057,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bmg#17",
+          "muc-anmeldung-familie#requirements",
+          "bmg#23",
+          "bp-wohnsitz-anmeldung#deadlines",
+          "bmg#27",
+          "bmg#24",
+          "bp-wohnsitz-anmeldung#steps",
+          "muc-anmeldung#requirements",
+          "muc-anmeldung-familie#overview",
+          "muc-anmeldung#overview"
+        ]
+      }
+    }
+  ]
+}
