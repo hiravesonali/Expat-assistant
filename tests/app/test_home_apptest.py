@@ -110,3 +110,18 @@ def test_which_city_follow_up_saves_the_city_and_answers_the_original_question(m
     assert at.session_state.profile.city == "berlin" and at.session_state.profile.state == "BE"
     conv = at.session_state.conversations[at.session_state.current]
     assert [m["content"] for m in conv["messages"]] == ["Where do I register my address?", "Answer for berlin."]
+
+
+def test_budget_errors_become_an_actionable_message_without_provider_links():
+    from expat.schemas import ErrorEvent
+
+    raw = ErrorEvent(
+        code="retrieval_failed",
+        message="Error code: 403 - Key limit exceeded (total limit). Manage it using https://openrouter.ai/x",
+        retryable=True,
+    )
+    friendly = pipeline_adapter.friendly_error(raw)
+    assert friendly.code == "budget_exhausted" and not friendly.retryable
+    assert "openrouter.ai" not in friendly.message and "Live answers" in friendly.message
+    other = ErrorEvent(code="generation_failed", message="timeout", retryable=True)
+    assert pipeline_adapter.friendly_error(other) is other

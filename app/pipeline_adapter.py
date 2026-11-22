@@ -107,9 +107,25 @@ def run_pipeline(
     try:
         pipeline = get_live_pipeline()
         runner = pipeline.run if hasattr(pipeline, "run") else pipeline
-        yield from runner(question=question, history=history, profile=profile)
+        for event in runner(question=question, history=history, profile=profile):
+            yield friendly_error(event) if isinstance(event, ErrorEvent) else event
     except Exception as exc:  # the UI must survive any backend failure
-        yield ErrorEvent(code=type(exc).__name__, message=str(exc) or "Unknown error", retryable=True)
+        yield friendly_error(ErrorEvent(code=type(exc).__name__, message=str(exc) or "Unknown error", retryable=True))
+
+
+# Provider messages that mean "the API key has no budget left" (OpenRouter 402/403). Visitors can't fix that,
+# and the raw text links to the key's management page, so it is replaced by an actionable message.
+_BUDGET_ERRORS = ("key limit exceeded", "requires more credits", "insufficient credits", "payment required")
+BUDGET_MESSAGE = (
+    "Live answers are paused: this public demo has used up its AI budget for now. "
+    "Switch **Live answers** off in Settings to explore the demo answers, or try again later."
+)
+
+
+def friendly_error(event: ErrorEvent) -> ErrorEvent:
+    if any(marker in event.message.lower() for marker in _BUDGET_ERRORS):
+        return ErrorEvent(code="budget_exhausted", message=BUDGET_MESSAGE, retryable=False)
+    return event
 
 
 def get_retrieval_backend(mode: str) -> tuple[Callable[[str], RetrievalPlan], Retriever, str]:
