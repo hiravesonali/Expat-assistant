@@ -15,7 +15,7 @@ from pipeline_adapter import LIVE, get_retrieval_backend, live_status
 
 from expat.schemas import RetrievalConfig, RetrievalResult, UserProfile
 
-st.set_page_config(page_title="Retrieval Debugger", page_icon="🔎", layout="wide")
+st.set_page_config(page_title="Retrieval Debugger · Ankommen", page_icon="🔎", layout="wide")
 ui.inject_css()
 require_admin()
 

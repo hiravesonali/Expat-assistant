@@ -204,6 +204,11 @@ Because 2–4 were fixed after looking at dev failures, **dev run 2 is optimisti
 - **Tool selection 0.82:** the checklist and family-benefit tools are sometimes skipped when retrieved sources
   already contain the information (answers still correct). Multi-domain questions remain the weakest slice
   (correct 0.67, n = 3).
+- **Citation style varies between runs (seen 2026-11-22).** For the same tenancy question, one run wrote law
+  references as plain text ("[§ 573c Abs. 1 BGB]") instead of `[S1]` markers, so no source chip appeared, and
+  repeated the generic "end of the second following month" rule next to the correct tool date. Next steps:
+  a citation-format check that maps bracketed § references to the matching `[S#]`, and a prompt rule to
+  quote the tool's period instead of restating the base rule.
 - **Latency:** p50 10–20 s per answer on 2026-11-20, dominated by slow OpenRouter embedding calls that day
   (single calls 8–48 s vs 0.7 s in the bake-off), not by the pipeline. Re-measure before quoting.
 

@@ -15,9 +15,11 @@ Everything here renders the typed pipeline events from `expat.schemas.events`.
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 from datetime import date
+from pathlib import Path
 from typing import Any
 
 import streamlit as st
@@ -38,6 +40,60 @@ from expat.schemas import (
 
 DISCLAIMER = "General information, not legal or tax advice. Official German texts are binding."
 
+# ---- Brand ("Ankommen" = German for "to arrive / to settle in") ------------------------------------
+BRAND_NAME = "Ankommen"
+BRAND_TAGLINE = "Your guide to settling in Munich"
+ASSETS = Path(__file__).resolve().parent / "assets"
+LOGO_SVG = (ASSETS / "logo-mark.svg").read_text(encoding="utf-8")
+LOGO_PNG = str(ASSETS / "logo-mark-256.png")  # favicon + assistant avatar (raster: works everywhere)
+
+
+_LOGO_URI = "data:image/svg+xml;base64," + base64.b64encode(LOGO_SVG.encode("utf-8")).decode("ascii")
+
+
+def logo_svg(size: int, uid: str) -> str:
+    """The logo mark as an <img> at `size` px. (st.html sanitises markup and strips inline <svg>, but keeps
+    <img> with a data URI, so the vector logo stays sharp.) `uid` only names the element for CSS hooks."""
+    return f'<img class="ank-logo ank-logo-{uid}" src="{_LOGO_URI}" width="{size}" height="{size}" alt="{BRAND_NAME}">'
+
+
+def brand_header() -> None:
+    """Sidebar brand: logo tile + wordmark + tagline (inline SVG, so it uses the page fonts)."""
+    st.html(
+        f'<div class="ank-brand">{logo_svg(36, "side")}'
+        f'<div><div class="ank-wordmark">{BRAND_NAME}</div><div class="ank-sub">Munich · official sources</div></div>'
+        "</div>"
+    )
+
+
+def hero() -> None:
+    """Start screen header: eyebrow badge, big logo, bold headline with a gradient accent, subtitle."""
+    st.html(
+        '<div class="ank-hero">'
+        f'<div class="ank-hero-logo">{logo_svg(64, "hero")}</div>'
+        '<div class="ank-eyebrow">📍 Munich · Official sources · English & Deutsch</div>'
+        '<h1 class="ank-title">Settle into Munich <span class="ank-gradient">with confidence</span></h1>'
+        '<p class="ank-lead">Registration, residence permits, renting and family benefits, answered from '
+        "official German sources, with every claim cited.</p>"
+        "</div>"
+    )
+
+
+def trust_row() -> None:
+    """Three short promises under the start-screen cards."""
+    items = [
+        ("📚", "Cited official sources", "Laws and city pages, with dates"),
+        ("🧮", "Calculated, not guessed", "Deadlines and amounts by tested tools"),
+        ("🛡️", "Knows its limits", "Refers you to experts when needed"),
+    ]
+    cells = "".join(
+        f'<div class="ank-trust-item"><span class="ank-trust-icon">{icon}</span>'
+        f"<div><b>{title}</b><br><span>{text}</span></div></div>"
+        for icon, title, text in items
+    )
+    st.html(f'<div class="ank-trust">{cells}</div>')
+
+
 STEP_LABELS: dict[str, tuple[str, str]] = {
     # name: (icon, label)
     "query_analysis": (":material/manage_search:", "Understanding your question"),
@@ -52,88 +108,17 @@ TOOL_LABELS = {
     "calculate_tenancy_notice": "Tenancy notice calculator",
     "calculate_deadline": "Deadline calculator",
     "estimate_family_benefits": "Family benefits estimator",
-    "document_checklist": "Document checklist",
-    "check_schengen_days": "Schengen 90/180 checker",
+    "generate_document_checklist": "Document checklist",
+    "schengen_days_calculator": "Schengen 90/180 checker",
 }
 
-_CSS = """
-<style>
-@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap");
-/* ---- Page frame: a narrow reading column, no Streamlit chrome ---------------------------------- */
-[data-testid="stMainBlockContainer"], [data-testid="stBottomBlockContainer"] { max-width: 760px; }
-[data-testid="stMainBlockContainer"] { padding-top: 2.5rem; padding-bottom: 2rem; }
-[data-testid="stHeader"] { background: transparent; }
-[data-testid="stAppDeployButton"], [data-testid="stMainMenu"] { display: none; }
-
-/* ---- Chat messages: no avatars; user = right-aligned bubble, assistant = plain text ------------- */
-[data-testid="stChatMessageAvatarUser"], [data-testid="stChatMessageAvatarAssistant"],
-[data-testid="stChatMessage"] > img { display: none; }
-[data-testid="stChatMessage"] { background: transparent; padding: 0.35rem 0; }
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) { justify-content: flex-end; }
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
-    flex: 0 1 auto; max-width: 85%;
-    background: #EDEAE2; border-radius: 1.25rem; padding: 0.55rem 1.05rem;
-}
-[data-testid="stChatMessageContent"] p { line-height: 1.65; }
-
-/* ---- The composer: a soft floating card -------------------------------------------------------- */
-[data-testid="stChatInput"], [data-testid="stChatInput"] > div, [data-testid="stChatInputTextArea"] {
-    background: #FFFFFF !important;
-}
-[data-testid="stChatInput"] {
-    border-radius: 1.4rem;
-    box-shadow: 0 1px 2px rgba(38, 37, 31, .04), 0 6px 24px rgba(38, 37, 31, .07);
-}
-[data-testid="stBottom"] > div { background: #FAF9F6; }
-
-/* ---- Empty state --------------------------------------------------------------------------------- */
-.st-key-hero { margin-top: 14vh; }
-.st-key-hero h1, .st-key-hero h1 span {
-    font-family: "Source Serif 4", Georgia, serif !important; font-weight: 400 !important;
-    font-size: 2.4rem; letter-spacing: -0.01em; padding-bottom: 0.2rem;
-}
-.st-key-hero [data-testid="stCaptionContainer"] p { text-align: center; font-size: 0.95rem; }
-.st-key-suggestions { justify-content: center; }
-[class*="st-key-example-"] button {
-    background: #FFFFFF; border: 1px solid #E4E1D8; color: #4A483F;
-    padding: 0.3rem 0.95rem; min-height: 2.1rem; font-size: 0.88rem;
-}
-[class*="st-key-example-"] button:hover { border-color: #1F6F64; color: #1F6F64; }
-.st-key-fineprint p { text-align: center; font-size: 0.78rem; color: #8A877C; }
-
-/* ---- Sidebar ------------------------------------------------------------------------------------- */
-.st-key-brand p { font-family: "Source Serif 4", Georgia, serif !important; font-size: 1.25rem; margin: 0; }
-.st-key-brand [data-testid="stCaptionContainer"] p {
-    font-family: Inter, sans-serif !important; font-size: 0.8rem; color: #8A877C;
-}
-.st-key-recents button, .st-key-new-chat button { justify-content: flex-start !important; text-align: left; }
-.st-key-recents button > div, .st-key-new-chat button > div { justify-content: flex-start !important; }
-.st-key-recents [data-testid="stBaseButton-secondary"] { background: #E6E3DA; border-color: transparent; }
-[data-testid="stPopoverBody"] { width: 330px !important; max-width: 330px !important; }
-.st-key-recents button p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.st-key-recents button { min-height: 2rem; padding: 0.2rem 0.75rem; }
-.st-key-sidebar-bottom { position: fixed; bottom: 1rem; width: calc(var(--sidebar-width, 18rem) - 2.5rem); }
-
-/* ---- Under an answer: small source pills, quiet details ----------------------------------------- */
-[class*="st-key-chips-"] button {
-    background: #F2F0EA; border: none; color: #4A483F;
-    padding: 0.05rem 0.7rem; min-height: 1.75rem; font-size: 0.8rem;
-}
-[class*="st-key-chips-"] button:hover { background: #E3EFEC; color: #1F6F64; }
-[data-testid="stChatMessageContent"] [data-testid="stExpander"] details {
-    border: none; background: transparent;
-}
-[data-testid="stChatMessageContent"] [data-testid="stExpander"] summary {
-    font-size: 0.82rem; color: #8A877C; padding-left: 0;
-}
-</style>
-"""
+_CSS = (ASSETS / "ankommen.css").read_text(encoding="utf-8")
 
 
 def inject_css() -> None:
     """Visual polish. Streamlit exposes `.st-key-<key>` classes on keyed elements and stable `data-testid`
     attributes on its own elements; the CSS above targets only those, so it survives Streamlit updates."""
-    st.html(_CSS)
+    st.html(f"<style>{_CSS}</style>")
 
 
 def disclaimer_footer() -> None:

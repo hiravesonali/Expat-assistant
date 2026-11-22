@@ -78,7 +78,7 @@ def to_json(conv: dict[str, Any], price_in: float, price_out: float, now: dateti
 
 def to_markdown(conv: dict[str, Any], price_in: float, price_out: float, now: datetime | None = None) -> str:
     stamp = (now or datetime.now()).strftime("%Y-%m-%d %H:%M")
-    lines = [f"# {conv['title']}", "", f"_Exported from Expat Assistant on {stamp}. {DISCLAIMER}_", ""]
+    lines = [f"# {conv['title']}", "", f"_Exported from Ankommen on {stamp}. {DISCLAIMER}_", ""]
     for rec in to_records(conv, price_in, price_out):
         if rec["role"] == "user":
             lines += ["## You", "", rec["content"], ""]
@@ -100,4 +100,4 @@ def to_markdown(conv: dict[str, Any], price_in: float, price_out: float, now: da
 
 def filename(conv: dict[str, Any], extension: str) -> str:
     slug = re.sub(r"[^a-z0-9]+", "-", conv["title"].lower()).strip("-")[:40] or "chat"
-    return f"expat-assistant-{slug}.{extension}"
+    return f"ankommen-{slug}.{extension}"

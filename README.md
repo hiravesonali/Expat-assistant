@@ -1,4 +1,9 @@
-# 🇩🇪 Expat Germany Assistant
+<p align="center">
+  <img src="app/assets/logo-mark.svg" width="88" alt="Ankommen logo">
+</p>
+
+<h1 align="center">Ankommen</h1>
+<p align="center"><b>Your guide to settling in Munich</b> · <i>ankommen</i> = German for "to arrive, to settle in"</p>
 
 An English-language assistant that helps expats in **Munich** (MVP persona: a non-EU Blue Card family) deal with registration, residence permits, renting and family benefits. It answers **only from official German sources**, with clickable citations and "last verified" dates, and does date and benefit calculations with tested tools instead of guessing.
 

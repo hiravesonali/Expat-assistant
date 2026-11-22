@@ -57,5 +57,5 @@ def test_json_contains_tools_sources_and_cost_but_not_quotes():
 
 
 def test_filename_is_a_safe_slug():
-    assert export.filename(CONV, "md") == "expat-assistant-end-my-lease.md"
-    assert export.filename({"title": "§§ ??"}, "json") == "expat-assistant-chat.json"
+    assert export.filename(CONV, "md") == "ankommen-end-my-lease.md"
+    assert export.filename({"title": "§§ ??"}, "json") == "ankommen-chat.json"

@@ -1,29 +1,30 @@
 # Streamlit config (committed). Secrets go in .streamlit/secrets.toml (git-ignored), see secrets.toml.example.
 # Community Cloud reads this file from the repo root, because it runs `streamlit run` from the root.
 #
-# Design: a calm, warm "paper" canvas with one accent colour (deep teal = trustworthy, official, not
-# alarming). Serif headings + Inter body text, like modern AI chat products.
+# Brand "Ankommen" (German: to arrive / to settle in). Modern & bold: a vivid indigo → violet brand gradient
+# (the logo tile), one warm amber accent (the arrow in the logo), crisp cool-white canvas, bold geometric
+# headings (Plus Jakarta Sans) and Inter for body text. Brand tokens are repeated in app/ui.py (CSS).
 
 [theme]
 base = "light"
-primaryColor = "#1F6F64"             # deep teal: primary buttons, focus rings, toggles
-backgroundColor = "#FAF9F6"          # warm off-white canvas
-secondaryBackgroundColor = "#F2F0EA" # inputs, code blocks, expanders
-textColor = "#26251F"
-linkColor = "#1F6F64"
-borderColor = "#E4E1D8"
+primaryColor = "#4F46E5"             # indigo: primary buttons, focus rings, toggles, links
+backgroundColor = "#FAFAFD"          # cool white canvas
+secondaryBackgroundColor = "#F1F1F8" # inputs, code blocks, expanders
+textColor = "#16172B"
+linkColor = "#4F46E5"
+borderColor = "#E4E4F0"
 showWidgetBorder = true
 showSidebarBorder = false
 baseRadius = "large"
 buttonRadius = "full"
 font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-headingFont = "Source Serif 4:https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap"
-headingFontWeights = [500, 500, 500, 500, 500, 500]
+headingFont = "Plus Jakarta Sans:https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+headingFontWeights = [800, 700, 700, 700, 600, 600]
 baseFontSize = 15
 
 [theme.sidebar]
-backgroundColor = "#F3F1EC"
-secondaryBackgroundColor = "#EAE7DF"
+backgroundColor = "#F4F4FB"
+secondaryBackgroundColor = "#EAEAF5"
 
 [client]
 toolbarMode = "minimal"        # hide developer menu items for visitors

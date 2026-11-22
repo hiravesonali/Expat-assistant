@@ -1,4 +1,4 @@
-"""Expat Germany Assistant: the chat page (Streamlit entrypoint, `streamlit run app/Home.py`).
+"""Ankommen (Expat Germany Assistant): the chat page (Streamlit entrypoint, `streamlit run app/Home.py`).
 
 How this page works (Streamlit's rerun model)
 --------------------------------------------
@@ -46,32 +46,41 @@ from expat.schemas import (
 from expat.schemas.profile import Citizenship, Employment, FamilyStatus, Housing, ResidenceStatus
 
 # `set_page_config` must be the first Streamlit call of the run.
-st.set_page_config(page_title="Expat Germany Assistant", page_icon="🇩🇪", layout="centered")
+st.set_page_config(page_title=f"{ui.BRAND_NAME} · {ui.BRAND_TAGLINE}", page_icon=ui.LOGO_PNG, layout="centered")
 ui.inject_css()
 sync_secrets_to_env()
 
 PREFER = "Prefer not to say"
 PLACEHOLDER = "Ask about Anmeldung, renting, Blue Card, Kindergeld…"
 
-# (pill label, full prompt that is sent)
+# Topic cards on the start screen: (icon, title, one-line description, full prompt that is sent)
 EXAMPLES = [
     (
-        ":material/how_to_reg: Anmeldung",
+        ":material/how_to_reg:",
+        "Anmeldung",
+        "Register your new address",
         "I just moved to Munich on a Blue Card. What do I need for the Anmeldung, and by when?",
     ),
     (
-        ":material/key: End my lease",
+        ":material/key:",
+        "End my lease",
+        "Notice periods and end dates",
         "I rent a flat in Munich since 2021. If I give notice today, when does my tenancy end?",
     ),
     (
-        ":material/child_care: Kindergeld & Elterngeld",
+        ":material/child_care:",
+        "Kindergeld & Elterngeld",
+        "What your family can get",
         "We're expecting a baby in March. How much Kindergeld and Elterngeld can we get?",
     ),
     (
-        ":material/verified_user: Permanent residence",
+        ":material/verified_user:",
+        "Permanent residence",
+        "Settlement permit with a Blue Card",
         "When can I apply for a settlement permit (Niederlassungserlaubnis) with my Blue Card?",
     ),
 ]
+ASSISTANT_AVATAR = ui.LOGO_PNG
 
 # Labels for the generated profile form. Keys are UserProfile field names; enum values map to labels.
 PROFILE_UI: dict[str, tuple[str, dict[str, str]]] = {
@@ -297,9 +306,7 @@ def render_conversation_list() -> None:
 
 def render_sidebar() -> str:
     with st.sidebar:
-        with st.container(key="brand"):
-            st.markdown(":primary[:material/travel_explore:] Expat Assistant")
-            st.caption("Munich · official sources")
+        ui.brand_header()
         with st.container(key="new-chat"):
             st.button(
                 "New chat",
@@ -352,16 +359,22 @@ def render_export(conv: dict[str, Any]) -> None:
 
 
 def render_empty_state() -> str | None:
-    """Greeting + composer in the middle of the page + suggestion pills. Returns a submitted prompt."""
-    with st.container(key="hero"):
-        st.title("How can I help you settle in?", anchor=False, text_alignment="center")
-        st.caption("Registration, residence permits, renting and family benefits in Munich, in English or German.")
+    """Brand hero + composer + topic cards + trust row. Returns a submitted prompt."""
+    ui.hero()
     # Inside a container, st.chat_input renders inline (here: centred) instead of pinned to the bottom.
     with st.container():
         prompt = st.chat_input(PLACEHOLDER, key="composer", max_chars=get_settings().max_question_chars)
-    with st.container(horizontal=True, horizontal_alignment="center", gap="small", key="suggestions"):
-        for i, (label, full_prompt) in enumerate(EXAMPLES):
-            st.button(label, key=f"example-{i}", on_click=_on_example, args=(full_prompt,), help=full_prompt)
+    with st.container(key="suggestions"):
+        for i, (icon, title, blurb, full_prompt) in enumerate(EXAMPLES):
+            st.button(
+                f"**{title}**\n{blurb}",  # CSS `white-space: pre-line` turns the newline into a second line
+                icon=icon,
+                key=f"example-{i}",
+                on_click=_on_example,
+                args=(full_prompt,),
+                help=full_prompt,
+            )
+    ui.trust_row()
     ui.disclaimer_footer()
     return prompt
 
@@ -369,7 +382,7 @@ def render_empty_state() -> str | None:
 def render_history(conv: dict[str, Any]) -> None:
     messages = conv["messages"]
     for i, msg in enumerate(messages):
-        with st.chat_message(msg["role"]):
+        with st.chat_message(msg["role"], avatar=ASSISTANT_AVATAR if msg["role"] == "assistant" else None):
             if msg["role"] == "user":
                 st.markdown(msg["content"])
                 continue
@@ -435,7 +448,7 @@ def handle_prompt(prompt: str, mode: str) -> None:
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar=ASSISTANT_AVATAR):
         # Containers are created up-front, then filled while the generator runs (like refs to DOM nodes).
         status = st.status("Thinking…", expanded=False)
         tool_area = st.container()

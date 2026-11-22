@@ -17,7 +17,7 @@ from _admin import require_admin
 
 from expat.config import get_settings
 
-st.set_page_config(page_title="Ingestion Status", page_icon="⚙️", layout="wide")
+st.set_page_config(page_title="Ingestion Status · Ankommen", page_icon="⚙️", layout="wide")
 ui.inject_css()
 require_admin()
 

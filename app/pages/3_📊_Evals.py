@@ -19,7 +19,7 @@ from _admin import require_admin
 
 from expat.config import REPO_ROOT
 
-st.set_page_config(page_title="Evals", page_icon="📊", layout="wide")
+st.set_page_config(page_title="Evals · Ankommen", page_icon="📊", layout="wide")
 ui.inject_css()
 require_admin()
 
