@@ -23,7 +23,7 @@ DEFAULT_SOURCES_PATH = REPO_ROOT / "sources.yaml"
 
 # Parser names follow docs/data-sources.md. All *_html parsers share one implementation
 # (parsers/html.py); the distinction documents intent and picks the default chunker.
-ParserName = Literal["law_xml", "bayern_recht_html", "guide_html", "procedure_html", "faq_html"]
+ParserName = Literal["law_xml", "bayern_recht_html", "law_pdf", "guide_html", "procedure_html", "faq_html"]
 
 _PARAGRAPH_RE = re.compile(r"^(\d+)([a-z]*)$")
 
@@ -112,6 +112,10 @@ class SourceConfig(BaseModel):
     terms: str = ""
     valid_from: date | None = None
     valid_until: date | None = None
+    # law_pdf only: regexes (multiline) that cut one regulation out of a gazette PDF. Empty start = from the
+    # beginning; empty end = parser default ("Begründung" / signature line after the last §).
+    pdf_start: str = ""
+    pdf_end: str = ""
 
     @model_validator(mode="after")
     def _check_consistency(self) -> SourceConfig:

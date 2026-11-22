@@ -29,6 +29,7 @@ from expat.ingestion.enrich import EnrichResult, deduplicate, enrich
 from expat.ingestion.fetch import FetchResult, PoliteFetcher, SnapshotStore, read_manual
 from expat.ingestion.parsers.bayern_recht import parse_bayern_recht
 from expat.ingestion.parsers.html import parse_html
+from expat.ingestion.parsers.law_pdf import parse_law_pdf
 from expat.ingestion.parsers.law_xml import parse_law_xml, read_law_xml
 from expat.ingestion.sources import PageConfig, SourceConfig, SourceRegistry
 from expat.schemas import ChunkRecord, ParentRecord
@@ -53,6 +54,18 @@ def chunk_page(source: SourceConfig, page: PageConfig, fetched: FetchResult) -> 
     abbrev = source.law_abbrev
     if source.parser == "law_xml":
         return chunk_law(parse_law_xml(read_law_xml(fetched.path), page.url, abbrev), source)
+    if source.parser == "law_pdf":
+        law = parse_law_pdf(
+            fetched.path.read_bytes(),
+            page.url,
+            abbrev,
+            long_title=source.name,
+            start=source.pdf_start,
+            end=source.pdf_end,
+            valid_from=source.valid_from,
+            valid_until=source.valid_until,
+        )
+        return chunk_law(law, source)
     html = _decode(fetched.path.read_bytes())
     if source.parser == "bayern_recht_html":
         return chunk_law(parse_bayern_recht(html, page.url, abbrev), source)

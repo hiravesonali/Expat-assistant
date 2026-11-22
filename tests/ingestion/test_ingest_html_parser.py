@@ -88,3 +88,32 @@ def test_rundfunkbeitrag_faq_headings_and_back_links():
         "I live in a student hall of residence. Do I have to pay?",
     ]
     assert all("back to" not in b.text for s in doc.sections for b in s.blocks)
+
+
+STUTTGART_PAGE = """<html><body><main><div class="SP-ArticleContent">
+<h1 class="SP-Headline--article">Wohnsitz anmelden</h1>
+<p>Sie müssen sich innerhalb von zwei Wochen anmelden.</p>
+<section class="SP-Collapsible"><h2 class="SP-Collapsible__trigger">Benötigte Unterlagen</h2>
+<div class="SP-Collapsible__content" aria-hidden="true" style="display:none"><p>Personalausweis und
+Wohnungsgeberbestätigung.</p></div></section>
+<div class="visually-hidden" aria-hidden="true"><p>Screenreader-Hinweis</p></div>
+</div></main></body></html>"""
+
+
+def test_stuttgart_collapsed_sections_are_unhidden_but_other_hidden_text_is_still_dropped():
+    """stuttgart.de marks every accordion body aria-hidden in the server HTML (70-90 % of the text)."""
+    doc = parse_html(STUTTGART_PAGE, "https://www.stuttgart.de/organigramm/leistungen/wohnsitz-anmelden")
+    sections = {s.heading: " ".join(b.text for b in s.blocks) for s in doc.sections}
+    assert "Wohnungsgeberbestätigung" in sections["Benötigte Unterlagen"]
+    assert "Screenreader" not in " ".join(sections.values())
+
+
+def test_welcome_stuttgart_demotes_accordion_triggers_below_the_permit_heading():
+    page = """<html><body><div class="SP-ArticleContent"><h1 class="SP-Headline--article">Niederlassungserlaubnis</h1>
+    <section class="SP-Section"><h2>Niederlassungserlaubnis für Fachkräfte</h2>
+    <section class="SP-Collapsible"><div class="SP-Collapsible__trigger"><h2 class="SP-Collapsible__trigger__text">
+    Voraussetzung</h2></div><div class="SP-Collapsible__content" aria-hidden="true"><p>Drei Jahre Aufenthalt.</p>
+    </div></section></section></div></body></html>"""
+    doc = parse_html(page, "https://welcome.stuttgart.de/einreise/niederlassungserlaubnis")
+    assert [s.heading for s in doc.sections] == ["Niederlassungserlaubnis für Fachkräfte"]
+    assert "Drei Jahre Aufenthalt" in " ".join(b.text for b in doc.sections[0].blocks)

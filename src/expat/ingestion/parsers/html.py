@@ -13,6 +13,7 @@ mimic each structure.
 
 from __future__ import annotations
 
+import dataclasses
 import re
 from dataclasses import dataclass, field
 from urllib.parse import urlsplit
@@ -59,6 +60,8 @@ class SiteProfile:
     move_to_end: tuple[str, ...] = ()  # side boxes that interrupt the main text flow
     stand: str = ""  # element holding a "last updated" date
     text_cleanup: re.Pattern[str] | None = None  # removed from every block (site-specific noise)
+    unhide: tuple[str, ...] = ()  # elements whose hidden / aria-hidden is removed before the global drop
+    demote: tuple[str, ...] = ()  # headings treated one level lower (accordion triggers styled as H2)
     notes: str = ""
 
 
@@ -137,7 +140,113 @@ PROFILES: dict[str, SiteProfile] = {
         faq_question="summary, .accordion__title",
         faq_answer=".accordion__content",
     ),
+    # ---- Germany-wide sources (docs/research/germany-sources.md: selectors checked on saved pages, 2026-11-22)
+    # Berlin service portal: div.block > h2.title per section (Verfahrensablauf, Voraussetzungen, Unterlagen,
+    # Gebühren, ...). The "Für Sie zuständig" office list alone is ~21k characters -> dropped.
+    "service.berlin.de": SiteProfile(
+        content=("#layout-grid__area--maincontent",),
+        title="h1.title",
+        drop=(
+            ".modul-servicepanel",
+            ".location-notes",
+            "#formulare",
+            "#rechtsbehelf",
+            "#zustaendig",
+            ".modul",
+            ".js-overlay-container",
+            "#toplist",
+        ),
+        drop_headings=re.compile(
+            r"^(online-abwicklung|online processing|your point of contact|weiterführende informationen|"
+            r"more information|hinweise zur zuständigkeit|notes on responsibility)$",
+            re.I,
+        ),
+    ),
+    # Berlin Mietspiegel (WordPress site of the Senate department), FAQ accordions.
+    "mietspiegel.berlin.de": SiteProfile(
+        content=("main .page-content",),
+        drop=(".modul-teasertile_buehne", ".modul-download-multi", ".modul-contact", ".modul-teaser", ".modul-linkup"),
+        faq_item=".c-accordion__item",
+        faq_question=".c-accordion__title",
+        faq_answer=".c-accordion__content",
+    ),
+    # hamburg.de "km1": service pages (accordion H3s inside H2 "Informationen" -- do NOT drop that heading)
+    # and authority articles. "Letzte Aktualisierung" is the render date, so it is not used as a Stand.
+    "www.hamburg.de": SiteProfile(
+        content=("main .km1-service-description-module", "main article.km1-main__article"),
+        title="h1",
+        drop=(
+            ".km1-service-banner",
+            ".km1-info-banner",
+            ".km1-newsflash",
+            ".km1-table-of-contents-article",
+            ".km1-external-opt-in",
+            ".km1-article-download",
+            ".km1-image-opener",
+        ),
+        drop_headings=re.compile(r"^(rechtsbehelf|formulare, services & links)$", re.I),
+    ),
+    # Hamburg Welcome Center (German and English site): the visible title is an H2, the H1 is sr-only.
+    "welcome.hamburg.de": SiteProfile(
+        content=("main article.skhh-main__article",),
+        title="h2.skhh-article__heading",
+        drop=("h2.skhh-article__heading", ".skhh-table-of-contents", ".skhh-teaser-row"),
+    ),
+    # frankfurt.de (Sitecore): title + section headings are H4; foreign-office pages have no headings.
+    # Cloudflare blocks /leistungen/* and /english/* for non-browsers (those pages are not used).
+    "frankfurt.de": SiteProfile(
+        content=("article#articlePage",),
+        title="h4._headline",
+        drop=("h3._categoryTitle", "h4._headline", "figure", ".teasers", "#cookieModal"),
+        section_level=4,
+    ),
+    # stadt-koeln.de: accordions are div.accordionhead > h2 + visible div.accordionpanel -> H2 sections.
+    "www.stadt-koeln.de": SiteProfile(
+        content=("main#inhalt",),
+        title="h1.articlehead",
+        drop=(".innersearch", "#breadcrumb", ".produkt_kontakt", ".aehnliche_dienstleistungen", "aside", ".unsichtbar"),
+        drop_headings=re.compile(r"^(anfahrt|kontakt und erreichbarkeit|online beantragen|vorsprache)$", re.I),
+    ),
+    # stuttgart.de: every collapsible body is aria-hidden in the server HTML (70-90 % of the text) -> unhide.
+    "www.stuttgart.de": SiteProfile(
+        content=(".SP-ArticleContent",),
+        title="h1.SP-Headline--article",
+        drop=(
+            ".SP-DigitalService__button",
+            ".SP-CallToAction",
+            ".SP-Contact",
+            ".SP-Share",
+            ".SP-JumboButton",
+            ".SP-CardTeaser",
+            ".SP-LastUpdatedTimestamp",
+        ),
+        drop_headings=re.compile(r"^(termin vereinbaren|formulare|weitere informationen)$", re.I),
+        stand=".SP-LastUpdatedTimestamp",
+        unhide=(".SP-Collapsible__content",),
+    ),
+    # recht.nrw.de: one section.legaldoc-article per § with an H2 (read as a web page, § = section).
+    "recht.nrw.de": SiteProfile(
+        content=("#block-rnrw-content article",),
+        title="h1",
+        drop=(".paragraph--action-alert", ".footnote-container", ".paragraph--type--footnotes"),
+        stand="#block-rnrw-legal-document-info-box",
+    ),
+    # Baden-Württemberg housing ministry explainer (FAQ accordions).
+    "mlw.baden-wuerttemberg.de": SiteProfile(
+        content=("main article.article",),
+        drop=(".link-list", ".newsletter-breaker", ".js-reading-time"),
+        faq_item=".accordion__item",
+        faq_question=".accordion__header",
+        faq_answer=".accordion__content",
+    ),
 }
+# Same layout on sister hosts.
+PROFILES["welcome.hamburg.com"] = PROFILES["welcome.hamburg.de"]
+PROFILES["welcome.stuttgart.de"] = dataclasses.replace(
+    PROFILES["www.stuttgart.de"],
+    # Each permit type is an H2 section; its collapsible triggers ("Voraussetzung") are H2s too -> one level down.
+    demote=("h2.SP-Collapsible__trigger__text",),
+)
 DEFAULT_PROFILE = SiteProfile()
 
 
@@ -284,6 +393,16 @@ def parse_html(html: str, url: str, profile: SiteProfile | None = None) -> WebDo
         # Accordion questions often live in a <button> inside the heading; keep the text.
         for button in root.select("h2 button, h3 button, h4 button, h5 button, summary button"):
             button.unwrap()
+        # Collapsed accordion bodies that are real content (server HTML marks them hidden until clicked).
+        for selector in profile.unhide:
+            for el in root.select(selector):
+                for attr in ("hidden", "aria-hidden"):
+                    del el[attr]
+        # Headings that are sub-headings in disguise (e.g. an accordion trigger styled as H2): one level down.
+        for selector in profile.demote:
+            for el in root.select(selector):
+                if el.name in _HEADINGS and el.name != "h6":
+                    el.name = f"h{int(el.name[1]) + 1}"
         for el in root.select(_GLOBAL_DROP + "".join(f", {s}" for s in profile.drop)):
             el.decompose()
         for selector in profile.move_to_end:

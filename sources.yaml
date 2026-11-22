@@ -557,3 +557,778 @@
   fetch_method: http
   refresh: quarterly
   terms: "Disclaimer only -> chunks + link"
+
+# ============================================================================================
+# Germany-wide expansion (2026-11-22): Berlin, Hamburg, Frankfurt am Main, Köln, Stuttgart and the rent-cap
+# rules of their states. Discovered and verified by a research pass (plain HTTP, robots.txt checked, main
+# text in the raw HTML): docs/research/germany-sources.md. Site profiles: ingestion/parsers/html.py.
+# ============================================================================================
+# --------------------------------------------------------------------------------------------
+# Rent-cap regulations (Mietpreisbremse), one per state. Official works, § 5 UrhG.
+# --------------------------------------------------------------------------------------------
+
+# Berlin: whole city. Consolidated text only on gesetze.berlin.de (robots: Disallow for *), so the
+# official Abgeordnetenhaus "Vorlage" PDF (Verordnungstext + Begründung) published by SenStadt is used.
+- id: be-mietpreisbremse
+  name: "Berliner Mietenbegrenzungsverordnung 2026–2029"
+  publisher: "Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen Berlin"
+  url: https://www.berlin.de/sen/stadt/_assets/service/rechtsvorschriften/bereich-wohnen/vo19-298.pdf
+  source_type: regulation
+  parser: law_pdf
+  law_abbrev: MietBegrV BE
+  domain: tenancy
+  subtopic: mietpreisbremse
+  keywords: [Mietpreisbremse, rent cap, Mietenbegrenzungsverordnung, Berlin]
+  language: de
+  jurisdiction: state
+  state: BE
+  fetch_method: http
+  refresh: monthly
+  valid_from: 2026-01-01
+  valid_until: 2029-12-31
+  terms: "Amtliches Werk, § 5 UrhG (Verordnung vom 11.11.2025, GVBl. S. 577; canonical: gesetze.berlin.de/bsbe/document/jlr-MietBegrVBE2026rahmen, robots-blocked)"
+
+# Hamburg: whole city. Mietpreisbegrenzungsverordnung vom 25.11.2025, HmbGVBl. 2025 Nr. 41 (whole issue PDF,
+# the regulation is on pp. 684-686). Only robots-allowed official text; landesrecht-hamburg.de is blocked.
+- id: hh-mietpreisbremse
+  name: "Hamburger Mietpreisbegrenzungsverordnung 2026–2029"
+  publisher: "Freie und Hansestadt Hamburg, Senat (HmbGVBl.)"
+  url: https://dokumente.hamburg.de/resource/blob/1127230/f4eeaf811b75b9b992bc00add53192d9/d-hmbgvbl-nr-41-dezember-2025-data.pdf
+  source_type: regulation
+  parser: law_pdf
+  law_abbrev: MietpreisbegrenzungsVO HH
+  pdf_start: '^Verordnung\s*\nzur zulässigen Miethöhe bei Mietbeginn'  # the issue holds several laws
+  domain: tenancy
+  subtopic: mietpreisbremse
+  keywords: [Mietpreisbremse, rent cap, Hamburg]
+  language: de
+  jurisdiction: state
+  state: HH
+  fetch_method: http
+  refresh: monthly
+  valid_from: 2026-01-01
+  valid_until: 2029-12-31
+  terms: "Amtliches Werk, § 5 UrhG (HmbGVBl. 2025 Nr. 41 vom 02.12.2025)"
+
+# Plain-language explainer by the Behörde für Stadtentwicklung und Wohnen (HTML, verified). Covers the
+# Vormiete / Neubau / Modernisierung exceptions and states "gilt bis zum 31. Dezember 2029".
+- id: hh-mietpreisbremse-info
+  name: "Mietpreisbremse in Hamburg – Behörde für Stadtentwicklung und Wohnen"
+  publisher: "Freie und Hansestadt Hamburg, Behörde für Stadtentwicklung und Wohnen"
+  url: https://www.hamburg.de/politik-und-verwaltung/behoerden/behoerde-fuer-stadtentwicklung-und-wohnen/themen/wohnen/mieten/mietenspiegel/mietpreisbremse-189826
+  source_type: guide
+  parser: guide_html
+  domain: tenancy
+  subtopic: mietpreisbremse
+  keywords: [Mietpreisbremse, rent cap, Hamburg]
+  language: de
+  jurisdiction: state
+  state: HH
+  fetch_method: http
+  refresh: monthly
+  valid_from: 2026-01-01
+  valid_until: 2029-12-31
+  terms: "© FHH; chunks + link only"
+
+# Hessen: NEW regulation, published 19.11.2026 (GVBl. 2026 Nr. 78), in force the day after promulgation
+# (§ 5 Abs. 1 -> 20.11.2026). § 1 Nr. 1 (Mietpreisbremse) expires 31.12.2029; Kappungsgrenze and
+# Kündigungssperrfrist parts run to 19.11.2031. Anlage 1: 71 municipalities, "20. Frankfurt am Main".
+# Replaces MiSchuV 2020 (extended 2025, held void by LG Frankfurt on 04.11.2026, 2-11 S 110/26).
+- id: he-mietpreisbremse
+  name: "Hessische Mieterschutzverordnung (MiSchuV) vom 17.11.2026"
+  publisher: "Hessische Landesregierung / Verkündungsplattform Hessen"
+  url: https://verkuendung.hessen.de/sites/verkuendung.hessen.de/files/veroeffentlichungsplattform_plugin/published/1568/GVBl_2026_Nr_78_Regelungstext.pdf
+  source_type: regulation
+  parser: law_pdf
+  law_abbrev: MiSchuV HE
+  domain: tenancy
+  subtopic: mietpreisbremse
+  keywords: [Mietpreisbremse, rent cap, Kappungsgrenze, Frankfurt am Main, Frankfurt]
+  language: de
+  jurisdiction: state
+  state: HE
+  fetch_method: http
+  refresh: monthly
+  valid_from: 2026-11-20
+  valid_until: 2029-12-31
+  terms: "Amtliches Werk, § 5 UrhG (GVBl. 2026 Nr. 78 vom 19.11.2026)"
+
+# STALE: wirtschaft.hessen.de still describes the MiSchuV 2020 (changed 2025) that was repealed on 20.11.2026.
+# Re-check in a few weeks; do not ingest while it contradicts he-mietpreisbremse.
+# - id: he-mietpreisbremse-info
+#   name: "Mieterschutzverordnung – Hessisches Wirtschaftsministerium"
+#   publisher: "Hessisches Ministerium für Wirtschaft, Energie, Verkehr, Wohnen und ländlichen Raum"
+#   url: https://wirtschaft.hessen.de/wohnen-und-bauen/wohnungsrecht/mieterschutzverordnung-vom-18-november-2020-gvbl-s-802
+#   source_type: guide
+#   parser: guide_html
+#   domain: tenancy
+#   subtopic: mietpreisbremse
+#   language: de
+#   jurisdiction: state
+#   state: HE
+#   fetch_method: http
+#   refresh: monthly
+#   terms: "© Land Hessen; chunks + link only"
+
+# NRW: consolidated HTML on recht.nrw.de (robots: Allow /). Version valid since 07.11.2025.
+# § 3 Abs. 2: § 1 Abs. 1 (Mietpreisbremse) expires 31.12.2029, the rest 28.02.2030.
+# The municipality list (Anlage, 57 Kommunen, "28 Köln") is only a PDF attachment:
+# https://recht.nrw.de/system/files/BA/54532-52830-sgv_238_20250128_1_anlage1.pdf
+- id: nw-mietpreisbremse
+  name: "Mieterschutzverordnung NRW (MietSchVO NRW) 2025–2029"
+  publisher: "Landesregierung Nordrhein-Westfalen / recht.nrw.de"
+  url: https://recht.nrw.de/lrgv/rechtsverordnung/07112025-mieterschutzverordnung-nrw-mietschvo-nrw/
+  source_type: regulation
+  parser: guide_html  # recht.nrw.de site profile: one section per §
+  law_abbrev: MietSchVO NRW
+  domain: tenancy
+  subtopic: mietpreisbremse
+  keywords: [Mietpreisbremse, rent cap, Kappungsgrenze, Köln, Cologne]
+  language: de
+  jurisdiction: state
+  state: NW
+  fetch_method: http
+  refresh: monthly
+  valid_from: 2025-03-01
+  valid_until: 2029-12-31
+  terms: "Amtliches Werk, § 5 UrhG (GV. NRW. 2025 S. 111, geändert GV. NRW. 2025 S. 848)"
+
+# The NRW municipality list (Anlage zu § 1, 57 Kommunen; "28 Köln") is only published as a PDF table.
+- id: nw-mietpreisbremse-anlage
+  name: "Mieterschutzverordnung NRW – Anlage: Kommunen mit angespanntem Wohnungsmarkt"
+  publisher: "Landesregierung Nordrhein-Westfalen / recht.nrw.de"
+  url: https://recht.nrw.de/system/files/BA/54532-52830-sgv_238_20250128_1_anlage1.pdf
+  source_type: regulation
+  parser: law_pdf
+  law_abbrev: MietSchVO NRW
+  domain: tenancy
+  subtopic: mietpreisbremse
+  keywords: [Mietpreisbremse, rent cap, Kappungsgrenze, Köln, Cologne]
+  language: de
+  jurisdiction: state
+  state: NW
+  fetch_method: http
+  refresh: monthly
+  valid_from: 2025-03-01
+  valid_until: 2029-12-31
+  terms: "Amtliches Werk, § 5 UrhG (GV. NRW. 2025 S. 111)"
+
+# Baden-Württemberg: PARKED law PDFs. The gazette PDF links carry an expiring token (they would have to be
+# resolved from the detail page on every fetch). bw-mietpreisbremse-info covers the municipality list
+# (Stuttgart), the 2026 rules and the 2027-2029 successor. Original note: two regulations. The current one ends in 5 weeks; the successor is already promulgated.
+# Gazette detail pages are stable; the PDF links carry a token (eID=dumpFile&...&token=), so resolve the
+# PDF from the detail page at fetch time. Stuttgart is listed in § 1 of both.
+# - id: bw-mietpreisbremse-2026
+#   name: "Mietpreisbegrenzungsverordnung Baden-Württemberg vom 16.12.2025 (gilt 2026)"
+#   publisher: "Landesregierung Baden-Württemberg (Gesetzblatt)"
+#   url: https://www.baden-wuerttemberg.de/de/service/gesetze-und-verordnungen/gesetzblatt/detail/2025-144
+#   source_type: regulation
+#   parser: law_pdf
+#   law_abbrev: MietBegrVO BW
+#   domain: tenancy
+#   subtopic: mietpreisbremse
+#   keywords: [Mietpreisbremse, rent cap, Stuttgart]
+#   language: de
+#   jurisdiction: state
+#   state: BW
+#   fetch_method: http
+#   refresh: monthly
+#   valid_from: 2026-01-01
+#   valid_until: 2026-12-31
+#   terms: "Amtliches Werk, § 5 UrhG (GBl. 2025 Nr. 144 vom 19.12.2025)"
+
+# - id: bw-mietpreisbremse
+#   name: "Mietpreisbegrenzungsverordnung Baden-Württemberg vom 10.11.2026 (2027–2029)"
+#   publisher: "Landesregierung Baden-Württemberg (Gesetzblatt)"
+#   url: https://www.baden-wuerttemberg.de/de/service/gesetze-und-verordnungen/gesetzblatt/detail/2026-95
+#   source_type: regulation
+#   parser: law_pdf
+#   law_abbrev: MietBegrVO BW
+#   domain: tenancy
+#   subtopic: mietpreisbremse
+#   keywords: [Mietpreisbremse, rent cap, Stuttgart]
+#   language: de
+#   jurisdiction: state
+#   state: BW
+#   fetch_method: http
+#   refresh: monthly
+#   valid_from: 2027-01-01
+#   valid_until: 2029-12-31
+#   terms: "Amtliches Werk, § 5 UrhG (GBl. 2026 Nr. 95 vom 12.11.2026)"
+
+- id: bw-mietpreisbremse-info
+  name: "Mietpreisbremse gemäß Landesverordnung – Ministerium für Landesentwicklung und Wohnen BW"
+  publisher: "Ministerium für Landesentwicklung und Wohnen Baden-Württemberg"
+  url: https://mlw.baden-wuerttemberg.de/de/bauen-wohnen/wohnungsbau/mietpreisbremse
+  source_type: guide
+  parser: guide_html
+  domain: tenancy
+  subtopic: mietpreisbremse
+  keywords: [Mietpreisbremse, rent cap, Stuttgart]
+  language: de
+  jurisdiction: state
+  state: BW
+  fetch_method: http
+  refresh: monthly
+  terms: "© Land BW; chunks + link only"
+
+# --------------------------------------------------------------------------------------------
+# Berlin (service.berlin.de + mietspiegel.berlin.de). robots: UA must identify itself; /pdf/ paths disallowed.
+# --------------------------------------------------------------------------------------------
+# No separate family page: 120686 covers registering children/family members. The linked EN page
+# (/dienstleistung/120686/en/) returns 404 (checked twice), so no alt_lang_urls.
+- id: ber-anmeldung
+  name: "Wohnsitz – Alleinige Wohnung oder Hauptwohnung anmelden – Service Berlin"
+  publisher: "Land Berlin, Bürgerämter"
+  url: https://service.berlin.de/dienstleistung/120686/
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: anmeldung
+  language: de
+  jurisdiction: city
+  state: BE
+  city: berlin
+  applies_to: [all]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Land Berlin / BerlinOnline; chunks + link only"
+
+- id: ber-lea-blaue-karte
+  name: "Blaue Karte EU beantragen – Landesamt für Einwanderung (LEA) Berlin"
+  publisher: "Land Berlin, Landesamt für Einwanderung"
+  url: https://service.berlin.de/dienstleistung/324659/
+  alt_lang_urls: {en: https://service.berlin.de/dienstleistung/324659/en/}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: city
+  state: BE
+  city: berlin
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Land Berlin / BerlinOnline; chunks + link only"
+
+- id: ber-lea-niederlassung-blaue-karte
+  name: "Niederlassungserlaubnis für Inhaber einer Blauen Karte EU beantragen – LEA Berlin"
+  publisher: "Land Berlin, Landesamt für Einwanderung"
+  url: https://service.berlin.de/dienstleistung/326556/
+  alt_lang_urls: {en: https://service.berlin.de/dienstleistung/326556/en/}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: de
+  jurisdiction: city
+  state: BE
+  city: berlin
+  applies_to: [non_eu, blue_card]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Land Berlin / BerlinOnline; chunks + link only"
+
+- id: ber-kita
+  name: "Kita-Gutschein beantragen oder erweitern – Service Berlin"
+  publisher: "Land Berlin, Jugendämter der Bezirke"
+  url: https://service.berlin.de/dienstleistung/324873/
+  alt_lang_urls: {en: https://service.berlin.de/dienstleistung/324873/en/}
+  source_type: procedure
+  parser: procedure_html
+  domain: family
+  subtopic: kita
+  keywords: [Kita-Gutschein, daycare voucher, childcare]
+  language: de
+  jurisdiction: city
+  state: BE
+  city: berlin
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Land Berlin / BerlinOnline; chunks + link only"
+
+# WordPress site of SenStadt (berlin.de/sen/wohnen/service/mietspiegel/ only teases it). Qualified Mietspiegel 2026.
+- id: ber-mietspiegel
+  name: "Berliner Mietspiegel 2026"
+  publisher: "Senatsverwaltung für Stadtentwicklung, Bauen und Wohnen Berlin"
+  pages:
+    - url: https://mietspiegel.berlin.de/
+    - url: https://mietspiegel.berlin.de/berliner-mietspiegel/erlaeuterungen-zum-mietspiegel/
+    - url: https://mietspiegel.berlin.de/berliner-mietspiegel/erlaeuterungen-zum-mietspiegel/preisspannen/
+  source_type: guide
+  parser: guide_html
+  domain: tenancy
+  subtopic: mietspiegel
+  keywords: [Mietspiegel, rent index, ortsübliche Vergleichsmiete]
+  language: de
+  jurisdiction: city
+  state: BE
+  city: berlin
+  fetch_method: http
+  refresh: monthly
+  terms: "© Land Berlin; chunks + link only"
+
+# --------------------------------------------------------------------------------------------
+# Hamburg (hamburg.de "Hamburg Service" + Behörde pages; welcome.hamburg.de / welcome.hamburg.com).
+# hamburg.de "EN" button is a JS machine translator -> no static English. welcome.hamburg.com is a real EN site.
+# --------------------------------------------------------------------------------------------
+# 111202447 ("Anmeldung der alleinigen Wohnung") is an empty umbrella ("siehe Rubrik Links"); the
+# expat-relevant content is in "Umzug nach Hamburg aus dem Ausland melden".
+- id: ham-anmeldung
+  name: "Umzug nach Hamburg aus dem Ausland melden – Hamburg Service"
+  publisher: "Freie und Hansestadt Hamburg, Hamburg Service"
+  url: https://www.hamburg.de/service/info/111142065/n0/
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: anmeldung
+  language: de
+  jurisdiction: city
+  state: HH
+  city: hamburg
+  applies_to: [all]
+  fetch_method: http
+  refresh: monthly
+  terms: "© FHH; chunks + link only"
+
+- id: ham-welcome-blaue-karte
+  name: "Blaue Karte EU – Hamburg Welcome Center"
+  publisher: "Freie und Hansestadt Hamburg, Hamburg Welcome Center (Amt für Migration)"
+  url: https://welcome.hamburg.de/einreise-und-aufenthalt/aufenthaltserlaubnisse/blaue-karte-eu-416694
+  alt_lang_urls: {en: https://welcome.hamburg.com/entry-and-residence/residence-permit/eu-blue-card-17644}
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: city
+  state: HH
+  city: hamburg
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© FHH; chunks + link only"
+
+- id: ham-welcome-niederlassung
+  name: "Niederlassungserlaubnis – Hamburg Welcome Center"
+  publisher: "Freie und Hansestadt Hamburg, Hamburg Welcome Center (Amt für Migration)"
+  url: https://welcome.hamburg.de/einreise-und-aufenthalt/aufenthaltserlaubnisse/niederlassungerlaubnis-416776
+  alt_lang_urls: {en: https://welcome.hamburg.com/entry-and-residence/residence-permit/settlement-permit-17664}
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: de
+  jurisdiction: city
+  state: HH
+  city: hamburg
+  applies_to: [non_eu, blue_card]
+  fetch_method: http
+  refresh: monthly
+  terms: "© FHH; chunks + link only"
+
+# Procedure-style counterparts on Hamburg Service (verified; samples ham-blaue-karte.html,
+# ham-niederlassung-blaue-karte.html). Optional: overlap with the Welcome Center pages above.
+- id: ham-blaue-karte
+  name: "Blaue Karte für die EU beantragen – Hamburg Service"
+  publisher: "Freie und Hansestadt Hamburg, Hamburg Service"
+  url: https://www.hamburg.de/service/info/111251568/
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: city
+  state: HH
+  city: hamburg
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© FHH; chunks + link only"
+
+- id: ham-niederlassung-blaue-karte
+  name: "Niederlassungserlaubnis für Inhaber einer Blauen Karte EU beantragen – Hamburg Welcome Center"
+  publisher: "Freie und Hansestadt Hamburg, Hamburg Service"
+  url: https://www.hamburg.de/service/info/111204805/
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: de
+  jurisdiction: city
+  state: HH
+  city: hamburg
+  applies_to: [non_eu, blue_card]
+  fetch_method: http
+  refresh: monthly
+  terms: "© FHH; chunks + link only"
+
+- id: ham-kita
+  name: "Kita-Gutschein – Antrag Kindertagesbetreuung Hamburg"
+  publisher: "Freie und Hansestadt Hamburg, Behörde für Schule, Familie und Berufsbildung"
+  url: https://www.hamburg.de/politik-und-verwaltung/behoerden/bsfb/familie/kinderbetreuung/elterninformationen/kita-gutschein-35656
+  source_type: guide
+  parser: guide_html
+  domain: family
+  subtopic: kita
+  keywords: [Kita-Gutschein, daycare voucher, childcare]
+  language: de
+  jurisdiction: city
+  state: HH
+  city: hamburg
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "© FHH; chunks + link only"
+
+# Table and brochure are PDFs (dokumente.hamburg.de); online map is a JS opt-in widget.
+- id: ham-mietspiegel
+  name: "Hamburger Mietenspiegel 2025"
+  publisher: "Freie und Hansestadt Hamburg, Behörde für Stadtentwicklung und Wohnen"
+  url: https://www.hamburg.de/politik-und-verwaltung/behoerden/behoerde-fuer-stadtentwicklung-und-wohnen/themen/wohnen/mieten/mietenspiegel/mietenspiegel-hintergrund-189816
+  source_type: guide
+  parser: guide_html
+  domain: tenancy
+  subtopic: mietspiegel
+  keywords: [Mietenspiegel, Mietspiegel, rent index]
+  language: de
+  jurisdiction: city
+  state: HH
+  city: hamburg
+  fetch_method: http
+  refresh: monthly
+  terms: "© FHH; chunks + link only"
+
+# --------------------------------------------------------------------------------------------
+# Frankfurt am Main (frankfurt.de, Cloudflare). robots: Allow /, Content-Signal search=yes, ai-train=no,
+# use=reference (ai-input not set). /auslaenderangelegenheiten/* and /themen/* fetched fine;
+# /leistungen/* and /english/* consistently returned 403 Cloudflare challenge (3 tries per page, 5-30 s apart).
+# English on the Ausländerbehörde microsite is a JS (Conword) translator -> no static EN.
+# --------------------------------------------------------------------------------------------
+# NOT VERIFIED (403 Cloudflare challenge for plain HTTP): save manually if wanted.
+# - id: fra-anmeldung
+#   name: "Anmeldung einer Wohnung – Stadt Frankfurt am Main"
+#   publisher: "Stadt Frankfurt am Main, Bürgeramt, Statistik und Wahlen"
+#   url: https://frankfurt.de/leistungen/Umzug-8958631/Abmeldungen-Ummeldungen-Anmeldungen-8958634/Anmeldung-einer-Wohnung
+#   alt_lang_urls: {en: https://frankfurt.de/english/service-and-city-hall/service-and-administration/municipal-offices/citizens-office-statistics-and-elections/our-services/registration-of-residence}
+#   source_type: procedure
+#   parser: procedure_html
+#   domain: bureaucracy
+#   subtopic: anmeldung
+#   language: de
+#   jurisdiction: city
+#   state: HE
+#   city: frankfurt
+#   applies_to: [all]
+#   fetch_method: manual
+#   manual_path: data/manual/fra-anmeldung.html
+#   refresh: monthly
+#   terms: "© Stadt Frankfurt am Main; Content-Signal use=reference; chunks + link only"
+
+- id: fra-auslaenderbehoerde-blaue-karte
+  name: "Blaue Karte EU – Ausländerbehörde Frankfurt am Main"
+  publisher: "Stadt Frankfurt am Main, Ordnungsamt – Ausländerbehörde"
+  url: https://frankfurt.de/auslaenderangelegenheiten/ich-moechte-einen-antrag-stellen/arbeitnehmer/blaue-karte-eu
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: city
+  state: HE
+  city: frankfurt
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Frankfurt am Main; Content-Signal use=reference; chunks + link only"
+
+- id: fra-auslaenderbehoerde-niederlassung
+  name: "Niederlassungserlaubnis Arbeitnehmer und Familienangehörige – Ausländerbehörde Frankfurt am Main"
+  publisher: "Stadt Frankfurt am Main, Ordnungsamt – Ausländerbehörde"
+  url: https://frankfurt.de/auslaenderangelegenheiten/ich-moechte-einen-antrag-stellen/arbeitnehmer/niederlassungserlaubnis
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: de
+  jurisdiction: city
+  state: HE
+  city: frankfurt
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Frankfurt am Main; Content-Signal use=reference; chunks + link only"
+
+# kindernetfrankfurt.de itself is a JS app (Lecos/Kivan; robots.txt returns HTTP 500) -> not usable.
+# This frankfurt.de page explains the kindernet registration (Vormerkung) and the Infobörse.
+- id: fra-kita
+  name: "Betreuungsplatz suchen und finden (kindernetfrankfurt) – Stadt Frankfurt am Main"
+  publisher: "Stadt Frankfurt am Main, Stadtschulamt"
+  url: https://frankfurt.de/themen/arbeit-bildung-und-wissenschaft/bildung/kindertagesbetreuung/betreuungsplatz-suchen-und-finden
+  source_type: guide
+  parser: guide_html
+  domain: family
+  subtopic: kita
+  keywords: [kindernetfrankfurt, Kita, daycare, childcare]
+  language: de
+  jurisdiction: city
+  state: HE
+  city: frankfurt
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Frankfurt am Main; Content-Signal use=reference; chunks + link only"
+
+# Qualified Mietspiegel 2026 (recognised 25.06.2026). EN page (frankfurt.de/english/.../frankfurt-rent-index)
+# exists but is Cloudflare-blocked (403), so it is not listed as alt_lang_url.
+- id: fra-mietspiegel
+  name: "Frankfurter Mietspiegel 2026"
+  publisher: "Stadt Frankfurt am Main, Amt für Wohnungswesen"
+  url: https://frankfurt.de/themen/planen-bauen-und-wohnen/wohnen/informationen-zum-wohnungsmarkt/mietspiegel
+  source_type: guide
+  parser: guide_html
+  domain: tenancy
+  subtopic: mietspiegel
+  keywords: [Mietspiegel, rent index, ortsübliche Vergleichsmiete]
+  language: de
+  jurisdiction: city
+  state: HE
+  city: frankfurt
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Frankfurt am Main; Content-Signal use=reference; chunks + link only"
+
+# --------------------------------------------------------------------------------------------
+# Köln (stadt-koeln.de). robots: only 3 unrelated paths disallowed. English = external Conword proxy (no static EN).
+# --------------------------------------------------------------------------------------------
+- id: cgn-anmeldung
+  name: "Anmeldung Ihres Wohnsitzes – Stadt Köln"
+  publisher: "Stadt Köln, Kundenzentren"
+  url: https://www.stadt-koeln.de/service/produkte/00415/index.html
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: anmeldung
+  language: de
+  jurisdiction: city
+  state: NW
+  city: cologne
+  applies_to: [all]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Köln; chunks + link only"
+
+- id: cgn-auslaenderbehoerde-blaue-karte
+  name: "Blaue Karte EU – Ausländeramt Stadt Köln"
+  publisher: "Stadt Köln, Ausländeramt – Arbeitsmigration"
+  url: https://www.stadt-koeln.de/service/produkte/20321/index.html
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: city
+  state: NW
+  city: cologne
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Köln; chunks + link only"
+
+# Canonical of /service/produkt/niederlassungserlaubnis-fuer-fachkraefte (covers § 18c incl. Blue Card holders).
+- id: cgn-auslaenderbehoerde-niederlassung
+  name: "Niederlassungserlaubnis für Fachkräfte – Ausländeramt Stadt Köln"
+  publisher: "Stadt Köln, Ausländeramt – Arbeitsmigration"
+  url: https://www.stadt-koeln.de/service/produkte/20359/index.html
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: de
+  jurisdiction: city
+  state: NW
+  city: cologne
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Köln; chunks + link only"
+
+- id: cgn-kita
+  name: "Vormerkung eines Kindergartenplatzes (LITTLE BIRD) – Stadt Köln"
+  publisher: "Stadt Köln, Amt für Kinder, Jugend und Familie"
+  pages:
+    - url: https://www.stadt-koeln.de/service/produkte/00386/index.html
+    - url: https://www.stadt-koeln.de/artikel/65229/index.html
+      source_type: faq
+  source_type: procedure
+  parser: procedure_html
+  domain: family
+  subtopic: kita
+  keywords: [LITTLE BIRD, Kita, Kindergarten, daycare, childcare]
+  language: de
+  jurisdiction: city
+  state: NW
+  city: cologne
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Köln; chunks + link only"
+
+# GAP: the Kölner Mietspiegel is a "einfacher Mietspiegel" published by the Rheinische Immobilienbörse e.V.
+# (private association; web.rheinische-immobilienboerse.de) -> not an official source. The city page below
+# only explains Mietpreisüberhöhung/Mietwucher and points to the RIB download. Useful for tenancy, not a Mietspiegel.
+- id: cgn-mietpreisueberhoehung
+  name: "Mietpreiskontrolle für freifinanzierten Wohnungsbau – Stadt Köln"
+  publisher: "Stadt Köln, Amt für Wohnungswesen"
+  url: https://www.stadt-koeln.de/service/produkte/00702/index.html
+  source_type: procedure
+  parser: procedure_html
+  domain: tenancy
+  subtopic: rent_control
+  keywords: [Mietpreisüberhöhung, Mietwucher, Mietspiegel, overpriced rent]
+  language: de
+  jurisdiction: city
+  state: NW
+  city: cologne
+  fetch_method: http
+  refresh: monthly
+  terms: "© Stadt Köln; chunks + link only"
+
+# --------------------------------------------------------------------------------------------
+# Stuttgart (stuttgart.de + welcome.stuttgart.de, Cloudflare but no challenge observed). robots: Allow /,
+# Content-Signal search=yes, ai-train=no, use=reference. EN pages are DeepL (og:locale "en_US_deepl").
+# --------------------------------------------------------------------------------------------
+- id: str-anmeldung
+  name: "Wohnsitz anmelden – als Hauptwohnsitz – Landeshauptstadt Stuttgart"
+  publisher: "Landeshauptstadt Stuttgart, Bürgerbüros"
+  url: https://www.stuttgart.de/organigramm/leistungen/wohnsitz-anmelden-als-hauptwohnsitz
+  alt_lang_urls: {en: https://www.stuttgart.de/en/organigramm/leistungen/wohnsitz-anmelden-als-hauptwohnsitz}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: anmeldung
+  language: de
+  jurisdiction: city
+  state: BW
+  city: stuttgart
+  applies_to: [all]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH Stuttgart; Content-Signal use=reference; chunks + link only"
+
+# Welcome Center overview of the first steps (Anmeldung, Rundfunkbeitrag, ...). Stand 09.09.2026.
+- id: str-welcome-anmeldung
+  name: "Anmelden – Welcome Center Stuttgart"
+  publisher: "Landeshauptstadt Stuttgart, Welcome Center Stuttgart"
+  url: https://welcome.stuttgart.de/ankommen/anmelden
+  alt_lang_urls: {en: https://welcome.stuttgart.de/en/ankommen/anmelden}
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: anmeldung
+  language: de
+  jurisdiction: city
+  state: BW
+  city: stuttgart
+  applies_to: [all]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH Stuttgart; Content-Signal use=reference; chunks + link only"
+
+- id: str-auslaenderbehoerde-blaue-karte
+  name: "Blaue Karte zur Ausübung einer hochqualifizierten Beschäftigung beantragen – Ausländerbehörde Stuttgart"
+  publisher: "Landeshauptstadt Stuttgart, Amt für öffentliche Ordnung – Ausländer- und Staatsangehörigkeitsrecht"
+  url: https://www.stuttgart.de/organigramm/leistungen/blaue-karte-zur-ausuebung-einer-hochqualifizierten-beschaeftigung-beantragen-blue-card-
+  alt_lang_urls: {en: https://www.stuttgart.de/en/organigramm/leistungen/blaue-karte-zur-ausuebung-einer-hochqualifizierten-beschaeftigung-beantragen-blue-card-}
+  source_type: procedure
+  parser: procedure_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: city
+  state: BW
+  city: stuttgart
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH Stuttgart; Content-Signal use=reference; chunks + link only"
+
+# Stand 18.12.2025 (older than the procedure page; salary thresholds may lag).
+- id: str-welcome-blaue-karte
+  name: "Blaue Karte EU – Welcome Center Stuttgart"
+  publisher: "Landeshauptstadt Stuttgart, Welcome Center Stuttgart"
+  url: https://welcome.stuttgart.de/ankommen/aufenthalt/blaue-karte-eu
+  alt_lang_urls: {en: https://welcome.stuttgart.de/en/ankommen/aufenthalt/blaue-karte-eu}
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: blue_card
+  language: de
+  jurisdiction: city
+  state: BW
+  city: stuttgart
+  applies_to: [non_eu, blue_card, employee]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH Stuttgart; Content-Signal use=reference; chunks + link only"
+
+# No separate stuttgart.de "Leistung" for the Blue Card settlement permit; this page has a section
+# "Niederlassungserlaubnis für Inhaber einer Blauen Karte". Stand 25.08.2025.
+- id: str-welcome-niederlassung
+  name: "Niederlassungserlaubnis – Welcome Center Stuttgart"
+  publisher: "Landeshauptstadt Stuttgart, Welcome Center Stuttgart"
+  url: https://welcome.stuttgart.de/ankommen/aufenthalt/niederlassungserlaubnis
+  alt_lang_urls: {en: https://welcome.stuttgart.de/en/ankommen/aufenthalt/niederlassungserlaubnis}
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: settlement_permit
+  language: de
+  jurisdiction: city
+  state: BW
+  city: stuttgart
+  applies_to: [non_eu, blue_card]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH Stuttgart; Content-Signal use=reference; chunks + link only"
+
+- id: str-kita
+  name: "Kita-Portal – Landeshauptstadt Stuttgart"
+  publisher: "Landeshauptstadt Stuttgart, Jugendamt"
+  url: https://www.stuttgart.de/kita-portal
+  source_type: guide
+  parser: guide_html
+  domain: family
+  subtopic: kita
+  keywords: [Kita-Portal, Kita, daycare, childcare]
+  language: de
+  jurisdiction: city
+  state: BW
+  city: stuttgart
+  applies_to: [family]
+  fetch_method: http
+  refresh: monthly
+  terms: "© LH Stuttgart; Content-Signal use=reference; chunks + link only"
+
+# Mietspiegel 2025/2026 (qualified, valid 01.01.2025-31.12.2026; successor 2027/2028 not yet published
+# -> re-check in January 2027). /en/service/statistik-und-wahlen/mietspiegel redirects to the German page.
+- id: str-mietspiegel
+  name: "Stuttgarter Mietspiegel 2025/2026"
+  publisher: "Landeshauptstadt Stuttgart, Statistisches Amt / Amt für Stadtplanung und Wohnen"
+  url: https://www.stuttgart.de/mietspiegel
+  source_type: guide
+  parser: guide_html
+  domain: tenancy
+  subtopic: mietspiegel
+  keywords: [Mietspiegel, rent index, ortsübliche Vergleichsmiete]
+  language: de
+  jurisdiction: city
+  state: BW
+  city: stuttgart
+  fetch_method: http
+  refresh: monthly
+  valid_from: 2025-01-01
+  valid_until: 2026-12-31
+  terms: "© LH Stuttgart; Content-Signal use=reference; chunks + link only"
