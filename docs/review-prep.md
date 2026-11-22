@@ -4,14 +4,16 @@
 > Practise each answer out loud in ≤ 60 s: **decision → alternative considered → evidence (a number)**.
 
 ## 1. The 60-second pitch
-"**Ankommen** helps expats settle in Germany. You ask in English or German; it answers **only from official
-sources** (federal laws, BAMF, Familienportal, city portals) with a citation behind every claim, and it
+"**Ankommen** helps expats settle in Germany: federal rules everywhere plus local details for six cities
+(Berlin, Hamburg, Munich, Cologne, Frankfurt, Stuttgart). You ask in English or German; it answers **only from
+official sources** (federal laws, state gazettes, BAMF, Familienportal, city portals) with a citation behind every claim, and it
 **calculates** deadlines and amounts with tested tools instead of guessing. Under the hood: one structured
 query-analysis call (English ↔ German rewrites, sub-questions, filters), hybrid search (Chroma vectors +
 German BM25, fused with RRF), metadata filters from the question and the user profile, and a LangChain
 agent with five tools. I evaluated it on a golden set: on **12 held-out questions, correct answers went
 from 70% (naive RAG) to 90%, with every claim backed by a source, at the same cost of about half a cent per
-answer**."
+answer**. Expanding to six cities, I measured that naive search pulls another city's rules into two out of
+three answers; with per-question location filters that dropped to zero."
 
 ## 2. Demo script (5 minutes)
 | # | Do | Point out |
@@ -87,6 +89,13 @@ limits. Blocked judge model → eval pre-flight fails in seconds. Stale sources 
 secrets, never in git; no tracebacks to visitors; sensitive topics redirected; retrieved text treated as data
 (delimiters neutralised); admin pages behind a password; spending capped (limits + OpenRouter key limit).
 
+**10a. "How do you make sure a Berlin user never gets Munich rules?"** Every chunk carries jurisdiction / state /
+city metadata. Per question I resolve the location (cities named in the question, incl. "Köln"/"München" and
+"moving from Berlin to Hamburg" -> both; else the profile; else *unknown* = nationwide sources only) and filter
+hard on it. If the answer depends on the city and none is known, the assistant asks "Which city do you live
+in?" with one-click buttons and then answers the original question. Evidence: leak@10 0.62–0.68 (naive) ->
+0.00 (dev and holdout, 71 questions); clarification accuracy 100%, never asked for federal questions.
+
 **10. "Privacy, copyright, liability?"** Statutes are public domain (§ 5 UrhG); portal content: robots.txt
 respected, chunks + attribution + deep links, scraped corpus not in git (shipped as a private versioned
 bundle). Persistent disclaimer.
@@ -100,6 +109,9 @@ bundle). Persistent disclaimer.
   pre-flight ping and per-metric error isolation.
 - **Saturday is not a working day** for the notice deadline (BGH VIII ZR 291/09) – exactly the kind of rule an
   LLM gets wrong, hence a tested tool.
+- **OpenRouter reserved credit for 64k output tokens per judge call** (no `max_tokens`) and started rejecting
+  calls with "402 payment required" while real spend was tiny – now every role has an output cap.
+- **Wrong-city answers are worse than none:** naive search mixed in other cities' rules for ~2/3 of questions.
 - **Streamlit Cloud kept old modules in memory** after a push → reboot after changes to `src/`.
 
 ## 6. Known limitations and what I would improve (reflection)
@@ -107,7 +119,8 @@ bundle). Persistent disclaimer.
   exact-identifier and German ones.
 - Citation style varies between runs (law named in text instead of `[S1]`). → map bracketed § to sources.
 - Latency 10–20 s on slow-embedding days. → cache query embeddings, faster provider, streaming earlier.
-- Local coverage: Munich today; **Germany-wide expansion in progress** on `feature/germany-wide`: 6 cities,
-  16 states, "Which city do you live in?" follow-up when the answer depends on it (docs/plan-germany-wide.md).
+- Local coverage: 6 cities in detail; other cities get federal + state rules. Gaps: Frankfurt Anmeldung page
+  (frankfurt.de blocks bots), Baden-Württemberg law PDFs (expiring links; the ministry explainer is used).
+- Holdout answer eval for the Germany-wide version is incomplete (API key limit); retrieval evals are complete.
 - Production: scheduled ingestion, reranker, user feedback loop, Postgres/pgvector or Qdrant if users need
   to write data.

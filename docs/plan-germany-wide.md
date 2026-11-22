@@ -1,6 +1,7 @@
 # Plan: from Munich to Germany-wide (branch `feature/germany-wide`)
 
-> Status: in progress (started 2026-11-22). Decided with the product owner: cities **Berlin, Hamburg,
+> Status: phases 1, 2 and 4 done and merged (2026-11-22); phase 3 (more nationwide topics) open.
+> Results: docs/evaluation-plan.md, "Germany-wide evaluation". Started 2026-11-22. Decided with the product owner: cities **Berlin, Hamburg,
 > Frankfurt am Main, Köln, Stuttgart** (+ Munich), tagline **"Your guide to settling in Germany"**, and a
 > **follow-up question when the city matters but is unknown**. Merged to `main` only after the evals show
 > no regression; the review submission stays on `main` until then.

@@ -216,6 +216,47 @@ Because 2–4 were fixed after looking at dev failures, **dev run 2 is optimisti
 `claude-haiku-4.5`, `gemini-2.5-flash`); `claude-sonnet-4.5`, `gemini-2.5-pro`, `gpt-4.1` are blocked. The eval CLI
 now pings the judge once before a paid run and fails fast, and a failing judge only empties its own metric.
 
+### Germany-wide evaluation (2026-11-22)
+
+After adding 5 cities (+264 local chunks, docs/plan-germany-wide.md) the golden set grew to **71 questions**
+(45 dev / 26 holdout): per-city Anmeldung, Blue Card, Kita and rent cap / rent index, cross-city questions,
+4 "should ask *which city?*" cases, federal questions with an empty profile and an unsupported city (Leipzig).
+LangSmith dataset `expat-golden-v2`. Two new metrics: **leak@10** (share of questions with another place's
+local chunk in the top 10; unknown location counts every local chunk) and **clarification** (asked for the city
+exactly when expected).
+
+**Retrieval (complete):**
+
+| Split | Variant | hit@5 | MRR@10 | leak@10 |
+|---|---|---|---|---|
+| dev (n = 40) | R0 naive | 0.95 | 0.74 | **0.62** |
+| dev | R5 production | 0.95 | 0.80 | **0.00** |
+| holdout (n = 22) | R0 naive | 0.95 | 0.84 | **0.68** |
+| holdout | R5 production | **1.00** | **0.88** | **0.00** |
+
+Without location filters, two out of three questions pull another city's or state's rules into the context;
+with the per-question location (question > profile > nationwide only) it is zero on both splits. Original 40
+questions: R5 hit@5 0.96 / 1.00 (dev / holdout), unchanged.
+
+**Answers:** dev complete (R0 / R5): faithful 0.85 / 0.90, correct 0.82 / 0.85, citations valid 0.97 / 1.00,
+must-include 0.84 / 0.90, clarification 1.00 / 1.00. New city questions (dev, R5): faithful 0.93, must-include
+1.00. Holdout R0 complete (faithful 0.77, correct 0.86); **holdout R5 incomplete**: the OpenRouter key hit its
+total limit mid-run (19 of 22 questions answered, judge scores for 10: correct 1.00, faithful 0.89). Rerun when
+credit is available: `MODEL_JUDGE=anthropic/claude-haiku-4.5 uv run python -m expat.evals answers --split holdout
+--variants R5 --mode langsmith --dataset expat-golden-v2`.
+
+**What the run found and what changed:**
+- **Regression (dev `ten-002`):** "How much notice do I give to move out?" -> the model asked for the tenancy start
+  date and claimed the tenant's period depends on tenancy length (it is always 3 months). Cause: `tenancy_start`
+  was required and the tool description stressed the landlord's 3/6/9 tiers. Fix: the date is only required when
+  the landlord gives notice (unit tests); *not yet re-verified with the live model* (key limit).
+- **Credit reservation bug:** no model call had an output cap, so OpenRouter reserved credit for the full output
+  limit (32k / 64k tokens) per call and rejected calls with 402 while real spend was tiny. All roles now have
+  caps (analysis 3000, answer 2500, judge 1024). The per-metric judge isolation kept the run alive and the
+  pre-flight ping stopped the retry before spending anything.
+- **Unsupported city:** "I live in Leipzig" no longer triggers a pointless "Which city?" (analysis reports
+  `mentioned_city`; known-but-unsupported -> nationwide sources only).
+
 ## 4. Tooling (APIs verified 2026-11-17: `langsmith` 0.14.x, `openevals` 0.2.x)
 - **Datasets:** `Client().create_dataset(dataset_name="expat-golden-v1")` + `create_examples(...)` from the JSONL. Put the `dev`/`holdout` split in example metadata (or use LangSmith dataset splits).
 - **Experiments:** `Client().evaluate(target, data="expat-golden-v1", evaluators=[...], experiment_prefix="R4-hybrid", metadata={...config...}, max_concurrency=4)`, or `aevaluate` for the async pipeline. Evaluators are plain functions `(inputs, outputs, reference_outputs) -> bool | dict`. The deterministic metrics are simply Python.
