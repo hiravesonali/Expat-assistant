@@ -93,7 +93,9 @@ def test_which_city_follow_up_saves_the_city_and_answers_the_original_question(m
     def fake_run(mode, question, history, profile):
         if profile.city is None:
             yield TokenEvent(text="Which city do you live in?")
-            yield ClarificationEvent(original_question=question, options=[("berlin", "Berlin"), ("other", "Other city")])
+            yield ClarificationEvent(
+                original_question=question, options=[("berlin", "Berlin"), ("other", "Other city")]
+            )
         else:
             yield TokenEvent(text=f"Answer for {profile.city}.")
         yield DoneEvent()
