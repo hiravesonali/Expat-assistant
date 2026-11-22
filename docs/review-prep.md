@@ -1,50 +1,113 @@
-# Review Prep: Top 10 Reviewer Questions
+# Review prep
 
-> Practise answering these out loud in ≤ 60 seconds each. The best answers follow **decision → alternative considered → evidence (a number from your evals)**. Fill in the numbers after Day 9.
+> Live app: https://expat-assistant.streamlit.app/ (open it 5 minutes early: the free tier sleeps).
+> Practise each answer out loud in ≤ 60 s: **decision → alternative considered → evidence (a number)**.
 
-### 1. "Why one vector collection instead of one per domain?"
-Multi-domain questions are the norm for expats. With one collection, routing is a *filter*, so a wrong route degrades gracefully: I drop the filter or use a soft boost. With per-domain collections it's zero recall. I also avoid duplicating content that spans domains (Kindergeld is family and tax). Evidence: R5 vs R4, and filter precision. → ADR-0001
+## 1. The 60-second pitch
+"**Ankommen** helps expats settle in Germany. You ask in English or German; it answers **only from official
+sources** (federal laws, BAMF, Familienportal, city portals) with a citation behind every claim, and it
+**calculates** deadlines and amounts with tested tools instead of guessing. Under the hood: one structured
+query-analysis call (English ↔ German rewrites, sub-questions, filters), hybrid search (Chroma vectors +
+German BM25, fused with RRF), metadata filters from the question and the user profile, and a LangChain
+agent with five tools. I evaluated it on a golden set: on **12 held-out questions, correct answers went
+from 70% (naive RAG) to 90%, with every claim backed by a source, at the same cost of about half a cent per
+answer**."
 
-### 2. "Your users write English but your sources are German. How does retrieval work across languages, and how do you know it works?"
-Two layers. A multilingual embedding model chosen by a bake-off on my own golden set, which also measured the *cross-lingual gap* (EN vs DE query hit@5). Plus explicit EN→DE query rewriting in authority language, which also makes BM25 useful on German text. Evidence: R0→R1 hit@5 jump. → ADR-0002, ADR-0005
+## 2. Demo script (5 minutes)
+| # | Do | Point out |
+|---|---|---|
+| 1 | Start screen | Brand, topic cards, "knows its limits" promises; disclaimer |
+| 2 | Card **"End my lease"** | Tool card (Tenancy notice calculator), exact end date, chips `§ 573c BGB` + `T1`; open a chip → quote + "verified" date |
+| 3 | Open **"How I got this answer"** | Standalone question, English + **German rewrites**, top hits table with scores, tool input/output, tokens + **≈ $ cost** |
+| 4 | Ask: *"My landlord gave me notice after 10 years because he needs the flat for his daughter. How long is my notice period?"* | **9 months** (landlord side, 3+3+3) – a bug the evals found and I fixed |
+| 5 | Ask in German: *"Wie viel Kindergeld bekomme ich für zwei Kinder?"* | Answers in German, top source § 66 EStG |
+| 6 | Ask: *"Got caught on the U-Bahn without a ticket, now a letter from the police. Will this kill my Blue Card?"* | Safety pre-check → lawyer + migration counselling, no legal guessing |
+| 7 | **Personalise answers** → set Blue Card + 2 kids, ask *"What do we need for the Anmeldung?"* | Profile changes retrieval (audience boost) and the checklist tool |
+| 8 | **Export chat** → Markdown | Sources and calculations travel with the answer |
+| 9 | (optional) Settings → Evaluation results page | Ablation + answer-quality tables, LangSmith experiment names |
 
-### 3. "Which query-translation techniques did you use, and which actually helped?"
-Cross-lingual rewriting, multi-query with RRF, decomposition (multi-domain only), step-back (legal only). All are generated in **one** structured-output call for latency, cost and consistency. HyDE was deliberately excluded, or tested as R7: a hallucinated legal answer can pull in wrong-but-similar passages. Show the ablation table. Say honestly if something didn't help ("decomposition only helped the multi-domain slice, so I gate it").
+Backup if the app is slow (cold start or slow embeddings): show the README screenshots and the eval report.
 
-### 4. "What does 'structured retrieval' mean in your system?"
-A Pydantic-validated metadata schema (domain, source_type, `section_kind`, jurisdiction/state/city, audience, `legal_reference`, validity dates) and filters built from **two sources**: the user profile (deterministic: city, state, validity) and the question (LLM: domain, section kind, § reference). Hard vs soft filters avoid over-filtering. It generalises LangChain's self-query retriever. Also: structure-aware chunking (§/Absatz, procedure sections) plus small-to-big parent expansion.
+## 3. Requirements → where they are
+| Task requirement | Implementation | Code / doc |
+|---|---|---|
+| Knowledge base, embeddings, chunking, similarity search | 941 chunks from 30 official sources; §/Absatz- and section-aware chunking, parent expansion; Qwen3-Embedding-8B (bake-off) | `src/expat/ingestion/`, `docs/vector-db-design.md`, ADR-0001/0002 |
+| Advanced RAG: query translation + structured retrieval | One structured call: standalone question, EN/DE rewrites, multi-query, step-back, decomposition, domain/section/§ hints; hard + soft metadata filters | `rag/query_analysis.py`, `rag/filters.py`, ADR-0005 |
+| ≥ 3 tools | 5: tenancy notice, deadlines, family benefits, document checklist, Schengen 90/180 | `src/expat/tools/`, `docs/tools.md` |
+| Domain prompts + security | Safety pre-check (emergency, asylum, court cases, police letters, medical, tax forms), sources as data (injection hygiene), § tripwire | `safety.py`, `rag/prompts.py`, `rag/context.py` |
+| LangChain + OpenRouter, error handling | `create_agent` + middleware, `ChatOpenRouter`; errors become events with Retry; transient retries | `rag/generate.py`, `rag/pipeline.py` |
+| Input validation | Length/empty/control-char check, per-session + daily limits; Pydantic tool schemas | `guards.py`, `tools/*` |
+| UI: context, sources, tool results, progress | Citation chips + dialog, tool cards, live step status, "How I got this answer" | `app/Home.py`, `app/ui.py` |
+| **Hard** optional | Hybrid search · RAG evaluation (LangSmith + LLM judge) · multi-language (EN/DE) | ADR-0004, `evals/`, `docs/evaluation-plan.md` |
+| **Medium** optional | Prompt-injection protection · personalisation · token + cost display · rate limiting/key management · logging/monitoring (LangSmith) · conversation export | see above |
 
-### 5. "Why hybrid search? Isn't the embedding enough?"
-Expat questions contain exact identifiers (§ 573c, Anlage N, Steuerklasse III, § 18g AufenthG) that embeddings blur. BM25 with a German stemmer catches them, and RRF fuses rankings without comparing incomparable scores. Local Chroma has no built-in hybrid (it's Cloud-only), and the LangChain BM25 retriever sits in the sunset community package, so I wrote a small, tested BM25 + RRF layer. Evidence: R4 gain on the `legal_lookup` slice. → ADR-0004
+## 4. Top reviewer questions (with my numbers)
 
-### 6. "How do you prevent hallucinated amounts, deadlines or legal references?"
-Defence in depth:
-- (a) **Prompt rule:** no number, date or § unless it's in a cited source or tool result.
-- (b) **Tools:** date and benefit maths happen in unit-tested Python, with constants in a versioned rules file that records source and `last_verified`.
-- (c) **Post-checks:** a citation validator plus a **§ tripwire** that flags any § not present in the cited sources.
-- (d) **Evals:** faithfulness judge, `must_include` checks, citation correctness.
+**1. "Explain how RAG works in your app."** Question → analysis (rewrite + German queries) → hybrid search over
+chunks with metadata filters → expand to the full parent section → numbered sources `[S1]…` go into the
+prompt → the agent answers, calls tools if needed → a validator keeps only real citations. Retrieval always
+runs; the model never answers from memory alone.
 
-Evidence: faithfulness score, and the number of tripwire hits on the eval set.
+**2. "English questions, German sources: how does that work, and how do you know?"** A multilingual embedding
+model chosen by a bake-off on my golden set (Qwen3-8B vs OpenAI small/large), plus explicit German rewrites
+in authority language. Evidence (dev, n = 25): MRR@10 0.77 (raw question) → 0.92 (full pipeline). Answer
+correctness on German questions: 0.20 → 0.60 in the first run (dev).
 
-### 7. "How does the model decide between retrieving and calling a tool?"
-Retrieval always runs (except out-of-scope), because even calculations need legal context to explain the result, and deterministic retrieval keeps evals reproducible. The answer agent (`create_agent` with a capped loop) decides *autonomously* whether to call tools, guided by tool descriptions and the "never compute yourself" rule. It asks the user when inputs are missing. Evidence: tool-selection accuracy. In Sprint 3, retrieval becomes a tool in a full agent. → ADR-0008
+**3. "Which query-translation techniques helped?"** Ablation R0–R5 (dev): German rewrite +0.07 MRR, multi-query
++ step-back +0.05, decomposition +0.03. Honest part: adding BM25 first *hurt* (0.92 → 0.81) because
+colloquial words ("security deposit") don't occur in statutes; I fixed it with keyword headers per law
+section, and filters brought R5 back to 0.92. On holdout, the no-BM25 variant still ranks best; BM25 is
+insurance for exact identifiers (§ 573c, Anlage N), which my golden set under-represents.
 
-### 8. "How did you evaluate the system? Why should I trust an LLM judge?"
-A golden set of N bilingual questions with expected sources at the *section* level (`doc_key`, stable across re-chunking), split dev/holdout. Retrieval metrics are deterministic (hit@5, MRR, recall@10). For answers: an LLM judge from a **different model family**, binary rubrics, and **calibration against 15 hand labels** (agreement X/15). Everything runs as LangSmith experiments, and I report holdout numbers to show I didn't overfit.
+**4. "What does structured retrieval mean here?"** Every chunk has validated metadata (domain, section kind,
+jurisdiction/state/city, audience, § reference, validity dates). Hard filters only for facts that make a
+chunk *wrong* (other city, expired rule, confident domain); soft boosts for audience, section, §.
 
-### 9. "How do you handle freshness? Rules change every January."
-Every chunk has `last_verified`, `valid_from` and `valid_until`. Ingestion is idempotent with content hashes, so a re-run re-embeds only changed chunks and bumps `last_verified` on unchanged ones. Each source has a refresh cadence (laws weekly via `builddate`, portals monthly, a January sweep for amounts). Tool constants live in `rules/2026.yaml` with validity windows, and a `pending_changes` list covers things like the Elterngeld reform and the Rundfunkbeitrag 2027 proposal. The UI shows "verified <date>" and warns when a source is stale.
+**5. "How does the model choose between retrieval and tools?"** Retrieval always runs; the agent decides tool
+calls from the tool descriptions and the rule "never compute dates or amounts yourself". Evals measure tool
+selection (0.82–0.92). Real story: the model passed `party="tenant"` for "my landlord gave me notice", so
+it got 6 instead of 9 months. Fix: the schema now says "who *sends* the notice".
 
-### 10. "What about privacy, copyright and liability?"
-- **Privacy:** a stateless backend. The profile is coarse enums kept in the browser, with no name, address or income. LangSmith runs in the EU region with enum-only metadata.
-- **Copyright:** statutes are public domain under § 5 UrhG. For portal content I respected robots.txt and the terms: I *excluded* sources that forbid storage (DRV, Arbeitsagentur) and the copyrighted English law translations. I store chunks with attribution and deep links, and the scraped corpus is not committed.
-- **Liability:** a persistent disclaimer, sensitive topics (asylum, eviction suits) redirected to professionals, and "check with the authority" when the context is insufficient.
+**6. "How do you prevent hallucinations?"** Prompt rule (no number/§ without a source), tools for maths,
+citation validator, § tripwire, and evals: faithfulness 1.00 on holdout (judge-scored).
 
----
+**7. "How did you evaluate? Why trust an LLM judge?"** 40 golden questions (28 dev / 12 holdout), retrieval
+metrics (hit@5, recall@10, MRR) and answer metrics (faithful, correct, citations, tool selection, refusal).
+Judge = Claude Haiku 4.5, a different family than the answer model (GPT-4.1-mini); binary rubrics,
+reasoning first. I read every failure: one was a judge mistake (it failed a correct answer as "too
+specific"), one was unfair (it couldn't see the user profile – fixed). Human calibration sheet: 15
+answers, verdicts hidden (`evals/calibration/`) – *fill in agreement here: __/15, kappa __*.
 
-### Bonus questions to be ready for
-- *"What would you change for production?"* Postgres + pgvector (hybrid via tsvector) or Qdrant; a scheduled ingestion job; user accounts with consent; a reranker; caching QueryAnalysis for frequent questions; online feedback evals.
-- *"What was the hardest bug / biggest surprise?"* Keep a running note during the sprint. Reviewers love real stories (e.g. "Saturday doesn't count as a Werktag for the notice grace period").
-- *"Why FastAPI + Next.js instead of just Streamlit?"* Product vs internal tools, streaming UX, and the step timeline as a frontend showcase. → ADR-0003
-- *"What does one answer cost and how long does it take?"* Have p50/p95 latency and $/answer from LangSmith ready.
-- *"Chunk size: why those numbers?"* Structural boundaries first, token targets second, validated by child-only vs parent-expanded faithfulness.
+**8. "Error scenarios and edge cases?"** Analysis model down → falls back to the raw question (R0 quality, no
+crash). Provider timeouts → retries, then an error card with Retry. Empty retrieval → "insufficient
+context" instead of guessing. Over-long or empty input → validation message. Abuse → per-session and daily
+limits. Blocked judge model → eval pre-flight fails in seconds. Stale sources → "verified" dates + warning.
+
+**9. "Security?"** No accounts, profile = coarse enums in the browser session only; secrets in Streamlit
+secrets, never in git; no tracebacks to visitors; sensitive topics redirected; retrieved text treated as data
+(delimiters neutralised); admin pages behind a password; spending capped (limits + OpenRouter key limit).
+
+**10. "Privacy, copyright, liability?"** Statutes are public domain (§ 5 UrhG); portal content: robots.txt
+respected, chunks + attribution + deep links, scraped corpus not in git (shipped as a private versioned
+bundle). Persistent disclaimer.
+
+## 5. Real stories (reviewers like these)
+- **Chroma Cloud shut down mid-sprint** (Replit acquisition, read-only from 22 Nov). Switched to embedded
+  Chroma + a versioned index bundle on Hugging Face; free hosted DBs sleep after a week, which kills a demo.
+- **A LangSmith decorator ate my config:** `@traceable` treats any argument called `config` as LangChain's
+  RunnableConfig, so every non-default retrieval setting crashed – only the eval runner used them.
+- **The OpenRouter guardrail blocked my judge** (Sonnet 4.5) → first eval run scored nothing; added a judge
+  pre-flight ping and per-metric error isolation.
+- **Saturday is not a working day** for the notice deadline (BGH VIII ZR 291/09) – exactly the kind of rule an
+  LLM gets wrong, hence a tested tool.
+- **Streamlit Cloud kept old modules in memory** after a push → reboot after changes to `src/`.
+
+## 6. Known limitations and what I would improve (reflection)
+- Small golden set (40): one question moves a score by 0.04–0.08. → more and harder questions, especially
+  exact-identifier and German ones.
+- Citation style varies between runs (law named in text instead of `[S1]`). → map bracketed § to sources.
+- Latency 10–20 s on slow-embedding days. → cache query embeddings, faster provider, streaming earlier.
+- Local coverage: Munich today; **Germany-wide expansion in progress** on `feature/germany-wide`: 6 cities,
+  16 states, "Which city do you live in?" follow-up when the answer depends on it (docs/plan-germany-wide.md).
+- Production: scheduled ingestion, reranker, user feedback loop, Postgres/pgvector or Qdrant if users need
+  to write data.
