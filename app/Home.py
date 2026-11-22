@@ -19,15 +19,20 @@ Everything the user enters (profile, conversations) lives only in `st.session_st
 memory for this browser tab. It is gone when the tab closes (ADR-0007/0009: nothing is persisted).
 """
 
+import math
+import time
 import uuid
+from datetime import date
 from typing import Any
 
 import _bootstrap  # noqa: F401  (must be first: makes `expat` importable on Streamlit Cloud)
+import export
 import streamlit as st
 import ui
 from pipeline_adapter import DEMO, LIVE, live_status, run_pipeline, sync_secrets_to_env
 
 from expat.config import get_settings
+from expat.guards import DailyCap, SlidingWindowLimiter, check_question
 from expat.schemas import (
     AnswerMetaEvent,
     ErrorEvent,
@@ -307,9 +312,38 @@ def render_sidebar() -> str:
         with st.container(key="sidebar-bottom"):
             with st.popover(profile_short(), icon=":material/person:", width="stretch"):
                 render_profile_form()
+            conv = current_conversation()
+            if conv["messages"]:
+                with st.popover("Export chat", icon=":material/download:", width="stretch"):
+                    render_export(conv)
             with st.popover("Settings", icon=":material/tune:", width="stretch"):
                 mode = render_settings()
     return mode
+
+
+def render_export(conv: dict[str, Any]) -> None:
+    """Download the current chat: Markdown to read or share, JSON with sources, tool calls and costs."""
+    s = get_settings()
+    prices = (s.price_in_per_mtok, s.price_out_per_mtok)
+    st.download_button(
+        "Markdown (.md)",
+        data=export.to_markdown(conv, *prices),
+        file_name=export.filename(conv, "md"),
+        mime="text/markdown",
+        icon=":material/description:",
+        width="stretch",
+        on_click="ignore",  # don't rerun the app on download
+    )
+    st.download_button(
+        "JSON (.json)",
+        data=export.to_json(conv, *prices),
+        file_name=export.filename(conv, "json"),
+        mime="application/json",
+        icon=":material/data_object:",
+        width="stretch",
+        on_click="ignore",
+    )
+    st.caption("Includes sources, calculations and token costs. Nothing is stored on the server.")
 
 
 # ------------------------------------------------------------------------------------------------
@@ -324,7 +358,7 @@ def render_empty_state() -> str | None:
         st.caption("Registration, residence permits, renting and family benefits in Munich, in English or German.")
     # Inside a container, st.chat_input renders inline (here: centred) instead of pinned to the bottom.
     with st.container():
-        prompt = st.chat_input(PLACEHOLDER, key="composer")
+        prompt = st.chat_input(PLACEHOLDER, key="composer", max_chars=get_settings().max_question_chars)
     with st.container(horizontal=True, horizontal_alignment="center", gap="small", key="suggestions"):
         for i, (label, full_prompt) in enumerate(EXAMPLES):
             st.button(label, key=f"example-{i}", on_click=_on_example, args=(full_prompt,), help=full_prompt)
@@ -351,6 +385,44 @@ def render_history(conv: dict[str, Any]) -> None:
 def _history_for_pipeline(messages: list[dict[str, Any]]) -> list[dict[str, str]]:
     turns = get_settings().history_turns
     return [{"role": m["role"], "content": m["content"]} for m in messages[-2 * turns :]] if turns else []
+
+
+@st.cache_resource
+def _daily_cap() -> DailyCap:
+    """ONE counter per server process, shared by every visitor (st.cache_resource = process-wide singleton)."""
+    return DailyCap(get_settings().daily_question_cap)
+
+
+def admit_question(raw: str, mode: str) -> str | None:
+    """Validate the question and apply the usage limits (Live mode only). Returns the cleaned text or None.
+
+    The UI also caps the input box (max_chars), but a pending prompt (suggestion, retry) bypasses the widget,
+    so the server-side check here is the one that counts. See expat/guards.py for the three limit layers.
+    """
+    s = get_settings()
+    check = check_question(raw, s.max_question_chars)
+    if check.error:
+        st.warning(check.error, icon=":material/edit_note:")
+        return None
+    if mode != LIVE:
+        return check.text  # demo answers are scripted and free
+    limiter = st.session_state.setdefault("limiter", SlidingWindowLimiter(s.questions_per_hour, 3600))
+    if (wait := limiter.try_acquire(time.monotonic())) is not None:
+        st.warning(
+            f"You've asked {s.questions_per_hour} questions in the last hour, the limit for this public demo. "
+            f"Please try again in about {math.ceil(wait / 60)} min, or switch **Live answers** off in Settings "
+            "to explore the demo answers.",
+            icon=":material/hourglass_top:",
+        )
+        return None
+    if not _daily_cap().try_acquire(date.today()):
+        st.warning(
+            "The public demo has reached its daily limit of live answers. Please come back tomorrow, or switch "
+            "**Live answers** off in Settings to explore the demo answers.",
+            icon=":material/hourglass_top:",
+        )
+        return None
+    return check.text
 
 
 def handle_prompt(prompt: str, mode: str) -> None:
@@ -411,7 +483,9 @@ def main() -> None:
     pending = st.session_state.pop("pending_prompt", None)  # from a suggestion, retry or the hero composer
     if not conv["messages"] and not pending:
         prompt = render_empty_state()
-        if prompt:
+        if prompt and (error := check_question(prompt, get_settings().max_question_chars).error):
+            st.warning(error, icon=":material/edit_note:")  # stay on the start screen
+        elif prompt:
             # Switch to the chat layout first, so the greeting doesn't stay above the streaming answer.
             st.session_state.pending_prompt = prompt
             st.rerun()
@@ -419,9 +493,9 @@ def main() -> None:
 
     render_history(conv)
     # Called at the top level, st.chat_input is pinned to the bottom of the page.
-    prompt = st.chat_input(PLACEHOLDER, key="composer") or pending
-    if prompt:
-        handle_prompt(prompt, mode)
+    prompt = st.chat_input(PLACEHOLDER, key="composer", max_chars=get_settings().max_question_chars) or pending
+    if prompt and (question := admit_question(prompt, mode)):
+        handle_prompt(question, mode)
 
 
 main()

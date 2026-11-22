@@ -68,3 +68,19 @@ def test_profile_form_saves_to_session_state():
     profile = at.session_state.profile
     assert profile.children_count == 2 and profile.youngest_child_age == 3
     assert profile.citizenship.value == "non_eu"
+
+
+def test_punctuation_only_question_is_rejected_and_not_answered():
+    at = _home()
+    at.chat_input[0].set_value("???").run()
+    assert not at.exception, at.exception
+    assert any("Please type a question" in w.value for w in at.warning)
+    assert not at.session_state.conversations[at.session_state.current]["messages"]
+
+
+def test_export_buttons_appear_once_the_chat_has_messages():
+    at = _home()
+    assert not at.get("download_button")  # nothing to export on the start screen
+    next(b for b in at.button if b.key and b.key.startswith("example-")).click().run()
+    assert not at.exception, at.exception
+    assert [d.proto.label for d in at.get("download_button")] == ["Markdown (.md)", "JSON (.json)"]

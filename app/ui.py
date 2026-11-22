@@ -22,6 +22,8 @@ from typing import Any
 
 import streamlit as st
 
+from expat.config import get_settings
+from expat.guards import estimate_cost_usd
 from expat.schemas import (
     AnswerMetaEvent,
     Citation,
@@ -353,7 +355,12 @@ def render_answer_meta(meta: AnswerMetaEvent) -> None:
 
 def render_done(done: DoneEvent, mode: str) -> None:
     secs = done.latency_ms / 1000
-    bits = [f":material/timer: {secs:.1f} s", f"{done.input_tokens:,} → {done.output_tokens:,} tokens", mode]
+    tokens = f"{done.input_tokens:,} → {done.output_tokens:,} tokens"
+    bits = [f":material/timer: {secs:.1f} s", tokens, mode]
+    if mode == "Live" and (done.input_tokens or done.output_tokens):
+        s = get_settings()
+        cost = estimate_cost_usd(done.input_tokens, done.output_tokens, s.price_in_per_mtok, s.price_out_per_mtok)
+        bits.insert(2, f"≈ ${cost:.4f}")  # analysis + answer model; embeddings are a fraction of a cent
     if done.run_id:
         bits.append(f"run `{done.run_id}`")
     st.caption(" · ".join(bits))

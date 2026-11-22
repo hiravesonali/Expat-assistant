@@ -53,6 +53,13 @@ class Settings(BaseSettings):
 
     # --- App ---
     history_turns: int = Field(default=6, ge=0, le=20)
+    # Public-app guards (expat/guards.py). Override via env / Streamlit secrets, e.g. QUESTIONS_PER_HOUR=10.
+    max_question_chars: int = Field(default=1000, ge=50)
+    questions_per_hour: int = Field(default=20, ge=1)  # per browser session, Live mode only
+    daily_question_cap: int = Field(default=300, ge=1)  # whole app per day, Live mode only
+    # Prices of MODEL_ANALYSIS / MODEL_ANSWER (both gpt-4.1-mini) in USD per 1M tokens, for the cost estimate.
+    price_in_per_mtok: float = 0.40
+    price_out_per_mtok: float = 1.60
     staleness_days: int = 90
 
     @property

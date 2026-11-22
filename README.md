@@ -40,6 +40,10 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
 - **Hybrid search:** Chroma dense vectors + German BM25, fused with Reciprocal Rank Fusion
 - **Tool calling:** tenancy notice periods (§ 573c BGB), statutory deadlines, Kindergeld/Elterngeld estimates, document checklists, Schengen 90/180
 - **Evaluated:** golden dataset + LangSmith experiments (ablation table below)
+- **Safe by design:** safety pre-check (emergency, asylum, court cases, police letters, medical, tax forms) with
+  fixed referrals; sources treated as data (prompt-injection hygiene); input validation and usage limits
+- **Transparent:** citation chips, tool cards, "How I got this answer" timeline, tokens and cost per answer,
+  chat export as Markdown or JSON
 
 ## Results (holdout, 12 questions never used for tuning; judge: Claude Haiku 4.5)
 

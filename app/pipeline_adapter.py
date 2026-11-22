@@ -43,7 +43,8 @@ def sync_secrets_to_env() -> None:
     """
     for name in ("OPENROUTER_API_KEY", "LANGSMITH_API_KEY", "LANGSMITH_TRACING", "LANGSMITH_PROJECT",
                  "LANGSMITH_ENDPOINT", "MODEL_ANALYSIS", "MODEL_ANSWER", "EMBEDDING_MODEL",
-                 "INDEX_REPO", "INDEX_REVISION", "HF_TOKEN"):  # fmt: skip
+                 "INDEX_REPO", "INDEX_REVISION", "HF_TOKEN",
+                 "MAX_QUESTION_CHARS", "QUESTIONS_PER_HOUR", "DAILY_QUESTION_CAP"):  # fmt: skip
         if not os.environ.get(name) and (value := _secret(name)):
             os.environ[name] = value
 

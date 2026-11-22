@@ -70,6 +70,20 @@ The heavy objects are built **once per server process** via `st.cache_resource`
 
 Until the index exists in the deployment, the app runs in **Demo mode**, so the deployed URL always works.
 
+## Cost protection for the public app (`src/expat/guards.py`)
+
+The app is public and every Live answer (~$0.005) is paid from one OpenRouter key. Three layers:
+
+| Layer | Default | Where | Limitation |
+|---|---|---|---|
+| Question validation | ≤ 1,000 characters, not empty, control characters stripped | input box + server-side check | – |
+| Per-session limit | 20 Live questions per rolling hour | `st.session_state` | a page reload starts a new session |
+| Daily cap | 300 Live questions per day for the whole app | process memory (`st.cache_resource`) | resets when the app reboots |
+| **Key credit limit** | e.g. $5 | OpenRouter → Keys → edit key | the only hard ceiling; set it! |
+
+Override the defaults with `MAX_QUESTION_CHARS`, `QUESTIONS_PER_HOUR`, `DAILY_QUESTION_CAP` in the secrets.
+Demo mode is never limited (scripted answers, no API calls). Worst case per day with the defaults: 300 × $0.005 ≈ $1.50.
+
 ## Admin password
 
 - The admin pages (`app/pages/*`) call `_admin.require_admin()`.
