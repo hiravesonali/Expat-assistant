@@ -108,6 +108,11 @@
 .st-key-new-chat button:hover { border-color: #C7C9F9 !important; color: var(--ank-indigo); }
 .st-key-recents button, .st-key-new-chat button { justify-content: flex-start !important; text-align: left; }
 .st-key-recents button > div, .st-key-new-chat button > div { justify-content: flex-start !important; }
+/* New chat: comfortable inner padding, icon vertically centred with the label and a small gap */
+.st-key-new-chat button { min-height: 2.6rem; padding: .45rem 1rem !important; }
+.st-key-new-chat button > div, .st-key-new-chat button > div > span { display: flex; align-items: center; gap: .55rem; }
+.st-key-new-chat [data-testid="stIconMaterial"] { font-size: 1.15rem; line-height: 1; color: var(--ank-indigo); }
+.st-key-new-chat button p { font-weight: 500; line-height: 1; margin: 0; }
 .st-key-recents [data-testid="stBaseButton-secondary"] { background: var(--ank-tint); border-color: transparent; color: #312E81; }
 [data-testid="stPopoverBody"] { width: 330px !important; max-width: 330px !important; }
 .st-key-recents button p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
