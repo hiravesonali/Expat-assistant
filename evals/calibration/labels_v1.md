@@ -24,9 +24,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > Bei weiteren Fragen zur Antragstellung können Sie die Service-Rufnummer der Bundesagentur für Arbeit anrufen: 0800 4 555530 [S5].
 
-**Your label (yes / no):** 
+**Your label (yes / no):** no
 
-**Note (optional):** 
+**Note (optional):** Wrong: says no back-payment at all. Applying in Nov 2026 still pays 6 months back (from May 2026). (labelled by Claude, not a human)
 
 ---
 
@@ -49,9 +49,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > If you want, I can also help estimate the exact Elterngeld amount if your income were below the threshold, but for now, based on your income, Elterngeld is not available.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 175k cap correctly applied. (labelled by Claude, not a human)
 
 ---
 
@@ -78,9 +78,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > If you want, I can help you with a checklist of documents needed for the application.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 21 months with B1 / 27 with A1, correct. (labelled by Claude, not a human)
 
 ---
 
@@ -106,9 +106,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > Assuming you are renting in Munich, this rent cap applies to you as a tenant under a new contract [S1][S3][S6][S7].
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 10% cap, Munich covered; exceptions and the complaint requirement not mentioned. (labelled by Claude, not a human)
 
 ---
 
@@ -127,9 +127,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 > - Bereiten Sie die erforderlichen Unterlagen vor, wie die Geburtsurkunde Ihres Kindes, Einkommensnachweise, Bescheinigungen über Mutterschaftsgeld und Arbeitgeberzuschuss.
 > - Reichen Sie den Antrag schriftlich oder online beim Zentrum Bayern Familie und Soziales ein.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 9 Feb 2027 correct (application in the 4th month of life). (labelled by Claude, not a human)
 
 ---
 
@@ -154,9 +154,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > If you want, I can guide you through the application process or provide a checklist of required documents.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 50,700 / 45,934.20 and 48k qualifies, correct. (labelled by Claude, not a human)
 
 ---
 
@@ -182,9 +182,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > If you want, I can provide a detailed checklist of documents for the family reunification visa application. Would you like that?
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** Spouse may work immediately; sufficient living space required. (labelled by Claude, not a human)
 
 ---
 
@@ -206,9 +206,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 > - If both parents live together, decide who will receive the Kindergeld through a Berechtigten-Bestimmung (beneficiary determination) if needed.
 > - Keep the Familienkasse informed of any changes in your family or residence status.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 2 x 259 = 518. (labelled by Claude, not a human)
 
 ---
 
@@ -243,9 +243,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > Ich gehe davon aus, dass Sie als Familie mit zwei Kindern in München Ihren Hauptwohnsitz anmelden möchten. Falls Sie weitere Fragen haben, stehe ich gerne zur Verfügung. [S1][S2][S3]
 
-**Your label (yes / no):** 
+**Your label (yes / no):** no
 
-**Note (optional):** 
+**Note (optional):** Misses marriage and birth certificates that a foreign family needs (key fact in the reference). (labelled by Claude, not a human)
 
 ---
 
@@ -268,9 +268,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > Assuming you are a tenant renting in Munich, Bavaria, this applies to your case. If you want, I can help you draft a response to your landlord.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 12-month deadline missed, tenant need not pay. (labelled by Claude, not a human)
 
 ---
 
@@ -296,9 +296,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > Let me know if you want details on the documents needed or how to book the appointment.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** no
 
-**Note (optional):** 
+**Note (optional):** Wrong: claims Berlin deregistration is required (not within Germany); ignores the lease notice asked for. (labelled by Claude, not a human)
 
 ---
 
@@ -319,9 +319,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > If you want, I can help you with a checklist for the Elterngeld application.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** no
 
-**Note (optional):** 
+**Note (optional):** Amount ~1,800 right, but 'up to 14 months' for one parent is wrong (12 unless partner months). (labelled by Claude, not a human)
 
 ---
 
@@ -357,9 +357,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > This system is managed by the City of Munich's Department of Education and Sports (Referat für Bildung und Sport) [S1].
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** kita finder+, correct. (labelled by Claude, not a human)
 
 ---
 
@@ -382,9 +382,9 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 > - Book an appointment at the Bürgerbüro or use the online registration option as soon as possible.
 > - Register your new address by 15 December 2026 at the latest.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 15 December 2026, correct. (labelled by Claude, not a human)
 
 ---
 
@@ -408,8 +408,8 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 >
 > If you want, I can help you review the notice or explain how to respond.
 
-**Your label (yes / no):** 
+**Your label (yes / no):** yes
 
-**Note (optional):** 
+**Note (optional):** 15% Munich cap -> 20% not allowed, correct. (labelled by Claude, not a human)
 
 ---

@@ -85,7 +85,7 @@ def export() -> None:
     print(f"wrote {SHEET.relative_to(REPO)} ({len(sample)} answers: {len(fails)} judge fails + random passes)")
 
 
-def score() -> None:
+def score(labeller: str = "human") -> None:
     key = json.loads(KEY.read_text(encoding="utf-8"))
     labels = {int(n): v.strip().lower() for n, v in _LABEL_RE.findall(SHEET.read_text(encoding="utf-8"))}
     missing = [n for n in range(1, len(key) + 1) if labels.get(n) not in ("yes", "no")]
@@ -106,10 +106,12 @@ def score() -> None:
         [
             "# Judge calibration result (correctness judge, claude-haiku-4.5)",
             "",
-            f"- Agreement with the human label: **{agree}/{total}** ({p_o:.0%}), Cohen's kappa **{kappa:.2f}**",
-            f"- Human 'correct' rate {h_yes:.0%}, judge 'correct' rate {j_yes:.0%}",
-            f"- Judge too strict (human yes, judge no): {', '.join(too_strict) or 'none'}",
-            f"- Judge too lenient (human no, judge yes): {', '.join(too_lenient) or 'none'}",
+            f"Reference labels by: **{labeller}**",
+            "",
+            f"- Agreement with the reference label: **{agree}/{total}** ({p_o:.0%}), Cohen's kappa **{kappa:.2f}**",
+            f"- Reference 'correct' rate {h_yes:.0%}, judge 'correct' rate {j_yes:.0%}",
+            f"- Judge too strict (reference yes, judge no): {', '.join(too_strict) or 'none'}",
+            f"- Judge too lenient (reference no, judge yes): {', '.join(too_lenient) or 'none'}",
             "",
             "Sample: all judge fails + random judge passes (seed 7), so the sample is enriched for failures and",
             "the agreement here is a conservative estimate for the full run.",
@@ -122,4 +124,6 @@ def score() -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("command", choices=("export", "score"))
-    {"export": export, "score": score}[parser.parse_args().command]()
+    parser.add_argument("--labeller", default="human", help='who filled the sheet, e.g. "Claude (not a human)"')
+    args = parser.parse_args()
+    export() if args.command == "export" else score(args.labeller)
