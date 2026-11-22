@@ -38,6 +38,7 @@ from expat.schemas import (
     AnswerMetaEvent,
     Citation,
     CitationsEvent,
+    ClarificationEvent,
     ContextSource,
     DoneEvent,
     ErrorEvent,
@@ -62,6 +63,7 @@ ANSWER_METRICS = (
     "must_not_include",
     "tool_selection",
     "refusal_accuracy",
+    "clarification",
     "total_tokens",
     "cost_usd",
 )
@@ -76,6 +78,7 @@ class AnswerOutput(BaseModel):
     tool_calls: list[ToolCallEvent] = Field(default_factory=list)
     tool_results: list[ToolResultEvent] = Field(default_factory=list)
     confidence: str | None = None
+    asked_clarification: bool = False  # the pipeline asked "Which city do you live in?" instead of answering
     latency_ms: float | None = None
     input_tokens: int | None = None
     output_tokens: int | None = None
@@ -126,6 +129,8 @@ def fold_events(events: Iterable[PipelineEvent], contexts: list[ContextSource] |
                 out.tool_results.append(event)
             case CitationsEvent():
                 out.citations = list(event.citations)
+            case ClarificationEvent():
+                out.asked_clarification = True
             case AnswerMetaEvent():
                 out.confidence = event.confidence
                 final_answer = event.final_answer or final_answer
@@ -193,6 +198,12 @@ def score_answer(
         # The user got an error instead of an answer: every applicable metric fails.
         metrics.update(must_include=0.0, tool_selection=0.0, refusal_accuracy=0.0)
         return ExampleScore(id=example.id, metrics=metrics, error=output.error, details=details)
+
+    # Asking for the city exactly when it is needed: scored on every example (asking needlessly is a failure too).
+    metrics["clarification"] = float(output.asked_clarification == example.expect_clarification)
+    details["asked_clarification"] = output.asked_clarification
+    if example.expect_clarification:
+        return ExampleScore(id=example.id, metrics=metrics, latency_ms=output.latency_ms, details=details)
 
     metrics["must_not_include"] = float(must_not_include_ok(output.answer, example.must_not_include))
     metrics["tool_selection"] = float(tool_selection_correct(expected_tool, output.tool_calls))

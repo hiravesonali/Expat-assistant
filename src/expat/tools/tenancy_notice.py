@@ -32,7 +32,11 @@ class NoticeInput(BaseModel):
             "user wants to move out. The two notice periods differ (landlord: 3/6/9 months by tenancy length)."
         )
     )
-    tenancy_start: date = Field(description="Date the tenant got the flat (handover / start of the lease).")
+    tenancy_start: date | None = Field(
+        default=None,
+        description="Date the tenant got the flat. Needed ONLY when the landlord gives notice (3/6/9 months by "
+        "tenancy length). A tenant's notice period is always 3 months: leave it empty, don't ask the user for it.",
+    )
     notice_date: date | None = Field(
         default=None, description="Date the notice letter is RECEIVED by the other party. Defaults to today."
     )
@@ -54,7 +58,7 @@ class NoticeResult(ToolOutput):
 
     party: Literal["tenant", "landlord"]
     contract_type: ContractType
-    tenancy_duration_years: int
+    tenancy_duration_years: int | None  # None when a tenant gives notice without a start date (not needed)
     notice_date: date
     notice_period_months: int | None
     receipt_deadline_this_month: date | None
@@ -111,7 +115,12 @@ def calculate_tenancy_notice(
     rule = rules.tenancy_notice
     notice_date = inp.notice_date or today or date.today()
 
-    if inp.tenancy_start > notice_date:
+    if inp.party == "landlord" and inp.tenancy_start is None:
+        return ToolError(
+            error="The landlord's notice period depends on how long the tenancy has lasted; tenancy_start is needed.",
+            needs=["tenancy_start"],
+        )
+    if inp.tenancy_start is not None and inp.tenancy_start > notice_date:
         return ToolError(
             error="tenancy_start is after the notice date; please check both dates.",
             needs=["tenancy_start", "notice_date"],
@@ -119,7 +128,7 @@ def calculate_tenancy_notice(
     if not rule.covers(notice_date):
         return outside_window(rule, notice_date, "tenancy notice periods (§ 573c BGB)")
 
-    years = full_years_between(inp.tenancy_start, notice_date)
+    years = full_years_between(inp.tenancy_start, notice_date) if inp.tenancy_start else None
     caveats = [
         "Notice must be in written form with a handwritten signature (§ 568 Abs. 1 BGB); email, fax or "
         "messenger messages are not valid.",
@@ -168,7 +177,8 @@ def calculate_tenancy_notice(
             caveats=[explanation, *caveats],
         )
 
-    months = rule.tenant_months if inp.party == "tenant" else _landlord_months(rules, years)
+    # years is set for the landlord (checked above); a tenant always has the flat rate
+    months = rule.tenant_months if inp.party == "tenant" else _landlord_months(rules, years or 0)
     deadline = nth_working_day(
         notice_date.year,
         notice_date.month,

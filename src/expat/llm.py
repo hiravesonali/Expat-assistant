@@ -47,6 +47,13 @@ def _require_key(settings: Settings) -> SecretStr:
 # --------------------------------------------------------------------------------------------- chat
 
 
+# Output caps per role, well above real outputs (analysis JSON ~0.5-1k tokens, answers ~0.3-0.8k, verdicts ~0.2k).
+# Without a cap OpenRouter reserves credit for the model's FULL output limit on every call (32k for gpt-4.1-mini,
+# 64k for Haiku 4.5) and rejects requests with "402 payment required" once the key's remaining limit is lower,
+# long before the money is actually used up (seen in the eval run of 2026-11-22).
+MAX_OUTPUT_TOKENS: dict[Role, int] = {"analysis": 3000, "answer": 2500, "judge": 1024}
+
+
 def model_slug_for(role: Role, settings: Settings | None = None) -> str:
     """Map a role to the configured OpenRouter model slug (kept separate so it is testable without a key)."""
     s = settings or get_settings()
@@ -70,6 +77,7 @@ def get_chat_model(role: Role, settings: Settings | None = None, **kwargs: Any) 
         "base_url": s.openrouter_base_url,
         "app_title": APP_TITLE,
         "temperature": 0,
+        "max_tokens": MAX_OUTPUT_TOKENS[role],
     }
     params.update(kwargs)
     return ChatOpenRouter(**params)

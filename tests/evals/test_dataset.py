@@ -42,18 +42,18 @@ def golden() -> list[GoldenExample]:
 
 
 def test_golden_size_and_unique_ids(golden: list[GoldenExample]) -> None:
-    assert len(golden) == 40
-    assert len({e.id for e in golden}) == 40
+    assert len(golden) == 71  # 40 Munich-era + 31 Germany-wide (evals/golden/add_germany_v1.py)
+    assert len({e.id for e in golden}) == 71
 
 
 def test_golden_slice_counts(golden: list[GoldenExample]) -> None:
     counts = Counter(e.slice for e in golden)
-    assert counts == {"bureaucracy": 11, "tenancy": 11, "family": 9, "multi_domain": 4, "out_of_scope": 5}
+    assert counts == {"bureaucracy": 25, "tenancy": 19, "family": 16, "multi_domain": 6, "out_of_scope": 5}
 
 
 def test_golden_split_is_stratified(golden: list[GoldenExample]) -> None:
     splits = Counter(e.split for e in golden)
-    assert splits == {"dev": 28, "holdout": 12}
+    assert splits == {"dev": 45, "holdout": 26}
     for slice_name in {e.slice for e in golden}:
         in_slice = [e for e in golden if e.slice == slice_name]
         assert any(e.split == "holdout" for e in in_slice), slice_name
@@ -104,7 +104,7 @@ def test_must_include_alternatives_appear_in_reference_answer(golden: list[Golde
 
 def test_split_filter(golden: list[GoldenExample]) -> None:
     dev = load_golden(DEFAULT_GOLDEN_PATH, split="dev")
-    assert len(dev) == 28 and all(e.split == "dev" for e in dev)
+    assert len(dev) == 45 and all(e.split == "dev" for e in dev)
 
 
 # --- loader error handling -------------------------------------------------------------------------------------
@@ -185,7 +185,7 @@ class FakeClient:
 def test_upload_dataset_creates_all_examples() -> None:
     client = FakeClient()
     assert upload_dataset("expat-test", DEFAULT_GOLDEN_PATH, client=client) == "ds-1"
-    assert len(client.created) == 40
+    assert len(client.created) == 71
     assert {e["split"] for e in client.created} == {"dev", "holdout"}
 
 

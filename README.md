@@ -3,9 +3,9 @@
 </p>
 
 <h1 align="center">Ankommen</h1>
-<p align="center"><b>Your guide to settling in Munich</b> · <i>ankommen</i> = German for "to arrive, to settle in"</p>
+<p align="center"><b>Your guide to settling in Germany</b> · <i>ankommen</i> = German for "to arrive, to settle in"</p>
 
-An English-language assistant that helps expats in **Munich** (MVP persona: a non-EU Blue Card family) deal with registration, residence permits, renting and family benefits. It answers **only from official German sources**, with clickable citations and "last verified" dates, and does date and benefit calculations with tested tools instead of guessing.
+An English-language assistant that helps expats in **Germany** deal with registration, residence permits, renting and family benefits: federal rules everywhere, plus local details for **Berlin, Hamburg, Munich, Cologne, Frankfurt and Stuttgart**. When the answer depends on the city and it is unknown, it asks. It answers **only from official German sources**, with clickable citations and "last verified" dates, and does date and benefit calculations with tested tools instead of guessing.
 
 > **Live demo:** https://expat-assistant.streamlit.app/
 >
@@ -50,12 +50,18 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
 - **Transparent:** citation chips, tool cards, "How I got this answer" timeline, tokens and cost per answer,
   chat export as Markdown or JSON
 
-## Results (holdout, 12 questions never used for tuning; judge: Claude Haiku 4.5)
+## Results
+
+**Answer quality** (holdout, 12 questions never used for tuning; judge: Claude Haiku 4.5)
 
 | | Faithful | Correct | Valid citations | Refusal accuracy | Cost / answer |
 |---|---|---|---|---|---|
 | Naive RAG (R0) | 0.90 | 0.70 | 1.00 | 1.00 | $0.005 |
 | **This system (R5)** | **1.00** | **0.90** | **1.00** | 0.92 | $0.005 |
+
+**Germany-wide (71 questions, 6 cities):** without location filters, 62–68% of questions pulled another city's
+or state's rules into the top 10 results; with the per-question location it is **0%** on dev and holdout, while
+holdout hit@5 rose to 1.00. The assistant asked "Which city do you live in?" exactly when needed (100%).
 
 Retrieval ablation, before/after runs, failure analysis and known issues: [`docs/evaluation-plan.md`](docs/evaluation-plan.md).
 

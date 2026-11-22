@@ -246,7 +246,10 @@ class HybridRetriever:
             raise RuntimeError("use_bm25=True but no BM25 index was loaded")
         today = self._today()
         subs = select_sub_queries(plan, cfg)
-        plans = [(sub, select_variants(sub, cfg), build_where(profile, sub, cfg, today=today)) for sub in subs]
+        plans = [
+            (sub, select_variants(sub, cfg), build_where(profile, sub, cfg, today=today, location=plan.location))
+            for sub in subs
+        ]
 
         lists_per_sub = self._run_searches(plans, cfg)
 

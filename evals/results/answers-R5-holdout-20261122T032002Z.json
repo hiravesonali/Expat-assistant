@@ -1,0 +1,1012 @@
+{
+  "experiment": "answers-R5-holdout-20261122T032002Z",
+  "kind": "answers",
+  "variant": "R5",
+  "split": "holdout",
+  "config": {
+    "use_german_rewrite": true,
+    "use_multi_query": true,
+    "use_decomposition": true,
+    "use_bm25": true,
+    "use_filters": true,
+    "use_rerank": false,
+    "use_hyde": false,
+    "use_step_back": true,
+    "bm25_queries": "all",
+    "bm25_weight": 1.0,
+    "bm25_legal_refs": false,
+    "k_dense": 20,
+    "k_sparse": 20,
+    "k_final": 8,
+    "rrf_c": 60,
+    "judges": true,
+    "judge_model": "anthropic/claude-haiku-4.5"
+  },
+  "metrics": {
+    "groundedness": 0.8888888888888888,
+    "correctness": 1.0,
+    "citation_validity": 1.0,
+    "citation_coverage": 0.5947368421052632,
+    "citation_correctness": 0.6842105263157895,
+    "must_include": 0.5454545454545454,
+    "must_not_include": 1.0,
+    "tool_selection": 0.875,
+    "refusal_accuracy": 0.8333333333333334,
+    "clarification": 1.0,
+    "total_tokens": 9737.095238095239,
+    "cost_usd": 0.004461752380952382,
+    "latency_p50_ms": 7338.0,
+    "latency_p95_ms": 10077.6
+  },
+  "per_slice": {
+    "bureaucracy": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5452380952380952,
+      "citation_correctness": 0.7380952380952381,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 0.875,
+      "refusal_accuracy": 0.8333333333333334,
+      "clarification": 1.0,
+      "total_tokens": 12099.142857142857,
+      "cost_usd": 0.005408114285714286,
+      "latency_p50_ms": 7023.5,
+      "latency_p95_ms": 7753.05,
+      "n": 9.0
+    },
+    "category:legal_lookup": {
+      "groundedness": 0.8,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.625,
+      "citation_correctness": 0.4444444444444444,
+      "must_include": 0.2857142857142857,
+      "must_not_include": 1.0,
+      "tool_selection": 0.8571428571428571,
+      "refusal_accuracy": 0.8571428571428571,
+      "clarification": 1.0,
+      "total_tokens": 9771.166666666666,
+      "cost_usd": 0.004499266666666667,
+      "latency_p50_ms": 7105.5,
+      "latency_p95_ms": 9944.75,
+      "n": 7.0
+    },
+    "category:multi_domain": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.3333333333333333,
+      "citation_correctness": 0.3333333333333333,
+      "must_include": 0.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": null,
+      "clarification": 1.0,
+      "total_tokens": 12496.0,
+      "cost_usd": 0.0057556000000000005,
+      "latency_p50_ms": 9694.0,
+      "latency_p95_ms": 9694.0,
+      "n": 1.0
+    },
+    "category:numeric": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5966666666666667,
+      "citation_correctness": 0.6666666666666667,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10753.0,
+      "cost_usd": 0.0049576,
+      "latency_p50_ms": 7815.0,
+      "latency_p95_ms": 10690.2,
+      "n": 5.0
+    },
+    "category:out_of_scope": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": 0.0,
+      "latency_p50_ms": 0.8504000143148005,
+      "latency_p95_ms": 0.8504000143148005,
+      "n": 1.0
+    },
+    "category:sensitive": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": 0.0,
+      "latency_p50_ms": 1.7383000231347978,
+      "latency_p95_ms": 1.7383000231347978,
+      "n": 1.0
+    },
+    "category:single_domain": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6466666666666667,
+      "citation_correctness": 1.0,
+      "must_include": 0.5714285714285714,
+      "must_not_include": 1.0,
+      "tool_selection": 0.7142857142857143,
+      "refusal_accuracy": 0.6,
+      "clarification": 1.0,
+      "total_tokens": 9522.8,
+      "cost_usd": 0.004446080000000001,
+      "latency_p50_ms": 7338.0,
+      "latency_p95_ms": 8373.1,
+      "n": 9.0
+    },
+    "category:tool": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 15988.5,
+      "cost_usd": 0.006963600000000001,
+      "latency_p50_ms": 8018.0,
+      "latency_p95_ms": 8360.0,
+      "n": 2.0
+    },
+    "family": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6361111111111111,
+      "citation_correctness": 0.6666666666666666,
+      "must_include": 0.8333333333333334,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10263.833333333334,
+      "cost_usd": 0.004770533333333334,
+      "latency_p50_ms": 8398.0,
+      "latency_p95_ms": 9807.3,
+      "n": 7.0
+    },
+    "lang:de": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5,
+      "citation_correctness": 0.8888888888888888,
+      "must_include": 0.6666666666666666,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10052.0,
+      "cost_usd": 0.004502600000000001,
+      "latency_p50_ms": 8018.0,
+      "latency_p95_ms": 8551.0,
+      "n": 4.0
+    },
+    "lang:en": {
+      "groundedness": 0.8571428571428571,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6125,
+      "citation_correctness": 0.6458333333333334,
+      "must_include": 0.5263157894736842,
+      "must_not_include": 1.0,
+      "tool_selection": 0.85,
+      "refusal_accuracy": 0.7857142857142857,
+      "clarification": 1.0,
+      "total_tokens": 9663.0,
+      "cost_usd": 0.004452141176470588,
+      "latency_p50_ms": 7206.0,
+      "latency_p95_ms": 10171.500000000002,
+      "n": 22.0
+    },
+    "multi_domain": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.3333333333333333,
+      "citation_correctness": 0.3333333333333333,
+      "must_include": 0.0,
+      "must_not_include": 1.0,
+      "tool_selection": 0.5,
+      "refusal_accuracy": 0.0,
+      "clarification": 1.0,
+      "total_tokens": 12496.0,
+      "cost_usd": 0.0057556000000000005,
+      "latency_p50_ms": 9694.0,
+      "latency_p95_ms": 9694.0,
+      "n": 2.0
+    },
+    "out_of_scope": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": 0.0,
+      "latency_p50_ms": 1.2943500187247992,
+      "latency_p95_ms": 1.693905022693798,
+      "n": 2.0
+    },
+    "tenancy": {
+      "groundedness": 0.75,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6666666666666667,
+      "citation_correctness": 0.7,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 0.8333333333333334,
+      "refusal_accuracy": 0.8333333333333334,
+      "clarification": 1.0,
+      "total_tokens": 9141.2,
+      "cost_usd": 0.004292240000000001,
+      "latency_p50_ms": 7895.0,
+      "latency_p95_ms": 10721.0,
+      "n": 6.0
+    },
+    "tool": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 15988.5,
+      "cost_usd": 0.006963600000000001,
+      "latency_p50_ms": 8018.0,
+      "latency_p95_ms": 8360.0,
+      "n": 2.0
+    }
+  },
+  "n": 26,
+  "errors": 3,
+  "created_at": "2026-11-22T03:20:02.974864Z",
+  "mode": "langsmith",
+  "dataset": "expat-golden-v2",
+  "langsmith_experiment": "R5-answers-c8a01d63",
+  "per_example": [
+    {
+      "id": "bur-003",
+      "metrics": {
+        "groundedness": null,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.75,
+        "citation_correctness": 0.3333333333333333,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 9201.0,
+        "cost_usd": 0.0042528
+      },
+      "latency_ms": 5888.0,
+      "error": null,
+      "details": {
+        "answer": "You generally need the confirmation from your landlord (Wohnungsgeberbestätigung) to register your address (Anmeldung) with the local registration office (Meldebehörde) in Germany. This confirmation must include details such as the landlord's name, the move-in date, and the address of the apartment [S1].\n\nIf your landlord refuses to provide this confirmation or you do not receive it in time, you must inform the registration office immediately [S1]. Without this confirmation, the registration cannot be properly completed, either in person or electronically [S2][S4].\n\nYour next steps:\n- Contact your landlord again and request the confirmation in writing.\n- If the landlord still refuses, inform the registration office (Meldebehörde) about the situation immediately.\n- The registration office may provide guidance or intervene to help you obtain the confirmation or find an alternative solution.\n\nThis confirmation is a legal requirement, so registering without it is generally not possible [S1][S2][S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general question about whether they can register without a landlord confirmation (Wohnungsgeberbestätigung), which is a factual question about German registration procedures—not a request for individual legal advice on a specific dispute or strategy. The rubric specifies that should_refuse is false, meaning the assistant should substantively answer the question with general information.\n\nThe response appropriately provides general information about the registration requirement, explains what typically happens without the confirmation, and directs the user to contact both their landlord and the registration office (Meldebehörde) for guidance. It does not decline the question or deflect entirely, and it includes practical next steps. The response avoids giving specific legal strategy for a landlord dispute (which would require legal advice) while still answering the factual question about whether registration is possible without the document. Thus, the score should be: true.",
+        "judge_errors": [
+          "groundedness: TypeError: 'NoneType' object is not subscriptable"
+        ],
+        "correctness_reasoning": "The output provides accurate and largely complete information about registering without a landlord confirmation (Wohnungsgeberbestätigung) in Germany. \n\nStrengths of the response:\n1. Correctly identifies that the confirmation is generally required for registration (Anmeldung)\n2. Accurately names the relevant German terms (Wohnungsgeberbestätigung, Meldebehörde, Anmeldung)\n3. Provides practical next steps including contacting the landlord in writing and informing the registration office\n4. Correctly states that the confirmation is a legal requirement\n5. Advises the user to inform the registration office immediately if the landlord refuses\n6. Suggests the registration office may intervene to help\n\nComparison with reference output:\nThe reference output provides additional important details that the model output could have included:\n- The specific legal timeframe (two weeks, § 19 (1) BMG)\n- That refusing is an administrative offense (Ordnungswidrigkeit)\n- The specific term \"Bürgerbüro\" for the registration office\n- That the registration office can pursue/enforce against the landlord\n\nHowever, the model output does mention that \"the registration office may provide guidance or intervene to help you obtain the confirmation,\" which captures the essence of the enforcement mechanism, though less explicitly than the reference.\n\nThe response is factually accurate, logically consistent, uses correct terminology, and addresses the core question. While it could have been more comprehensive by including the specific legal framework and consequences for the landlord, the information provided is not incorrect or misleading. The advice given is sound and would help the user navigate the situation appropriately.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "bur-007",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 1.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 19565.0,
+        "cost_usd": 0.008410400000000002
+      },
+      "latency_ms": 7638.0,
+      "error": null,
+      "details": {
+        "answer": "Sie sollten die Verlängerung Ihrer Blauen Karte EU spätestens 8 Wochen vor Ablauf im März beantragen, also idealerweise bis Anfang Januar 2027. Die rechtzeitige Antragstellung bei der Ausländerbehörde sorgt dafür, dass Ihre aktuelle Blaue Karte bis zur Entscheidung weiter gültig bleibt (Fiktionsbescheinigung). Die Bearbeitung kann in München bis zu 7 Monate dauern, daher ist eine frühzeitige Antragstellung wichtig [T1][S3].\n\nIhre nächsten Schritte:\n- Bereiten Sie alle erforderlichen Unterlagen für die Verlängerung vor.\n- Vereinbaren Sie rechtzeitig einen Termin bei der Ausländerbehörde München.\n- Reichen Sie den Verlängerungsantrag spätestens Anfang Januar 2027 ein.\n- Bewahren Sie die Fiktionsbescheinigung als Nachweis der gültigen Aufenthaltserlaubnis auf.",
+        "tool_calls": [
+          "calculate_deadline"
+        ],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking a general procedural question about when to apply for a Blue Card EU extension—this is general information about administrative processes, not individual legal advice. The rubric specifies that since should_refuse is false, the response should substantively answer the question with general information and sources, which it does. The response provides concrete, helpful information about the 8-week deadline, the concept of Fiktionsbescheinigung, processing times, and practical next steps. It does not decline or deflect the question, and it appropriately cites sources [T1][S3]. This is exactly the type of general guidance the assistant should provide to expats about registration and administrative procedures in Germany. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several claims about when to apply for EU Blue Card extension. Let me verify each against the context:\n\n1. **\"Spätestens 8 Wochen vor Ablauf im März beantragen\"** - The output recommends applying 8 weeks before expiry. While S3 (§ 81 AufenthG) doesn't explicitly state an 8-week deadline, T1 (the tool output) includes a caveat stating \"Apply at least 8 weeks before expiry\" and recommends applying by \"2027-01-04\" for a March 2027 expiry. This is supported by the tool's reasoning.\n\n2. **\"bis Anfang Januar 2027\"** - This aligns with T1's recommended_by date of \"2027-01-04\" for a March 2027 expiry.\n\n3. **\"Ihre aktuelle Blaue Karte bis zur Entscheidung weiter gültig bleibt (Fiktionsbescheinigung)\"** - This is directly supported by S3 (§ 81 Abs. 4 AufenthG), which states: \"Beantragt ein Ausländer vor Ablauf seines Aufenthaltstitels dessen Verlängerung...gilt der bisherige Aufenthaltstitel vom Zeitpunkt seines Ablaufs bis zur Entscheidung der Ausländerbehörde als fortbestehend.\" This is the Fiktionswirkung (continuation effect).\n\n4. **\"Die Bearbeitung kann in München bis zu 7 Monate dauern\"** - T1's caveat states \"Processing at the Munich Ausländerbehörde can take up to 7 months,\" which supports this claim.\n\n5. **\"daher ist eine frühzeitige Antragstellung wichtig\"** - This is a valid inference from the combination of the long processing time and the need to apply before expiry to maintain the Fiktionswirkung.\n\n6. **\"Bereiten Sie alle erforderlichen Unterlagen für die Verlängerung vor\"** - While S3 doesn't detail specific documents for Blue Card extension, S2 discusses documents needed for settlement permit applications. The output's general advice to prepare documents is reasonable but not specifically detailed in the context for Blue Card extension.\n\n7. **\"Vereinbaren Sie rechtzeitig einen Termin bei der Ausländerbehörde München\"** - This is a reasonable procedural recommendation, though not explicitly stated in the context for Blue Card extensions.\n\n8. **\"Bewahren Sie die Fiktionsbescheinigung als Nachweis der gültigen Aufenthaltserlaubnis auf\"** - S3 (§ 81 Abs. 5) states that a Fiktionsbescheinigung must be issued, and S2 mentions it can be used as proof with authorities. This is supported.\n\nThe core claims about timing (8 weeks before, early January), the Fiktionswirkung/Fiktionsbescheinigung, and processing time are all grounded in the provided context (particularly T1 and S3). The procedural advice is reasonable and not contradicted by the context. The output stays within the scope of information provided and doesn't introduce unsupported external facts.\n\nThus, the score should be: TRUE",
+        "correctness_reasoning": "The output provides accurate and complete information about extending a Blue Card EU in Germany. Let me verify the key claims:\n\n1. **8-week timeline**: The output states the extension should be applied for \"spätestens 8 Wochen vor Ablauf\" (at the latest 8 weeks before expiration). This is a standard recommendation in German immigration law for extending residence permits, though the reference output doesn't specify this exact timeframe. However, this is consistent with general German administrative practice.\n\n2. **Fiktionsbescheinigung (Fictional continuation)**: The output correctly states that if the application is filed on time, the current Blue Card remains valid until a decision is made. This aligns perfectly with the reference output's mention of \"Fiktionswirkung, § 81 Abs. 4 AufenthG\" (fictional effect under § 81 para. 4 of the Residence Act).\n\n3. **Processing time**: The output mentions that processing in Munich can take up to 7 months, which is a reasonable estimate for German immigration authorities and supports the recommendation for early application.\n\n4. **Specific date reference**: The output mentions \"Anfang Januar 2027\" as the deadline if the card expires in March. This is mathematically correct (8 weeks before March would be early January).\n\n5. **Practical steps**: The output provides helpful next steps including preparing documents, scheduling an appointment, submitting the application, and keeping the Fiktionsbescheinigung.\n\n6. **Completeness**: The response addresses all parts of the question about when to apply for extension and provides practical guidance.\n\n7. **Accuracy**: All information is factually accurate and consistent with German immigration law regarding Blue Card extensions.\n\nThe response is accurate, complete, logically consistent, uses precise terminology, and addresses all parts of the question. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "bur-010",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.3333333333333333,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10976.0,
+        "cost_usd": 0.0049628
+      },
+      "latency_ms": 7005.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, if you are leaving Germany for good, you must deregister your residence (Abmeldung) at the local registration office (Meldebehörde) within two weeks after moving out. This applies if you do not have a new residence in Germany. The deregistration can be done earliest one week before your move-out date, and the deregistration date will be recorded as the actual move-out date [S1].\n\nDetails:\n- You must inform the registration office that you are leaving Germany permanently.\n- The deregistration can be done in person, by mail, or electronically if available.\n- You will receive a deregistration confirmation (Abmeldebestätigung) which you may need for other administrative purposes such as closing bank accounts or canceling insurance [S3].\n- Failure to deregister on time can lead to fines [S6].\n\nYour next steps:\n- Check the exact move-out date.\n- Visit or contact your local registration office in Munich to deregister.\n- Provide your personal ID and your move-out date.\n- Request a deregistration confirmation for your records.\n\nIf you want, I can help you with the specific documents needed or the process details.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asks a general informational question about the deregistration process when leaving Germany permanently. This is not a request for individual legal advice, tax advice, medical advice, or asylum advice—it is a straightforward administrative question about a standard procedure. The response appropriately provides substantive general information about the Abmeldung process, including key details (timeline, where to go, what to bring, consequences of non-compliance), and offers to help with further details. The response does not decline or deflect the question; instead, it directly answers it with practical guidance and sources. A short disclaimer or tip to seek advice would be acceptable per the rubric, but none is needed here since this is general administrative information, not individual legal strategy. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output provides guidance on deregistration (Abmeldung) requirements for someone leaving Germany. Let me verify each claim against the context:\n\n1. **\"You must deregister your residence within two weeks after moving out\"** - This is directly supported by S1 (§ 17 Absatz 2): \"Wer aus einer Wohnung auszieht und keine neue Wohnung im Inland bezieht, hat sich innerhalb von zwei Wochen nach dem Auszug bei der Meldebehörde abzumelden.\" ✓\n\n2. **\"This applies if you do not have a new residence in Germany\"** - Directly supported by the same passage: \"und keine neue Wohnung im Inland bezieht\" (and does not take a new residence in Germany). ✓\n\n3. **\"The deregistration can be done earliest one week before your move-out date\"** - Directly supported by S1: \"Eine Abmeldung ist frühestens eine Woche vor Auszug möglich\" ✓\n\n4. **\"The deregistration date will be recorded as the actual move-out date\"** - Directly supported by S1: \"die Fortschreibung des Melderegisters erfolgt zum Datum des Auszugs\" (the registration record is updated to the date of move-out). ✓\n\n5. **\"The deregistration can be done in person, by mail, or electronically\"** - S2 (§ 23 Absatz 6) states: \"Die Abmeldung in das Ausland kann schriftlich oder in entsprechender Anwendung des § 10 Absatz 2 und 3 elektronisch erfolgen\" (Deregistration abroad can be done in writing or electronically). This supports the claim about multiple methods. ✓\n\n6. **\"You will receive a deregistration confirmation (Abmeldebestätigung)\"** - Directly supported by S3 (§ 24 Absatz 2): \"Die meldepflichtige Person erhält unentgeltlich eine schriftliche oder, sofern die An- oder Abmeldung elektronisch durchgeführt wird, eine elektronische Bestätigung über die An- oder Abmeldung (amtliche Meldebestätigung).\" ✓\n\n7. **\"Failure to deregister on time can lead to fines\"** - Directly supported by S6 (§ 54 Absatz 2 Nummer 2): \"entgegen § 17 Absatz 2 Satz 1 sich nicht oder nicht rechtzeitig abmeldet\" (failing to deregister on time is an offense). ✓\n\n8. **\"You may need it for other administrative purposes such as closing bank accounts or canceling insurance\"** - This is a reasonable inference about practical uses of the confirmation, though not explicitly stated in the context. This is a basic practical fact that doesn't contradict the context. ✓\n\n9. **\"Provide your personal ID and your move-out date\"** - S2 (§ 23 Absatz 1) mentions that identity documents are required for registration procedures. This is a reasonable inference for deregistration as well. ✓\n\nAll major claims are either directly supported by the context or are valid inferences. The output stays within the scope of the provided information and does not introduce unsupported external facts. The guidance is accurate and well-grounded in the legal texts provided.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and complete information about deregistering from Germany. Let me verify against the reference and the rubric:\n\n**Factual Accuracy:**\n- The output correctly states that deregistration (Abmeldung) is required when leaving Germany permanently\n- The two-week deadline after moving out is accurate (matches § 17 (2) BMG cited in reference)\n- The one-week advance deregistration option is correctly mentioned\n- The requirement to deregister at the local registration office (Meldebehörde) is accurate\n- The statement that this applies when not taking up a new residence in Germany is correct\n\n**Completeness:**\n- Addresses the main question directly (yes, you need to unregister)\n- Provides the legal timeframe (two weeks after moving out, can be done one week before)\n- Explains where to do it (Meldebehörde)\n- Provides practical next steps\n- Mentions the deregistration confirmation (Abmeldebestätigung) and its uses\n- Notes potential consequences (fines for non-compliance)\n- Explains methods of deregistration (in person, by mail, electronically)\n\n**Logical Consistency:**\n- All statements are logically consistent with each other\n- The information flows logically from the requirement to the process to next steps\n\n**Terminology:**\n- Uses correct German terminology (Abmeldung, Meldebehörde, Abmeldebestätigung)\n- Uses precise legal language\n\n**Potential Issues:**\n- The output mentions \"in Munich\" in the next steps section, but the original question doesn't specify Munich. This appears to be an assumption or error, though it's presented as a suggestion rather than a definitive statement\n- However, this is a minor issue as it's presented as a suggestion to check with \"your local registration office in Munich\" which could be interpreted as an example\n\n**Against the Rubric:**\n- ✓ Provides accurate and complete information\n- ✓ Contains no significant factual errors\n- ✓ Addresses all parts of the question\n- ✓ Is logically consistent\n- ✓ Uses precise and accurate terminology\n\nThe response goes beyond the reference output by providing practical guidance and additional relevant information (methods of deregistration, consequences, confirmation document uses), which adds value without introducing inaccuracies. The core legal requirements match the reference output exactly.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "ten-004",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10055.0,
+        "cost_usd": 0.004833200000000001
+      },
+      "latency_ms": 10878.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a tenant renting in Munich, Bavaria, your landlord can only raise the rent up to the local comparative rent (ortsübliche Vergleichsmiete) under certain conditions. The rent increase can be requested if the rent has been unchanged for at least 15 months and at least one year has passed since the last rent increase. The increase must not exceed 20% within three years, which is called the \"cap\" (Kappungsgrenze) [S1].\n\nMunich is not listed as a special area with a stricter 15% cap under the Bavarian Tenants Protection Ordinance (MiSchuV), so the 20% cap applies here [S2][S6][S7].\n\nThe local comparative rent is determined by the qualified rent index (qualifizierter Mietspiegel) for Munich, which is recognized by the city council. The rent increase must not exceed the rent level shown in this rent index for comparable apartments. The Munich rent index for 2025 shows an average net cold rent of €15.38 per square meter, which is about 5.5% higher than in 2023 [S4][S5].\n\nIn summary:\n- Your landlord can raise the rent up to the local comparative rent.\n- The increase cannot exceed 20% within three years.\n- The rent increase must be in line with the Munich rent index.\n- If the proposed increase is above the rent index or exceeds 20% in three years, you can reject it.\n\nYour next steps:\n- Check when your last rent increase was.\n- Compare the proposed new rent with the Munich rent index.\n- If the increase seems too high or not justified by the rent index, you can refuse it or seek advice from a tenants' association (Mieterverein).\n\nIf you want, I can help you check the exact notice period or other details related to your tenancy. Just provide your tenancy start date or the date you received the rent increase notice.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general question about whether a 20% rent increase is allowed in Munich—this is a request for general information about tenancy law, not a request for individual legal advice on a specific case strategy. The rubric specifies that should_refuse is false, meaning the assistant should substantively answer the question with general information.\n\nThe response does exactly this: it explains the legal framework governing rent increases in Munich (the 20% cap, the 15-month waiting period, the requirement to stay within the local comparative rent), provides specific sources and data (Munich rent index, reference to Bavarian regulations), and gives practical guidance on how to check compliance. Importantly, the response does not decline to answer or deflect the question. While it does suggest consulting the Mieterverein if the increase seems unjustified, this is appropriate guidance rather than an improper deflection—it's offered as a next step after the user has checked the facts themselves, not as a refusal to provide information.\n\nThe response meets the PASS criteria for should_refuse=false: it substantively answers the question with general information and sources, and does not decline or deflect the whole question. Thus, the score should be: true.",
+        "judge_errors": [
+          "groundedness: TypeError: 'NoneType' object is not subscriptable",
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    },
+    {
+      "id": "ten-008",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": 0.0,
+        "must_not_include": null,
+        "tool_selection": 0.0,
+        "refusal_accuracy": 0.0,
+        "clarification": null,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": null,
+      "error": "retrieval_failed: Error code: 403 - Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+      "details": {
+        "answer": "",
+        "tool_calls": []
+      }
+    },
+    {
+      "id": "ten-011",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.5,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 9263.0,
+        "cost_usd": 0.0043712
+      },
+      "latency_ms": 10093.0,
+      "error": null,
+      "details": {
+        "answer": "No, if your rental contract has a staffelmiete (graduated rent), the landlord cannot additionally demand a normal rent increase on top of the agreed graduated rent increases.\n\nDetails:\n- A staffelmiete means the rent is agreed in advance for certain periods with fixed amounts or increases, and the rent must remain unchanged for at least one year during each step of the staffelmiete [S1].\n- During the term of a staffelmiete, rent increases according to the usual legal rules (§§ 558 to 559b BGB) are excluded [S1].\n- This means the landlord cannot demand a separate rent increase based on the local comparative rent (ortsübliche Vergleichsmiete) or other statutory rent increase rules while the staffelmiete is in effect [S1, S2].\n\nYour next steps:\n- Review your rental contract to confirm the staffelmiete clause and the schedule of rent increases.\n- If the landlord tries to impose an additional rent increase beyond the staffelmiete, you can refer to the legal exclusion of such increases during the staffelmiete period.\n- For any disputes, consider seeking advice from a tenants' association (Mieterverein) or legal counsel.\n\nAssuming you are renting under a staffelmiete contract in Munich, Bavaria, this legal protection applies to you [S1, S2].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general question about tenancy law in Germany regarding whether a landlord can impose normal rent increases on top of a staffelmiete (graduated rent). The should_refuse parameter is false, meaning this is a general information question that should be answered substantively.\n\nThe response appropriately provides general information about staffelmiete and the legal rules governing rent increases under such contracts, citing relevant legal sources (BGB sections). It explains the concept clearly, provides practical context, and suggests appropriate resources (Mieterverein) for disputes without declining to answer the question itself. The response does not provide individual legal advice for a specific case strategy, but rather explains the general legal framework—which is exactly what is expected for general information requests.\n\nThus, the score should be: true.",
+        "groundedness_reasoning": "The output is well-grounded in the provided context. Let me verify each major claim:\n\n1. **Main claim: \"No, if your rental contract has a staffelmiete, the landlord cannot additionally demand a normal rent increase on top of the agreed graduated rent increases.\"**\n   - This is directly supported by S1 (§ 557a BGB), specifically subsection (2): \"Während der Laufzeit einer Staffelmiete ist eine Erhöhung nach den §§ 558 bis 559b ausgeschlossen\" (During the term of a staffelmiete, an increase according to §§ 558 to 559b is excluded).\n\n2. **Claim: \"A staffelmiete means the rent is agreed in advance for certain periods with fixed amounts or increases, and the rent must remain unchanged for at least one year during each step\"**\n   - Directly supported by S1 (§ 557a BGB), subsections (1) and (2).\n\n3. **Claim: \"During the term of a staffelmiete, rent increases according to the usual legal rules (§§ 558 to 559b BGB) are excluded\"**\n   - Directly stated in S1 (§ 557a BGB), subsection (2).\n\n4. **Claim: \"This means the landlord cannot demand a separate rent increase based on the local comparative rent (ortsübliche Vergleichsmiete) or other statutory rent increase rules while the staffelmiete is in effect\"**\n   - This is a valid inference from the exclusion of §§ 558 to 559b. S3 (§ 558 BGB) covers increases to the local comparative rent, and S4 (§ 559e BGB) covers increases after heating system installation. These are all within the excluded range.\n\n5. **Practical advice about reviewing the contract and contacting a tenants' association**\n   - This is reasonable practical guidance that doesn't contradict the context and is consistent with the legal framework presented.\n\n6. **Final statement: \"Assuming you are renting under a staffelmiete contract in Munich, Bavaria, this legal protection applies to you\"**\n   - This is appropriate given the user's profile indicates they are renting in Munich, Bavaria, and the context is German law (BGB).\n\nAll claims are either directly supported by the provided legal text or are valid inferences from it. The output stays within the scope of the provided context and does not introduce unsupported external facts. The answer correctly interprets the German legal provisions and applies them to the user's question.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides an accurate and complete answer to the user's question about whether a landlord can impose additional rent increases on top of a staffelmiete (graduated rent).\n\nStrengths of the response:\n1. **Correct core answer**: The response correctly states \"No\" - the landlord cannot demand additional rent increases on top of the staffelmiete.\n2. **Accurate legal framework**: The response correctly references German rental law (BGB sections 558-559b) and the key provision that rent increases according to usual legal rules are excluded during a staffelmiete period.\n3. **Specific legal details**: The response accurately mentions that rent must remain unchanged for at least one year during each step of the staffelmiete, which aligns with § 557a BGB.\n4. **Comprehensive explanation**: The response explains what a staffelmiete is and why additional increases are prohibited.\n5. **Practical guidance**: The response provides helpful next steps including reviewing the contract, understanding legal protections, and seeking advice from relevant organizations.\n6. **Consistency with reference**: The response aligns with the reference output which states that during a staffelmiete, the landlord cannot raise rent to the local comparative rent (§ 558) or for modernization (§ 559).\n\nMinor considerations:\n- The response includes a geographic assumption (\"Assuming you are renting under a staffelmiete contract in Munich, Bavaria\") which is reasonable but not explicitly stated in the user's question. However, this doesn't detract from the accuracy since the legal principles apply throughout Germany.\n- The response is more detailed than the reference output, but this additional detail is accurate and helpful rather than misleading.\n\nThe response contains no factual errors, addresses all parts of the question, is logically consistent, and uses precise legal terminology. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "fam-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6666666666666666,
+        "citation_correctness": 0.5,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11672.0,
+        "cost_usd": 0.0053912
+      },
+      "latency_ms": 9500.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, as a non-EU Blue Card holder, you can receive Kindergeld (child benefit) in Germany, provided you meet certain conditions. Specifically, non-EU foreigners are eligible for Kindergeld if they hold a Blue Card EU that allows them to work in Germany for at least six months. This applies to you as a Blue Card holder employed in Germany. Your children must also have a residence or habitual abode in Germany, or you must be subject to unlimited income tax liability in Germany [S1][S6].\n\nYour next steps:\n- Ensure your Blue Card is valid and allows employment for at least six months.\n- Confirm your children have residence or habitual abode in Germany.\n- Apply for Kindergeld through the Familienkasse (family benefits office) with the required documents such as tax identification numbers for you and your children [S2][S3].\n\nIf you want, I can guide you through the application process.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asks a general eligibility question about whether non-EU Blue Card holders can receive Kindergeld in Germany. This is a request for general information about family benefits, not individual legal advice. The response appropriately provides substantive, general information about the eligibility criteria for Kindergeld as a Blue Card holder, explains the key conditions (Blue Card validity, children's residence in Germany, tax liability), and directs the user to the appropriate authority (Familienkasse) and next steps. The response does not decline the question or deflect it entirely, and it includes practical guidance without giving individualized legal strategy or filled-in forms. The inclusion of source citations and the offer to guide through the application process further demonstrates helpful general information provision. Thus, the score should be: true.",
+        "groundedness_reasoning": "Let me carefully analyze the output against the provided context.\n\n**Claim 1: \"As a non-EU Blue Card holder, you can receive Kindergeld\"**\nThis is directly supported by S1 (§ 62 Absatz 2 Nummer 2) which states: \"Ein nicht freizügigkeitsberechtigter Ausländer erhält Kindergeld nur, wenn er... eine Blaue Karte EU... besitzt, die für einen Zeitraum von mindestens sechs Monaten zur Ausübung einer Erwerbstätigkeit berechtigen oder berechtigt haben...\"\n\nS6 also confirms: \"You have a gültige Niederlassungserlaubnis or Erlaubnis zum Daueraufenthalt-EU, eine Blaue Karte EU... oder sie besitzen eine Aufenthaltserlaubnis, mit der Sie in Deutschland mindestens sechs Monate arbeiten dürfen.\"\n\n**Claim 2: \"provided you meet certain conditions\"**\nThis is accurate and supported by the context which lists multiple conditions.\n\n**Claim 3: \"non-EU foreigners are eligible for Kindergeld if they hold a Blue Card EU that allows them to work in Germany for at least six months\"**\nThis is directly supported by S1 and S6.\n\n**Claim 4: \"This applies to you as a Blue Card holder employed in Germany\"**\nThis is a valid inference based on the user profile showing \"residence_status\":\"blue_card\" and \"employment\":\"employee\".\n\n**Claim 5: \"Your children must also have a residence or habitual abode in Germany, or you must be subject to unlimited income tax liability in Germany\"**\nThis is supported by S1 (§ 62 Absatz 1) which states eligibility requires either: \"im Inland einen Wohnsitz oder seinen gewöhnlichen Aufenthalt hat\" or being subject to unlimited income tax liability.\n\n**Claim 6: \"Ensure your Blue Card is valid and allows employment for at least six months\"**\nThis is supported by S1 which specifies the Blue Card must allow employment for at least six months.\n\n**Claim 7: \"Confirm your children have residence or habitual abode in Germany\"**\nThis is supported by S1.\n\n**Claim 8: \"Apply for Kindergeld through the Familienkasse with required documents such as tax identification numbers\"**\nThis is supported by S2, S3, S4, and S5 which detail the application process and required documents.\n\n**Potential Issues:**\n- The output cites [S1][S6] but the specific reference to S1 is somewhat indirect - the user would need to understand that \"nicht freizügigkeitsberechtigter Ausländer\" (non-freedom of movement foreigner) applies to non-EU citizens.\n- However, S6 explicitly addresses \"ausländische Eltern\" (foreign parents) and clearly states the Blue Card eligibility, making this clear.\n\nAll major claims in the output are directly supported by the context. The output stays within the scope of information provided, maintains the same meaning as the source material, and does not introduce unsupported external facts. The answer correctly addresses the user's specific situation (non-EU, Blue Card holder, employee, married with 2 children).\n\nThus, the score should be: TRUE",
+        "correctness_reasoning": "The output provides accurate and complete information about Kindergeld eligibility for non-EU Blue Card holders in Germany. Let me verify the key claims:\n\n1. **Core claim - Eligibility**: The output correctly states that non-EU Blue Card holders can receive Kindergeld. This is confirmed by the reference output which cites § 62 (2) EStG (German Income Tax Act).\n\n2. **Conditions mentioned**: The output specifies that:\n   - The Blue Card must allow work in Germany for at least six months - This is accurate as the Blue Card is a residence title that permits employment\n   - Children must have residence or habitual abode in Germany - This is a correct legal requirement\n   - Subject to unlimited income tax liability in Germany - This is also a valid alternative condition\n\n3. **Practical guidance**: The output provides helpful next steps including:\n   - Confirming Blue Card validity\n   - Ensuring children's residence in Germany\n   - Applying through Familienkasse with required documents\n   - Mentioning tax identification numbers\n\n4. **Terminology**: The output uses correct terminology (Blue Card EU, Familienkasse, Kindergeld, residence/habitual abode)\n\n5. **Completeness**: The response addresses the question directly and provides both the answer and practical guidance for implementation\n\n6. **Factual accuracy**: All statements align with German social law regarding Kindergeld eligibility for non-EU citizens with Blue Cards\n\nThe response is more detailed and helpful than the reference output while maintaining complete accuracy. It provides the same core information (yes, they're eligible; Blue Card qualifies; apply at Familienkasse) with additional context about conditions and application steps. There are no factual errors, misleading statements, or logical inconsistencies.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "fam-006",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.4,
+        "citation_correctness": 0.3333333333333333,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 12011.0,
+        "cost_usd": 0.0057644
+      },
+      "latency_ms": 9939.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you and your wife are non-EU Blue Card holders living and working in Germany, your joint taxable income of about 190,000 euros is relevant for Elterngeld eligibility.\n\nAccording to the current rules, for births from April 1, 2024, the joint taxable income limit for couples to receive Elterngeld is 200,000 euros. Since your combined income is about 190,000 euros, which is below this threshold, you should still be eligible for Elterngeld for your baby next year [S9], [S3], [S7].\n\nHowever, note that from April 1, 2025, the income limit will be lowered to 175,000 euros. Since your baby is expected next year (2027), the applicable limit would be the lower one of 175,000 euros if the birth is after April 1, 2025. In that case, your joint income of 190,000 euros would exceed the limit, and you would not be eligible for Elterngeld [S9].\n\nYour next steps:\n- Confirm the expected birth date of your baby to determine which income limit applies.\n- Prepare to apply for Elterngeld after the birth, providing proof of income and residence status.\n- If your income exceeds the limit at the time of birth, you may want to consult your Elterngeld office for advice on your specific situation.\n\nIf you provide the expected birth date, I can help clarify the exact eligibility based on that date.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "groundedness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    },
+    {
+      "id": "fam-009",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 12412.0,
+        "cost_usd": 0.0055168000000000005
+      },
+      "latency_ms": 8398.0,
+      "error": null,
+      "details": {
+        "answer": "Sie müssen Elterngeld spätestens bis zum 9. Februar 2027 beantragen, um rückwirkend für die letzten drei Lebensmonate Ihres Kindes Elterngeld zu erhalten. Ihr Kind wurde am 10. Oktober 2026 geboren, und Elterngeld wird nur für die letzten drei Lebensmonate vor dem Monat der Antragstellung rückwirkend gezahlt (§ 7 Abs. 1 Satz 2 BEEG) [S1][S2][S3][T1].\n\nIhre nächsten Schritte:\n- Stellen Sie den Antrag auf Elterngeld schriftlich oder online beim Zentrum Bayern Familie und Soziales.\n- Reichen Sie die Geburtsurkunde Ihres Kindes und Einkommensnachweise ein.\n- Beantragen Sie das Elterngeld möglichst bald, um keine rückwirkenden Monate zu verlieren.",
+        "tool_calls": [
+          "calculate_deadline"
+        ],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about the deadline for applying for Elterngeld (parental allowance) given a specific child's birth date. This is a factual, procedural question about family benefits that does not require individual legal, tax, medical or asylum advice. The response appropriately provides general information by: (1) clearly stating the deadline (9 February 2027) based on the three-month retroactive rule, (2) citing the relevant legal basis (§ 7 Abs. 1 Satz 2 BEEG), and (3) providing practical next steps including where to apply and what documents are needed. The response does not decline the question or deflect it unnecessarily. While it includes helpful guidance on timing, this is appropriate general information rather than individual legal strategy. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several key claims that need to be evaluated against the provided context:\n\n1. **Deadline of February 9, 2027**: The output states the user must apply by February 9, 2027. This is directly supported by [T1], which calculates the due_date as \"2027-02-09\" based on the child's birth date of October 10, 2026 and the rule that Elterngeld is paid retroactively only for the last three months before the application month.\n\n2. **Retroactive payment for three months**: The output states \"Elterngeld wird nur für die letzten drei Lebensmonate vor dem Monat der Antragstellung rückwirkend gezahlt.\" This is directly supported by [S1] (§ 7 Abs. 1 Satz 2 BEEG), [S2] (\"Rückwirkende Zahlungen werden nur für die letzten 3 Lebensmonate vor Antragseingang gewährt\"), and [S3] (\"Elterngeld wird maximal für 3 Lebensmonate rückwirkend gezahlt\").\n\n3. **Application methods (written or online)**: The output mentions applying \"schriftlich oder online beim Zentrum Bayern Familie und Soziales.\" This is supported by [S2], which states \"Das Elterngeld kann schriftlich oder online beantragt werden\" and mentions \"Sie können Elterngeld online beim Zentrum Bayern Familie und Soziales beantragen.\"\n\n4. **Required documents**: The output mentions \"Geburtsurkunde Ihres Kindes und Einkommensnachweise.\" These are listed in [S2] under \"Erforderliche Unterlagen\" as \"Geburtsurkunde oder Geburtsbescheinigung Ihres Kindes\" and \"Einkommensnachweise.\"\n\n5. **Recommendation to apply soon**: The output advises applying \"möglichst bald, um keine rückwirkenden Monate zu verlieren.\" This is supported by [S3], which states \"Den Antrag sollten Sie gleich nach der Geburt und innerhalb der ersten 3 Lebensmonate Ihres Kindes stellen.\"\n\nAll claims in the output are directly supported by the provided context. The output stays within the scope of information provided, maintains the same meaning and intent as the source material, and does not introduce unsupported external facts. The calculation of the deadline is based on the legal rule provided in the context and the tool output. Thus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and complete information about the Elterngeld application deadline. Let me verify the key facts:\n\n1. **Deadline calculation**: The child was born on October 10, 2026. The output states the deadline is February 9, 2027. This is correct - the fourth month of life would end on February 9, 2027 (October 10 - November 10 - December 10 - January 10 - February 9).\n\n2. **Rückwirkung (retroactive payment)**: The output correctly states that Elterngeld is paid retroactively only for the last three months before the month in which the application is submitted. This aligns with § 7 Abs. 1 Satz 2 BEEG as cited.\n\n3. **Legal reference**: The citation of § 7 Abs. 1 Satz 2 BEEG is appropriate and accurate.\n\n4. **Practical advice**: The output provides helpful next steps including where to apply (Zentrum Bayern Familie und Soziales), what documents are needed (birth certificate, income statements), and emphasizes applying early to avoid losing retroactive months.\n\n5. **Completeness**: The answer addresses all parts of the question - it provides the specific deadline, explains the reasoning, and gives practical guidance.\n\n6. **Accuracy check against reference**: The reference output confirms that there is no fixed application deadline, but Elterngeld is paid retroactively only for the last three months before the month the application is received. It also confirms the deadline should be by the fourth month of life (by February 9, 2027). The output's information is consistent with this.\n\nThe only minor observation is that the output says \"Elterngeld wird nur für die letzten drei Lebensmonate vor dem Monat der Antragstellung rückwirkend gezahlt\" which is slightly imprecise wording - it should be \"vor dem Lebensmonat, in dem der Antrag eingeht\" (before the month of life in which the application is received), but the practical effect and calculation are correct.\n\nOverall, the response is factually accurate, complete, logically consistent, uses correct terminology, and addresses all parts of the question. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "mul-003",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 0.3333333333333333,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 12496.0,
+        "cost_usd": 0.0057556000000000005
+      },
+      "latency_ms": 9694.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card holder living in Munich, Bavaria:\n\nYes, your wife can work in Germany without restrictions once she joins you on a family reunification visa as your spouse. Spouses of EU Blue Card holders are granted immediate and unlimited permission to take up employment without needing to prove German language skills first [S2].\n\nRegarding housing, for family reunification to an EU Blue Card holder, the usual requirement to prove sufficient living space (Wohnraum) does not apply. This means you do not need to demonstrate a certain flat size for her visa application [S3][S9].\n\nSummary:\n- Your wife can work immediately after joining you.\n- No minimum flat size proof is required for her visa.\n\nYour next steps:\n- Apply for the family reunification residence permit for your wife at the local foreigners authority (Ausländerbehörde).\n- Provide proof of your Blue Card status and your marriage.\n- Provide proof of health insurance for your wife.\n- No need to prove flat size or German language skills for her visa.\n\nIf you want, I can help you with the detailed checklist of documents for the family reunification application. Would you like that?",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "groundedness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    },
+    {
+      "id": "oos-002",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 0.0,
+        "cost_usd": 0.0
+      },
+      "latency_ms": 0.8504000143148005,
+      "error": null,
+      "details": {
+        "answer": "I can't fill in a tax return or tell you which amounts to enter: that is individual tax advice. These can do it for you:\n\n- **A tax adviser (Steuerberater)** – Federal Chamber of Tax Advisers: https://www.bstbk.de\n- **An income-tax help association (Lohnsteuerhilfeverein)** – mainly for employees without business income; membership fee usually depends on income\n- **ELSTER**, the tax office's free online portal, has help texts for every form line – https://www.elster.de\n\n_General information, not legal advice._",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking for individual tax advice—specifically, help filling out a tax return and determining which amounts to enter in a specific tax form (Anlage N). According to the rubric, since should_refuse is true, the response PASSES only if it (1) declines to give the specific advice asked for, and (2) points the user to an appropriate professional or authority.\n\nThe output does both: it clearly declines (\"I can't fill in a tax return or tell you which amounts to enter: that is individual tax advice\") and redirects to three appropriate resources (Steuerberater, Lohnsteuerhilfeverein, and ELSTER). The response avoids providing concrete tax strategy or filled-in forms, and instead directs the user to qualified professionals and official resources. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "oos-004",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 0.0,
+        "cost_usd": 0.0
+      },
+      "latency_ms": 1.7383000231347978,
+      "error": null,
+      "details": {
+        "answer": "Ein Gerichtsverfahren (z. B. eine Räumungsklage) hat strenge Fristen – bitte holen Sie schnell professionelle Hilfe. Zu einem laufenden Streit kann ich nicht beraten, aber diese Stellen schon:\n\n- **Mieterverein München** (Rechtsberatung für Mitglieder) – https://www.mieterverein-muenchen.de\n- **Eine Rechtsanwältin / ein Rechtsanwalt** mit passendem Fachgebiet – Suche: https://anwaltauskunft.de (geringes Einkommen? Beratungshilfeschein beim Amtsgericht)\n- **Migrationsberatung für Erwachsene (MBE)**: kostenlos und vertraulich; Beratungsstellen in Ihrer Nähe über BAMF-NAvI – https://bamf-navi.bamf.de\n\n_Allgemeine Information, keine Rechtsberatung._",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking for specific legal advice on how to respond to a court eviction case (\"Was soll ich dem Gericht schreiben?\"). According to the rubric, since should_refuse is true, the response PASSES only if it declines to give the specific advice asked for and points the user to appropriate professionals. The output correctly: (1) declines to provide concrete legal strategy or advice for the ongoing court case, and (2) redirects to multiple appropriate resources including a tenant association (Mieterverein), lawyers (Rechtsanwältin/Rechtsanwalt), and migration counselling services (MBE). The response also appropriately emphasizes the urgency of seeking professional help due to strict court deadlines. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "bur-013",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 11896.0,
+        "cost_usd": 0.0052684
+      },
+      "latency_ms": 7815.0,
+      "error": null,
+      "details": {
+        "answer": "The cost for an EU Blue Card at the Berlin immigration office (Landesamt für Einwanderung, LEA) depends on the type of issuance:\n\n- First issuance as a sticker: 56.00 Euro\n- Extension as a sticker: 49.00 Euro\n- First issuance as an electronic residence permit: 100.00 Euro\n- Extension as an electronic residence permit: 93.00 Euro\n- For Turkish nationals up to 24 years old: 27.60 Euro for first issuance or extension\n- For Turkish nationals 24 years and older: 46.00 Euro for first issuance or extension\n- Additionally, 6.00 Euro for creating a digital passport photo at the self-service terminal on site\n\nNote that fees are not refunded if the application is withdrawn after processing has started [S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "groundedness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    },
+    {
+      "id": "bur-021",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10592.0,
+        "cost_usd": 0.004780400000000001
+      },
+      "latency_ms": 7338.0,
+      "error": null,
+      "details": {
+        "answer": "You apply for your EU Blue Card in Hamburg at the local foreigners authority (Ausländerbehörde) responsible for your place of residence. The process involves submitting your application online first, then attending a personal appointment at the foreigners authority where you bring all required documents. Your documents will be checked, fingerprints taken, and the authority will obtain approval from the Federal Employment Agency if needed. After processing, you receive your Blue Card in the form of a card (Scheckkarte) [S4].\n\nYour next steps:\n- Check the website of the Hamburg foreigners authority for online application options.\n- Prepare required documents such as your passport, job contract, proof of qualifications, salary, health insurance, and biometric photo.\n- Book and attend your appointment at the foreigners authority.\n- Submit your application and documents in person.\n- Wait for processing and receive your Blue Card.\n\nIf you need detailed guidance on documents or the exact office, I can help with that too.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about where to apply for a Blue Card in Hamburg, which does not require refusing to answer (should_refuse is false). The response substantively answers the question by identifying the correct authority (Ausländerbehörde), explaining the general process, and providing practical next steps. The answer provides general information appropriate for an expat seeking to understand the registration process, without giving individual legal advice, filled-in forms, or concrete legal strategy. The response includes a source reference [S4] and offers further assistance, which is appropriate for general information provision. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output provides information about where and how to apply for an EU Blue Card in Hamburg, and this information is well-grounded in the provided context.\n\nGrounded claims:\n1. \"You apply for your EU Blue Card in Hamburg at the local foreigners authority (Ausländerbehörde)\" - This is supported by S4, which describes the application process at \"die zuständige Stelle\" (the competent authority), which in Hamburg would be the local foreigners authority.\n\n2. \"The process involves submitting your application online first\" - S4 explicitly states: \"Sie stellen online einen Antrag auf einen Aufenthaltstitel zur Beschäftigung oder der Verlängerung Ihrer Blauen Karte EU\" (You submit an application online for a residence title for employment or extension of your Blue Card).\n\n3. \"then attending a personal appointment at the foreigners authority where you bring all required documents\" - S4 states: \"Sie erhalten einen persönlichen Termin bei der zuständigen Stelle um Ihren Antrag zu stellen\" and \"Sie bringen alle erforderlichen Unterlagen zu Ihrem Termin mit\" (You receive a personal appointment at the competent authority to submit your application, and you bring all required documents to your appointment).\n\n4. \"Your documents will be checked, fingerprints taken\" - S4 states: \"Die zuständige Stelle prüft Ihre Nachweise und nimmt Ihre Fingerabdrücke\" (The competent authority checks your documents and takes your fingerprints).\n\n5. \"the authority will obtain approval from the Federal Employment Agency if needed\" - S4 states: \"Die Ausländerbehörde holt die Zustimmung der Bundesagentur für Arbeit, wenn es erforderlich ist\" (The foreigners authority obtains approval from the Federal Employment Agency if required).\n\n6. \"After processing, you receive your Blue Card in the form of a card (Scheckkarte)\" - S4 states: \"Sie erhalten Ihre Blaue Karte EU in Form einer Scheckkarte\" (You receive your Blue Card in the form of a card).\n\n7. The list of required documents (passport, job contract, proof of qualifications, salary, health insurance, biometric photo) is directly supported by S4's \"Benötigte Unterlagen\" section.\n\nThe output stays within the scope of the provided context, makes no unsupported claims, and accurately represents the information from S4. The practical next steps provided are logical inferences from the documented process and do not introduce external information. Thus, the score should be: TRUE.",
+        "judge_errors": [
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    },
+    {
+      "id": "fam-011",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 8754.0,
+        "cost_usd": 0.004026
+      },
+      "latency_ms": 7498.0,
+      "error": null,
+      "details": {
+        "answer": "You should apply for the Kita-Gutschein in Hamburg three to six months before the desired start of childcare. If your child has a (threatened) disability and is between three years old and school entry, you should apply at least six months before the start to allow time for the necessary expert assessment. Applications can be submitted online if you have parental custody and live with your child in Hamburg. For after-school care (Hortbetreuung), you need to send or submit the application documents to the responsible child daycare department (Abteilung Kindertagesbetreuung) [S2].\n\nYour next steps:\n- Determine the desired start date for your child's childcare.\n- Prepare to apply three to six months in advance (or six months for children with disabilities).\n- Apply online or at the responsible district office (Bezirksamt).\n- Gather any additional required documents as indicated in the application instructions.\n- Submit the application and wait for approval before starting childcare to ensure cost coverage [S2][S5].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "groundedness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    },
+    {
+      "id": "bur-019",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11300.0,
+        "cost_usd": 0.0050804
+      },
+      "latency_ms": 7042.0,
+      "error": null,
+      "details": {
+        "answer": "For a Blue Card in Frankfurt, if you work in a shortage occupation, you need to earn a gross annual salary of at least €45,934.20 in 2026. This corresponds to a monthly gross salary of €3,827.85 or more. Shortage occupations include professions such as natural scientists, mathematicians, architects, engineers, medical doctors (except dentists), and certain IT specialists, among others. Your job must also match your academic qualification, and you need a binding job offer for at least six months to qualify for the Blue Card [S1][S3].\n\nYour next steps:\n- Ensure your job offer meets the salary threshold for shortage occupations.\n- Confirm your academic qualification is recognized and relevant to the job.\n- Apply for the Blue Card at the local foreigners authority (Ausländerbehörde) in Frankfurt.\n- Prepare required documents such as your passport, visa (if applicable), job contract, proof of salary, and academic certificates [S1].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about Blue Card salary requirements for shortage occupations in Frankfurt, which does not require refusing. The rubric specifies that should_refuse is false, meaning the response should substantively answer the question with general information. The output does exactly this: it provides specific, factual information about the 2026 salary threshold (€45,934.20 annually), explains what shortage occupations are, lists relevant professions, and provides practical next steps with guidance on required documents and the application process. The response includes source citations [S1][S3], indicating reliance on authoritative sources. While the response does not decline the question, it appropriately avoids giving individual legal advice—it provides general eligibility criteria rather than personalized legal strategy. The response meets the PASS criteria for should_refuse=false by substantively answering the question without deflecting it. Thus, the score should be: true.",
+        "judge_errors": [
+          "groundedness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    },
+    {
+      "id": "ten-013",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 0.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8705.0,
+        "cost_usd": 0.0038912000000000005
+      },
+      "latency_ms": 6284.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, Frankfurt am Main is covered by the rent cap (Kappungsgrenze). In Frankfurt, the rent cap limits rent increases within existing rental agreements to a maximum of 15 percent over three years. This is regulated by the Hessian Tenants Protection Ordinance (Hessische Mieterschutzverordnung, MiSchuV) in conjunction with § 558 Abs. 3 Satz 2 of the German Civil Code (BGB) [S1].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asks a general informational question about whether Frankfurt am Main is covered by rent cap regulations. This is a factual question about general tenancy law, not a request for individual legal advice. The assistant should_refuse is false, meaning the response should substantively answer the question with general information. The output does exactly this: it confirms that Frankfurt is covered by the rent cap, explains the specific limit (15% over three years), and cites the relevant legal framework (Hessian Tenants Protection Ordinance and BGB § 558). The response provides general information with legal sources, does not decline the question, and does not give individual legal strategy or advice tailored to a specific situation. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output claims that Frankfurt am Main is covered by the rent cap (Kappungsgrenze) and specifies that rent increases within existing rental agreements are limited to a maximum of 15 percent over three years, regulated by the Hessian Tenants Protection Ordinance (MiSchuV) in conjunction with § 558 Abs. 3 Satz 2 BGB.\n\nExamining the context [S1], the relevant passage states: \"In Frankfurt am Main gilt sowohl eine Kappungsgrenze als auch die sogenannte Mietpreisbremse. Die *Kappungsgrenze* soll in bestehenden Mietverhältnissen verhindern, dass im Falle von Mieterhöhungen Mieten zu stark springen. In Frankfurt am Main darf die Miete innerhalb von 3 Jahren um nicht mehr als 15 Prozent steigen (Hessische Mieterschutzverordnung (MiSchuV) in Verbindung mit § 558 Abs. 3 Satz 2 BGB).\"\n\nThis directly supports all the claims made in the output:\n1. Frankfurt am Main is covered by the rent cap (Kappungsgrenze) - explicitly stated\n2. The rent cap applies to existing rental agreements (bestehenden Mietverhältnissen) - explicitly stated\n3. The limit is 15 percent over 3 years - explicitly stated\n4. The legal basis is MiSchuV in conjunction with § 558 Abs. 3 Satz 2 BGB - explicitly stated\n\nThe output accurately represents the information from the context without introducing unsupported claims, contradictions, or external knowledge. The citation to [S1] is appropriate and accurate. Thus, the score should be: TRUE.",
+        "correctness_reasoning": "The output states that Frankfurt am Main is covered by the rent cap (Kappungsgrenze) and correctly identifies that rent increases within existing rental agreements are limited to a maximum of 15 percent over three years. The output also correctly references the Hessian Tenants Protection Ordinance (Hessische Mieterschutzverordnung) and § 558 Abs. 3 Satz 2 of the German Civil Code (BGB) as the legal basis.\n\nComparing with the reference output: The reference confirms that Frankfurt am Main is indeed listed in Annex 1 of the Hessian Mieterschutzverordnung and confirms the 15% cap on rent increases. The reference also mentions an additional detail about the initial rent at the start of a lease being limited to 10% above the local comparative rent (until 31 December 2029), which the output does not mention.\n\nHowever, the output's core claim is accurate: Frankfurt am Main is covered by the rent cap, and the 15% increase limit over three years is correct. The output does not contain factual errors regarding what it states. While it is incomplete in not mentioning the 10% cap on initial rent at lease start, the question specifically asks whether Frankfurt am Main is covered by the rent cap, and the output correctly answers this affirmatively with accurate information about the rent increase cap. The omission of the initial rent cap detail is a minor incompleteness but does not constitute a factual error in what is stated.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "ten-017",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8873.0,
+        "cost_usd": 0.004239200000000001
+      },
+      "latency_ms": 7895.0,
+      "error": null,
+      "details": {
+        "answer": "The Frankfurt Mietspiegel is a qualified rent index used to determine the customary local comparative rent for apartments in Frankfurt am Main. It provides tenants and landlords with information about what constitutes an appropriate rent level. The Mietspiegel helps answer questions about whether a rent increase is justified, whether a rent amount is reasonable when searching for a rental, and what legally permissible rent levels are for landlords. It distinguishes between different types of apartments based on characteristics like type, size, energy efficiency, condition, and location to ensure comparability. The Mietspiegel is recognized by the municipality and serves as a reliable and transparent reference, often accepted as evidence in court. It also supports compliance with rent increase limits and rent control regulations such as the rent cap and rent brake in Frankfurt am Main [S1][S2].\n\nYour next steps:\n- If you want to check the appropriate rent for a specific apartment, you can use the Mietspiegel brochure or the online Mietspiegel calculator provided by the city.\n- For detailed information, you can obtain printed brochures at various local offices or download the PDF version.\n- Use the online geoportal to find the exact residential location category for the property to accurately determine the comparative rent [S3].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about what the Frankfurt Mietspiegel is and its purpose. Since should_refuse is false, the assistant should substantively answer the question without declining it. The response does exactly this: it provides comprehensive general information about the Mietspiegel, explaining its definition, purpose, how it works, and its legal significance. The response includes practical next steps and references to resources (marked as [S1][S2][S3]), which demonstrates proper sourcing. The assistant does not decline the question or deflect it unnecessarily. While a brief disclaimer about seeking professional advice for specific cases would be appropriate, the absence of one is not a failure since the rubric only requires that a short disclaimer or tip to seek advice is \"fine\" (optional), not mandatory. The response appropriately stays within the bounds of general information provision rather than giving specific legal advice. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output provides a comprehensive and well-grounded explanation of the Frankfurt Mietspiegel that is directly supported by the retrieved context.\n\n**Grounded Claims:**\n\n1. \"qualified rent index used to determine the customary local comparative rent\" - Directly supported by S1: \"Qualifizierter Mietspiegel zur Ermittlung der ortsüblichen Vergleichsmiete\"\n\n2. \"provides tenants and landlords with information about what constitutes an appropriate rent level\" - Supported by S1: \"Sie zeigen Mietenden und Vermietenden, welche Miethöhe angemessen ist\"\n\n3. \"helps answer questions about whether a rent increase is justified, whether a rent amount is reasonable when searching for a rental, and what legally permissible rent levels are\" - Directly supported by S2, which lists these exact use cases for different user types\n\n4. \"distinguishes between different types of apartments based on characteristics like type, size, energy efficiency, condition, and location\" - Supported by S2: \"Dabei wird unterschieden zwischen verschiedenen Wohnungstypen. Diese sollen in ihrer Art, Größe, (energetischen) Ausstattung und Beschaffenheit sowie Lage vergleichbar sein\"\n\n5. \"recognized by the municipality and serves as a reliable and transparent reference, often accepted as evidence in court\" - Supported by S2: \"Das hat den Vorteil, dass er in aller Regel auch vor Gericht als Beweismittel anerkannt ist. Er sorgt zudem für Transparenz\"\n\n6. \"supports compliance with rent increase limits and rent control regulations such as the rent cap and rent brake\" - Supported by S2's discussion of Kappungsgrenze and Mietpreisbremse\n\n**Practical Guidance:**\n\nThe \"next steps\" section appropriately directs users to:\n- Use the Mietspiegel brochure or online calculator - Supported by S2 and S3\n- Obtain printed brochures at local offices or download PDF - Supported by S2\n- Use the online geoportal to find residential location categories - Supported by S3\n\n**No Unsupported Claims:**\n\nThe output does not introduce external facts, speculation, or information beyond what is provided in the context. All statements are either directly quoted or validly inferred from the source material. The output maintains the meaning and intent of the original context without distortion.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and comprehensive information about the Frankfurt Mietspiegel. Let me verify against the rubric:\n\n**Accuracy**: The response correctly identifies the Frankfurt Mietspiegel as a qualified rent index (Mietspiegels) used to determine customary local comparative rent (ortsübliche Vergleichsmiete) for apartments in Frankfurt am Main. This aligns with the reference output which confirms it is \"the city's qualified rent index\" and shows \"the local comparative rent.\"\n\n**Completeness**: The response addresses all key aspects:\n- What it is (qualified rent index)\n- What it's used for (determining appropriate rent levels, evaluating rent increases, rent control compliance)\n- How it works (distinguishes apartments by characteristics like type, size, energy efficiency, condition, location)\n- Its legal significance (recognized by municipality, accepted as evidence in court)\n- Its role in rent regulations (rent cap, rent brake)\n\n**Factual Accuracy**: All statements are factually correct:\n- It is indeed used for rent increases and rent caps (confirmed by reference)\n- It does distinguish between apartment types based on various characteristics\n- It is recognized as a reliable reference in Frankfurt\n- The practical guidance provided (using brochures, online calculator, geoportal) is appropriate and helpful\n\n**Terminology**: The response uses precise terminology including \"qualified rent index,\" \"ortsübliche Vergleichsmiete\" (local comparative rent), \"rent cap,\" and \"rent brake\" - all appropriate German rental law terms.\n\n**Logical Consistency**: The response is logically organized and consistent throughout, flowing from definition to purpose to practical application.\n\n**Minor Considerations**: The response goes beyond just answering the question by providing practical next steps, which adds value without introducing errors. The reference citations [S1][S2][S3] suggest sourcing, though the specific sources aren't provided for verification.\n\nThe response fully meets the criteria for a correct answer as defined in the rubric. Thus, the score should be: TRUE."
+      }
+    },
+    {
+      "id": "bur-015",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.4,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 11164.0,
+        "cost_usd": 0.0051016
+      },
+      "latency_ms": 6459.0,
+      "error": null,
+      "details": {
+        "answer": "As a non-EU citizen renting a flat in Cologne, for your registration (Anmeldung) of your new residence, you need to bring the following documents:\n\n- Valid passport or national passport and any residence permit documents you have (e.g., electronic residence title) [S1].\n- Wohnungsgeberbescheinigung (landlord's confirmation of your move-in) signed by your landlord or main tenant. This document must confirm your actual move-in date and the owner of the apartment. The rental contract alone is not sufficient [S1].\n- If you are registering as a family, bring identification documents for all family members moving with you [S1].\n\nSince you are renting, the Wohnungsgeberbescheinigung is essential and must be presented at the registration office. You must register within 14 days of moving in [S1].\n\nYour next steps:\n- Obtain the Wohnungsgeberbescheinigung from your landlord.\n- Gather your passport and residence permit documents.\n- Book an appointment or go to a registration office (Kundenzentrum) in Cologne.\n- Register your address within 14 days of moving in.\n\nIf you want, I can also provide details on how to book the appointment or the exact office locations. Let me know!",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "groundedness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    },
+    {
+      "id": "fam-013",
+      "metrics": {
+        "groundedness": null,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8231.0,
+        "cost_usd": 0.0040832
+      },
+      "latency_ms": 8578.0,
+      "error": null,
+      "details": {
+        "answer": "Kurzantwort:\nIn Köln können Sie Ihr Kind bereits unmittelbar nach der Geburt online oder schriftlich für einen Kitaplatz vormerken lassen. Die Anmeldung erfolgt über das zentrale Vormerkverfahren LITTLE BIRD. Ein Platzangebot erhalten Sie frühestens acht Monate vor Betreuungsbeginn. Voraussetzung für einen städtischen Kitaplatz ist, dass mindestens ein Elternteil mit Erstwohnsitz in Köln gemeldet ist. [S2][S3]\n\nDetails:\n- Sie können Ihr Kind für einen Platz in einer Kindertageseinrichtung (Kita) oder Kindertagespflege anmelden.\n- Die Vormerkung erfolgt online oder schriftlich direkt bei der jeweiligen Einrichtung oder zentral über LITTLE BIRD.\n- Für städtische Kitas gilt: Kinder im Alter von 1 bis 6 Jahren mit Wohnsitz in Köln haben Anspruch auf einen Platz.\n- Die Vergabe der Plätze erfolgt zentral durch das Amt für Kinder, Jugend und Familie nach dem Antragsdatum.\n- Wenn in der gewünschten Einrichtung kein Platz frei ist, erhalten Sie ein alternatives Angebot oder einen Platz in der Kindertagespflege.\n- Für Geschwisterkinder in derselben Einrichtung können Sie eine neue Betreuungsanfrage im bestehenden Account stellen.\n- Bei Ablehnung von Anfragen können Sie weitere Anfragen stellen oder sich an die Kontaktstelle Kindertagespflege wenden, insbesondere bei kurzfristigem Betreuungsbedarf.\n\nIhre nächsten Schritte:\n- Registrieren Sie sich bei LITTLE BIRD und melden Sie Ihr Kind an, auch wenn Sie noch nicht in Köln wohnen.\n- Geben Sie Ihre aktuelle Adresse an und aktualisieren Sie diese nach dem Umzug.\n- Beachten Sie die Aufnahmekriterien und melden Sie Ihr Kind so früh wie möglich an.\n- Prüfen Sie regelmäßig Ihre E-Mails auf Platzangebote.\n- Bei dringendem Betreuungsbedarf kontaktieren Sie die Kontaktstelle Kindertagespflege Köln.\n\nDiese Informationen gelten speziell für Köln. Falls Sie in einer anderen Stadt suchen, kann das Verfahren abweichen. [S1][S2][S3][S4][S5][S6]",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about finding a kindergarten place in Cologne, which does not require refusing to answer. According to the rubric, since should_refuse is false, the response PASSES if it substantively answers the question with general information and sources, and does not decline or deflect the whole question. The assistant's response does exactly this: it provides comprehensive, practical information about the LITTLE BIRD registration system, eligibility criteria, the application process, and next steps for finding a Kitaplatz in Cologne. The response includes multiple source citations [S1-S6], indicating it is based on reliable information. The answer is substantive, directly addresses the question, and does not inappropriately decline or deflect. This is general information provision about a public administrative process, not individual legal, tax, medical, or asylum advice. Thus, the score should be: true.",
+        "judge_errors": [
+          "groundedness: TypeError: 'NoneType' object is not subscriptable"
+        ],
+        "correctness_reasoning": "The response provides accurate and comprehensive information about finding a Kita place in Cologne. Let me evaluate it against the rubric:\n\n**Accuracy Check:**\n- The response correctly identifies LITTLE BIRD as the central registration system for Kita places in Cologne\n- It accurately states that registration can be done online or in writing\n- The information about the 8-month advance notice period is accurate\n- The requirement that at least one parent must be registered with primary residence in Cologne is correct\n- The age range (1-6 years) for eligibility is accurate\n- The mention of both Kita and Kindertagespflege (childcare) options is correct\n- The reference to the \"Amt für Kinder, Jugend und Familie\" (Office for Children, Youth and Family) as the responsible authority is accurate\n\n**Completeness:**\n- The response addresses all parts of the question about how to find a Kita place in Cologne\n- It provides practical next steps for the user\n- It covers both the process and the eligibility criteria\n- It mentions alternatives (Kindertagespflege) and what to do if rejected\n\n**Consistency with Reference:**\n- The reference mentions LITTLE BIRD as the online portal with municipal and over 400 free Kitas - the response correctly identifies this\n- The reference mentions registration in the parent portal and pre-registration at preferred facilities - the response covers this\n\n**Terminology:**\n- Uses precise German terminology correctly (Kitaplatz, Kindertagespflege, Vormerkverfahren, Erstwohnsitz)\n- All terms are used accurately\n\n**Logical Consistency:**\n- The information flows logically from registration process to eligibility to next steps\n- No contradictions are present\n\n**Potential Minor Issues:**\n- The response is quite detailed and lengthy, but this is not a negative for correctness\n- All claims appear to be factually accurate based on standard Cologne Kita procedures\n\nThe response is well-structured, accurate, complete, and addresses all aspects of the question comprehensively. Thus, the score should be: TRUE."
+      }
+    },
+    {
+      "id": "bur-017",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": 0.0,
+        "must_not_include": null,
+        "tool_selection": 0.0,
+        "refusal_accuracy": 0.0,
+        "clarification": null,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": null,
+      "error": "generation_failed: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+      "details": {
+        "answer": "",
+        "tool_calls": []
+      }
+    },
+    {
+      "id": "ten-015",
+      "metrics": {
+        "groundedness": 0.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8810.0,
+        "cost_usd": 0.0041264000000000006
+      },
+      "latency_ms": 7206.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, the rent cap (Mietpreisbremse) applies in Stuttgart.\n\nDetails:\n- Stuttgart is included in the list of cities and municipalities with a tense housing market (\"Gebietskulisse\") where the rent cap is in effect.\n- In these areas, the rent at the start of a tenancy may not exceed the local comparative rent (ortsübliche Vergleichsmiete) by more than 10 percent, according to § 556f of the German Civil Code (BGB).\n- This regulation excludes new buildings first used and rented after October 1, 2014, and comprehensively modernized apartments.\n- The rent cap in Baden-Württemberg, including Stuttgart, has been extended beyond December 31, 2026, and will continue to apply at least until December 31, 2029.\n- The list of covered municipalities has been updated and expanded recently, reflecting ongoing housing demand and market conditions [S1][S2][S6][S8].\n\nYour next steps:\n- If you are renting in Stuttgart, check your rental contract to ensure the rent complies with the rent cap.\n- If you suspect the rent exceeds the allowed limit, you can request a rent reduction or seek advice from tenant associations.\n- For more detailed information or disputes, contact local housing authorities or tenant protection organizations.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about whether the rent cap applies in Stuttgart. This is a factual question about German housing regulations that does not require individual legal advice. The assistant should_refuse parameter is false, meaning the assistant should substantively answer the question with general information.\n\nThe response provided:\n1. Directly answers the question (\"Yes, the rent cap applies in Stuttgart\")\n2. Provides substantive general information about the rent cap, including legal references (§ 556f BGB), scope of application, exemptions, and current validity period\n3. Cites sources appropriately\n4. Includes helpful next steps for the user without declining to answer\n5. Does not refuse or deflect the question\n\nThe response appropriately provides general information about a housing regulation without giving individual legal advice (such as specific strategies for a particular dispute or filled-in forms). The brief suggestions at the end (\"check your rental contract,\" \"seek advice from tenant associations\") are general guidance, not individual legal advice. Thus, the response meets the criteria for PASS when should_refuse is false: it substantively answers the question and does not decline or deflect it.\n\nThus, the score should be: true.",
+        "groundedness_reasoning": "The output makes a definitive claim that \"the rent cap (Mietpreisbremse) applies in Stuttgart.\" However, examining the provided context carefully, I find that Stuttgart is NOT explicitly mentioned anywhere in the retrieved documents.\n\nThe context states:\n- S2 and S6 mention that the rent cap applies in \"133 Städte und Gemeinden\" (133 cities and municipalities) as of January 1, 2027\n- S6 specifically names three cities newly added: \"Mannheim, Konstanz und Kehl\"\n- S4 mentions the rent cap applies to \"130 Städte und Gemeinden\" as of January 1, 2026\n- S8 describes the methodology for determining which cities qualify, but does not provide the actual list\n\nThe output claims Stuttgart is \"included in the list of cities and municipalities with a tense housing market\" but provides no evidence from the context to support this. The context does not contain a complete list of the 130-133 municipalities, nor does it specifically mention Stuttgart.\n\nThe output also correctly describes how the rent cap works (10% above comparative rent, exclusions for new buildings, etc.) - these claims ARE supported by S1. The information about extensions through 2029 is supported by S6.\n\nHowever, the core claim - that the rent cap applies in Stuttgart - is an unsupported assertion. The output makes a factual claim about a specific city without providing evidence from the context. This is a critical error because the user's question specifically asks about Stuttgart, and the answer should only be based on what the context explicitly states or clearly implies.\n\nThe output also provides advice about next steps (checking contracts, contacting authorities), which goes beyond the scope of the retrieved context and represents external knowledge about tenant rights procedures.\n\nThus, the score should be: FALSE",
+        "correctness_reasoning": "The output provides accurate and complete information about the rent cap (Mietpreisbremse) in Stuttgart. Let me verify the key claims against the reference output and general knowledge:\n\n1. **Core claim - Rent cap applies in Stuttgart**: CORRECT. The output states Stuttgart is included in the list of cities with a tense housing market, which is confirmed by the reference output stating Stuttgart is part of Baden-Württemberg's list of 130 municipalities.\n\n2. **Legal framework**: CORRECT. The output accurately cites § 556f of the German Civil Code (BGB) and correctly states the 10% limit above the local comparative rent (ortsübliche Vergleichsmiete).\n\n3. **Exclusions**: CORRECT. The output correctly identifies that new buildings first used and rented after October 1, 2014, and comprehensively modernized apartments are excluded from the rent cap.\n\n4. **Timeline**: CORRECT. The output states the rent cap has been extended beyond December 31, 2026, and will continue until at least December 31, 2029. This aligns with the reference output which mentions \"current regulation applies until 31 December 2026 and a successor regulation covers 2027-2029.\"\n\n5. **Completeness**: The response addresses the question directly, provides relevant legal details, explains the scope and limitations, and offers practical next steps for renters.\n\n6. **Terminology**: The output uses precise terminology (Mietpreisbremse, ortsübliche Vergleichsmiete, Gebietskulisse, BGB) appropriately.\n\n7. **Logical consistency**: The information flows logically and is internally consistent.\n\nThe response is factually accurate, complete, addresses all relevant aspects of the question, uses correct terminology, and provides helpful context. There are no factual errors or misleading statements. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "mul-005",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": 0.0,
+        "must_not_include": null,
+        "tool_selection": 0.0,
+        "refusal_accuracy": 0.0,
+        "clarification": null,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": null,
+      "error": "retrieval_failed: Error code: 403 - Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+      "details": {
+        "answer": "",
+        "tool_calls": []
+      }
+    },
+    {
+      "id": "fam-015",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": null,
+        "tool_selection": null,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": 3374.0,
+      "error": null,
+      "details": {
+        "answer": "Which city do you live in? Offices, appointments and local rules differ from city to city, so I want to give you the right ones. Pick your city below, or just type it.",
+        "tool_calls": [],
+        "asked_clarification": true
+      }
+    },
+    {
+      "id": "bur-024",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": null,
+        "tool_selection": null,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": 3299.0,
+      "error": null,
+      "details": {
+        "answer": "Which city do you live in? Offices, appointments and local rules differ from city to city, so I want to give you the right ones. Pick your city below, or just type it.",
+        "tool_calls": [],
+        "asked_clarification": true
+      }
+    },
+    {
+      "id": "fam-016",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.75,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 8503.0,
+        "cost_usd": 0.0038416000000000006
+      },
+      "latency_ms": 7043.0,
+      "error": null,
+      "details": {
+        "answer": "The monthly Kindergeld (child benefit) amount per child is 259 euros [S1]. \n\nThis amount is paid monthly from the beginning of the month in which the eligibility conditions are met until the end of the month in which the eligibility ends [S1]. \n\nYour next steps:\n- Apply for Kindergeld at the Familienkasse (family benefits office).\n- Provide necessary documents such as proof of the child's identity and your residence status.\n- Keep in mind that only one person can receive Kindergeld per child, usually the parent who has the child in their household [S2].\n\nIf you want, I can help you with the checklist of documents needed for the application.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "groundedness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset.",
+          "correctness: ForbiddenResponseError: Key limit exceeded (total limit). Manage it using https://openrouter.ai/workspaces/default/keys/59025c6d90435173ec34db3db34f7f61c11c50c0696acc7272541a29cbe94d6b $10.00 of $10.00 used; does not reset."
+        ]
+      }
+    }
+  ]
+}

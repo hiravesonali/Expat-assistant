@@ -73,6 +73,9 @@ class GoldenExample(BaseModel):
     must_include: list[str] = Field(default_factory=list)
     must_not_include: list[str] = Field(default_factory=list)
     should_refuse: bool = False
+    # The right response is the follow-up "Which city do you live in?" (location-dependent question, no city in
+    # the question or profile). No expected sources; scored only on asking (docs/plan-germany-wide.md).
+    expect_clarification: bool = False
     notes: str = ""
 
     @model_validator(mode="after")
@@ -83,7 +86,9 @@ class GoldenExample(BaseModel):
             raise ValueError(f"{self.id}: should_refuse must be true exactly for out_of_scope/sensitive categories")
         if self.should_refuse and (self.expected_sources or self.expected_tool):
             raise ValueError(f"{self.id}: refusal examples must not expect sources or tools")
-        if not self.should_refuse and not self.required_doc_keys:
+        if self.expect_clarification and (self.should_refuse or self.expected_sources or self.profile.city):
+            raise ValueError(f"{self.id}: clarification examples: no refusal, no expected sources, no profile city")
+        if not self.should_refuse and not self.expect_clarification and not self.required_doc_keys:
             # Without a required key, hit@k is undefined and the example would silently drop out of retrieval evals.
             raise ValueError(f"{self.id}: answerable examples need at least one required expected source")
         if self.category == "tool" and self.expected_tool is None:

@@ -200,3 +200,19 @@ def test_tool_call_returns_json_content_and_typed_artifact() -> None:
     assert isinstance(message, ToolMessage)
     assert json.loads(message.content)["tenancy_end_date"] == "2027-05-31"
     assert isinstance(message.artifact, NoticeResult)
+
+
+def test_tenant_notice_needs_no_tenancy_start() -> None:
+    """Regression (eval 2026-11-22): a required start date made the model ask for it and claim the tenant's period
+    depends on tenancy length. A tenant's period is always 3 months."""
+    result = calculate_tenancy_notice(
+        NoticeInput(party="tenant", notice_date=date(2026, 11, 2)), today=date(2026, 11, 2)
+    )
+    assert isinstance(result, NoticeResult)
+    assert result.notice_period_months == 3 and result.tenancy_duration_years is None
+    assert result.tenancy_end_date == date(2027, 1, 31)
+
+
+def test_landlord_notice_still_requires_tenancy_start() -> None:
+    result = calculate_tenancy_notice(NoticeInput(party="landlord", notice_date=date(2026, 11, 2)))
+    assert isinstance(result, ToolError) and result.needs == ["tenancy_start"]

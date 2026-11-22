@@ -412,9 +412,10 @@ class DemoRetriever:
 
     @staticmethod
     def _where(sq: SubQuery, profile: UserProfile) -> dict[str, Any]:
+        # The scripted demo corpus is Munich-only, so an unset profile location means Munich here.
         clauses: list[dict[str, Any]] = [
-            {"city": {"$in": [profile.city, ""]}},
-            {"state": {"$in": [profile.state, ""]}},
+            {"city": {"$in": [profile.city or "munich", ""]}},
+            {"state": {"$in": [profile.state or "BY", ""]}},
         ]
         if sq.domain and sq.domain_confidence >= 0.7:
             clauses.append({"domain": sq.domain.value})

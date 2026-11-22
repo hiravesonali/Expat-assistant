@@ -121,7 +121,7 @@ def test_analyze_returns_parsed_result_with_usage():
     llm = FakeStructuredModel({"raw": raw, "parsed": parsed, "parsing_error": None})
     history = [HumanMessage("I just signed a lease."), AIMessage("Great!")]
 
-    result = analyze("How long do I have to register it?", history, UserProfile(), llm)  # type: ignore[arg-type]
+    result = analyze("How long do I have to register it?", history, UserProfile(city="munich"), llm)  # type: ignore[arg-type]
 
     assert result.intent == "info" and not result.is_fallback
     assert result.usage == (120, 40)

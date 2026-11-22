@@ -33,8 +33,10 @@ from pipeline_adapter import DEMO, LIVE, live_status, run_pipeline, sync_secrets
 
 from expat.config import get_settings
 from expat.guards import DailyCap, SlidingWindowLimiter, check_question
+from expat.places import STATES, SUPPORTED_CITIES, city_label
 from expat.schemas import (
     AnswerMetaEvent,
+    ClarificationEvent,
     ErrorEvent,
     PipelineEvent,
     StepEvent,
@@ -51,7 +53,8 @@ ui.inject_css()
 sync_secrets_to_env()
 
 PREFER = "Prefer not to say"
-PLACEHOLDER = "Ask about Anmeldung, renting, Blue Card, Kindergeld…"
+OTHER_CITY = "__other__"
+PLACEHOLDER = "Ask about Anmeldung, renting, Blue Card, Kindergeld… in any German city"
 
 # Topic cards on the start screen: (icon, title, one-line description, full prompt that is sent)
 EXAMPLES = [
@@ -59,13 +62,13 @@ EXAMPLES = [
         ":material/how_to_reg:",
         "Anmeldung",
         "Register your new address",
-        "I just moved to Munich on a Blue Card. What do I need for the Anmeldung, and by when?",
+        "I just moved to Berlin on a Blue Card. What do I need for the Anmeldung, and by when?",
     ),
     (
         ":material/key:",
         "End my lease",
         "Notice periods and end dates",
-        "I rent a flat in Munich since 2021. If I give notice today, when does my tenancy end?",
+        "I rent a flat in Hamburg since 2021. If I give notice today, when does my tenancy end?",
     ),
     (
         ":material/child_care:",
@@ -204,7 +207,7 @@ def profile_short() -> str:
     if not st.session_state.profile_saved:
         return "Personalise answers"
     p: UserProfile = st.session_state.profile
-    bits: list[str] = []
+    bits: list[str] = [city_label(p.city)] if p.city else ([STATES[p.state].split(" (")[0]] if p.state else [])
     if p.residence_status != ResidenceStatus.UNKNOWN:
         bits.append(PROFILE_UI["residence_status"][1].get(p.residence_status, p.residence_status.value))
     elif p.citizenship != Citizenship.UNKNOWN:
@@ -213,7 +216,43 @@ def profile_short() -> str:
         bits.append(f"{p.children_count} kid{'s' if p.children_count > 1 else ''}")
     if p.housing != Housing.UNKNOWN:
         bits.append(p.housing.value)
-    return " · ".join(bits) or "Munich"
+    return " · ".join(bits[:3]) or "Your profile"
+
+
+CITY_OPTIONS = ["", *SUPPORTED_CITIES, OTHER_CITY]
+STATE_OPTIONS = ["", *STATES]
+
+
+def render_location_fields(profile: UserProfile) -> dict[str, Any]:
+    """City + state pickers inside the profile form. Returns {"city", "state"} for UserProfile.
+
+    Widgets in a form don't rerun on change, so "other city" and the state picker are always visible:
+    a supported city sets its state automatically (UserProfile validator); for any other place the user
+    types the name and picks the state, which still unlocks state-level rules (e.g. the rent cap).
+    """
+    supported = profile.city in SUPPORTED_CITIES
+    city_choice = st.selectbox(
+        "City",
+        CITY_OPTIONS,
+        index=CITY_OPTIONS.index(profile.city if supported else (OTHER_CITY if profile.city else "")),
+        format_func=lambda v: PREFER if v == "" else "Other city…" if v == OTHER_CITY else city_label(v),
+        help="Local offices, appointments and rules differ by city. Six cities have detailed local sources.",
+        key="pf_city",
+    )
+    other_name = st.text_input(
+        "Other city (if not listed)", value="" if supported else (profile.city or "").title(), key="pf_city_other"
+    )
+    state = st.selectbox(
+        "State (Bundesland)",
+        STATE_OPTIONS,
+        index=STATE_OPTIONS.index(profile.state or ""),
+        format_func=lambda v: PREFER if v == "" else STATES[v],
+        help="Filled in automatically for the listed cities.",
+        key="pf_state",
+    )
+    if city_choice == OTHER_CITY:
+        return {"city": other_name.strip() or None, "state": state or None}
+    return {"city": city_choice or None, "state": state or None}
 
 
 def render_profile_form() -> None:
@@ -222,8 +261,7 @@ def render_profile_form() -> None:
     st.caption("Optional. Lets me apply the rules that fit you. Kept only in this browser tab.")
     # A form batches its widgets: changing a selectbox does NOT rerun the script, only the submit does.
     with st.form("profile_form", border=False):
-        st.selectbox("City", ["Munich (Bavaria)"], disabled=True, help="The MVP covers Munich only.")
-        values: dict[str, Any] = {}
+        values: dict[str, Any] = render_location_fields(profile)
         for name in UserProfile.model_fields:
             if name in ("city", "state"):
                 continue
@@ -393,6 +431,43 @@ def render_history(conv: dict[str, Any]) -> None:
             error = next((e for e in msg["events"] if isinstance(e, ErrorEvent)), None)
             if is_last and error and error.retryable:
                 st.button("Try again", icon=":material/refresh:", key=f"retry-{i}", on_click=_on_retry)
+            clarification = next((e for e in msg["events"] if isinstance(e, ClarificationEvent)), None)
+            if is_last and clarification:
+                render_city_picker(clarification)
+
+
+def render_city_picker(clarification: ClarificationEvent) -> None:
+    """One-click answers to "Which city do you live in?" (plus a small form for any other place)."""
+    with st.container(horizontal=True, gap="small", key="city-picker"):
+        for value, label in clarification.options:
+            if value == OTHER_CITY or value == "other":
+                continue
+            st.button(
+                label,
+                key=f"pick-city-{value}",
+                icon=":material/location_on:",
+                on_click=_on_pick_location,
+                args=(value, None, clarification.original_question),
+            )
+    with st.expander("Another city or region", icon=":material/map:"), st.form("other-city-form", border=False):
+        name = st.text_input("City", placeholder="e.g. Leipzig")
+        state = st.selectbox("State (Bundesland)", list(STATES), format_func=STATES.get)
+        if st.form_submit_button("Use this place", type="primary"):
+            _on_pick_location(name.strip() or None, state, clarification.original_question)
+            st.rerun()
+
+
+def _on_pick_location(city: str | None, state: str | None, question: str) -> None:
+    """Save the place in the profile, drop the 'Which city?' exchange and re-ask the original question."""
+    profile: UserProfile = st.session_state.profile
+    st.session_state.profile = UserProfile(**{**profile.model_dump(), "city": city, "state": state})
+    st.session_state.profile_saved = True
+    messages = current_conversation()["messages"]
+    if messages and messages[-1]["role"] == "assistant":
+        messages.pop()
+    if messages and messages[-1]["role"] == "user":
+        messages.pop()
+    st.session_state.pending_prompt = question
 
 
 def _history_for_pipeline(messages: list[dict[str, Any]]) -> list[dict[str, str]]:

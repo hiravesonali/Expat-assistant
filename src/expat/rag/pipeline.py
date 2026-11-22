@@ -32,7 +32,9 @@ from langsmith import traceable
 from langsmith.run_helpers import get_current_run_tree
 
 from expat.config import REPO_ROOT, get_settings
+from expat.places import SUPPORTED_CITIES, city_label, find_cities
 from expat.rag.context import build_context_pack, source_header
+from expat.rag.filters import location_from_profile
 from expat.rag.generate import (
     AnswerAgent,
     AnswerContext,
@@ -53,6 +55,7 @@ from expat.schemas.events import (
     AnswerMetaEvent,
     Citation,
     CitationsEvent,
+    ClarificationEvent,
     DoneEvent,
     ErrorEvent,
     PipelineEvent,
@@ -64,6 +67,7 @@ from expat.schemas.events import (
 from expat.schemas.profile import UserProfile
 from expat.schemas.retrieval import (
     ContextSource,
+    Location,
     RetrievalConfig,
     RetrievalPlan,
     RetrievalResult,
@@ -206,6 +210,15 @@ def _run_traced(
             yield done()
             return
 
+        # Where is the question about? Places named in the question (or kept from the history by the
+        # standalone rewrite) win over the profile; unknown -> nationwide sources only.
+        location = resolve_location(question, analysis.standalone_question, profile, analysis.mentioned_city)
+        plan = plan.model_copy(update={"location": location})
+        if analysis.location_dependent and not location.known:
+            yield from _ask_for_location(question, language)
+            yield done()
+            return
+
         # 2. Structured hybrid retrieval (deterministic, always runs for in-scope questions).
         stage = "retrieval"
         yield StepEvent(name="retrieval", status="started")
@@ -269,6 +282,49 @@ def _run_traced(
         logger.exception("Pipeline failed during %s", stage)
         yield StepEvent(name=stage, status="failed", detail={"error": type(exc).__name__})
         yield ErrorEvent(code=f"{stage}_failed", message=str(exc)[:500], retryable=is_transient_error(exc))
+
+
+def resolve_location(
+    question: str, standalone_question: str, profile: UserProfile | None, mentioned_city: str | None = None
+) -> Location:
+    """Location for this turn: supported cities named in the question > another city the analysis heard
+    ("I live in Leipzig": known, but no local sources -> nationwide only) > the profile > unknown."""
+    cities = find_cities(" \n".join((question, standalone_question, mentioned_city or "")))
+    if cities:
+        return Location(
+            cities=[c.slug for c in cities], states=list(dict.fromkeys(c.state for c in cities)), source="question"
+        )
+    if mentioned_city and mentioned_city.strip():
+        return Location(cities=[mentioned_city.strip().lower()], source="question")
+    return location_from_profile(profile)
+
+
+def with_question_city(profile: UserProfile | None, question: str) -> UserProfile | None:
+    """The profile, moved to the city the question names (exactly one), for the profile-bound tools."""
+    cities = find_cities(question)
+    if profile is None or len(cities) != 1:
+        return profile
+    return profile.model_copy(update={"city": cities[0].slug, "state": cities[0].state})
+
+
+_ASK_LOCATION = {
+    "en": "Which city do you live in? Offices, appointments and local rules differ from city to city, so I want "
+    "to give you the right ones. Pick your city below, or just type it.",
+    "de": "In welcher Stadt wohnen Sie? Ämter, Termine und lokale Regeln sind von Stadt zu Stadt verschieden. "
+    "Wählen Sie unten Ihre Stadt oder schreiben Sie sie einfach.",
+}
+
+
+def _ask_for_location(question: str, language: str) -> Iterator[PipelineEvent]:
+    """One follow-up question instead of a possibly wrong-city answer (docs/plan-germany-wide.md)."""
+    yield StepEvent(name="clarification", status="completed", detail={"kind": "location"})
+    yield TokenEvent(text=_ASK_LOCATION["de" if language == "de" else "en"])
+    yield ClarificationEvent(
+        original_question=question,
+        options=[(c.slug, c.name) for c in SUPPORTED_CITIES.values()] + [("other", "Other city")],
+    )
+    yield CitationsEvent(citations=[])
+    yield AnswerMetaEvent(confidence="insufficient")
 
 
 def _short_circuit(category: SafetyCategory, language: str, *, trigger: str) -> Iterator[PipelineEvent]:
@@ -451,8 +507,13 @@ class Pipeline:
     _static_agent: AnswerAgent | None = None
 
     def analyze(self, question: str, history: History = (), profile: UserProfile | None = None) -> RetrievalPlan:
-        """Query analysis only (debugger / retrieval evals). Never raises; falls back to the raw question."""
-        return analyze(question, convert_to_messages(list(history)), profile, self.analysis_llm).to_plan()
+        """Query analysis only (debugger / retrieval evals). Never raises; falls back to the raw question.
+
+        Resolves the location exactly like `run()` does, so evals and the debugger filter like the chat.
+        """
+        analysis = analyze(question, convert_to_messages(list(history)), profile, self.analysis_llm)
+        location = resolve_location(question, analysis.standalone_question, profile, analysis.mentioned_city)
+        return analysis.to_plan().model_copy(update={"location": location})
 
     def tools_for(self, profile: UserProfile | None) -> list[BaseTool]:
         """Static calculators + the profile-bound checklist tool (when we know who is asking)."""
@@ -463,8 +524,9 @@ class Pipeline:
 
         def fetch_sources(procedure: str, prof: UserProfile) -> list[ContextSource]:
             readable = procedure.replace("_", " ")
+            where = f" in {city_label(prof.city)}" if prof.city else ""
             sub = SubQuery(
-                text=f"Which documents do I need for {readable} in Munich?",
+                text=f"Which documents do I need for {readable}{where}?",
                 queries_de=[CHECKLIST_QUERY_DE.format(procedure=readable)],
                 section_kinds=[SectionKind.DOCUMENTS],
             )
@@ -480,7 +542,7 @@ class Pipeline:
         profile: UserProfile | None = None,
         config: RetrievalConfig | None = None,
     ) -> Iterator[PipelineEvent]:
-        tools = self.tools_for(profile)
+        tools = self.tools_for(with_question_city(profile, question))
         # Reuse the compiled agent when the tool set is the static one; otherwise build per turn (cheap).
         agent = self._static_agent if tools is self._static_tools else None
         return run(

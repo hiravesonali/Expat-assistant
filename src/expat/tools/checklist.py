@@ -15,6 +15,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field, ValidationInfo, model_validator
 
+from expat.places import city_label
 from expat.schemas.profile import UserProfile
 from expat.schemas.retrieval import ContextSource
 from expat.tools._common import ToolOutput, make_tool
@@ -96,7 +97,7 @@ class Checklist(ToolOutput):
     """
 
     procedure: ChecklistProcedure
-    city: str
+    city: str | None = None  # None when the user has not said where they live
     items: list[ChecklistItem] = Field(default_factory=list)
     fees: list[FeeItem] = Field(default_factory=list)
     steps: list[StepItem] = Field(default_factory=list)
@@ -168,7 +169,7 @@ def build_checklist(
     messages = [
         SystemMessage(SYSTEM_PROMPT),
         HumanMessage(
-            f"Procedure: {procedure} in {profile.city.title()}\n{profile.summary()}\n\nSources:\n"
+            f"Procedure: {procedure} in {city_label(profile.city) or 'Germany'}\n{profile.summary()}\n\nSources:\n"
             f"{_format_sources(sources)}"
         ),
     ]

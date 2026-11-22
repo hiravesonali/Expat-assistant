@@ -14,6 +14,7 @@ from expat.rag.query_analysis import QueryAnalysis
 from expat.schemas import (
     AnswerMetaEvent,
     CitationsEvent,
+    ClarificationEvent,
     DoneEvent,
     ErrorEvent,
     PipelineEvent,
@@ -24,7 +25,7 @@ from expat.schemas import (
     UserProfile,
 )
 
-PROFILE = UserProfile(citizenship="non_eu", residence_status="blue_card", housing="renting")
+PROFILE = UserProfile(city="munich", citizenship="non_eu", residence_status="blue_card", housing="renting")
 
 
 class FakeAnalysisModel:
@@ -258,3 +259,65 @@ def test_explicit_retrieval_config_reaches_the_retriever():
     events = _run("Question?", FakeAnalysisModel(_analysis(1)), answer_llm, retriever, config=config)
     assert not [e for e in events if type(e).__name__ == "ErrorEvent"]
     assert retriever.calls[0][2] == config
+
+
+# ---- location (docs/plan-germany-wide.md) -------------------------------------------------------------
+
+
+def _run_with(question: str, profile: UserProfile, example: int, retriever: FakeRetriever | None = None):
+    answer_llm = ScriptedChatModel(script=[AIMessage("Answer [S1].")])
+    return list(
+        pipeline.run(
+            question,
+            [],
+            profile,
+            retriever=retriever or FakeRetriever(),
+            analysis_llm=FakeAnalysisModel(_analysis(example)),
+            answer_llm=answer_llm,
+            tools=[notice_period],
+            today=date(2026, 11, 22),
+        )
+    )
+
+
+def test_location_dependent_question_without_a_city_asks_which_city():
+    retriever = FakeRetriever()
+    events = _run_with(
+        "Where do I book an appointment for the Anmeldung?", UserProfile(), example=7, retriever=retriever
+    )
+    clarification = next(e for e in events if isinstance(e, ClarificationEvent))
+    assert clarification.original_question == "Where do I book an appointment for the Anmeldung?"
+    assert ("berlin", "Berlin") in clarification.options and ("other", "Other city") in clarification.options
+    assert "Which city" in _text(events)
+    assert retriever.calls == []  # no retrieval, no answer model: we ask first
+
+
+def test_city_named_in_the_question_is_used_for_retrieval_without_asking():
+    retriever = FakeRetriever()
+    events = _run_with(
+        "Where do I book an Anmeldung appointment in Köln?", UserProfile(), example=7, retriever=retriever
+    )
+    assert not [e for e in events if isinstance(e, ClarificationEvent)]
+    plan = retriever.calls[0][0]
+    assert plan.location.cities == ["cologne"] and plan.location.states == ["NW"] and plan.location.source == "question"
+
+
+def test_profile_city_answers_location_dependent_questions_without_asking():
+    retriever = FakeRetriever()
+    events = _run_with("Where do I book an appointment?", UserProfile(city="hamburg"), example=7, retriever=retriever)
+    assert not [e for e in events if isinstance(e, ClarificationEvent)]
+    assert retriever.calls[0][0].location.cities == ["hamburg"]
+
+
+def test_federal_question_without_a_city_is_answered_from_nationwide_sources():
+    retriever = FakeRetriever()
+    events = _run_with("How much Kindergeld?", UserProfile(), example=4, retriever=retriever)  # not location-dependent
+    assert not [e for e in events if isinstance(e, ClarificationEvent)]
+    assert retriever.calls[0][0].location.known is False
+
+
+def test_unsupported_city_counts_as_known_location_and_is_not_asked_for():
+    """'I live in Leipzig': no local Leipzig sources, but asking "Which city?" again would be absurd."""
+    location = pipeline.resolve_location("Where do I register? I live in Leipzig.", "", UserProfile(), "Leipzig")
+    assert location.known and location.cities == ["leipzig"] and location.states == []
+    assert pipeline.resolve_location("x", "", UserProfile(), "München").cities == ["munich"]  # alias still resolves

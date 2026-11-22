@@ -20,7 +20,7 @@ from expat.ingestion.sources import SourceConfig
 from expat.ingestion.text import count_tokens
 from expat.schemas import ChunkMetadata, ChunkRecord, ParentRecord
 
-LAW_PARSERS = ("law_xml", "bayern_recht_html")  # doc_key = "<source>#<paragraph>" for these
+LAW_PARSERS = ("law_xml", "bayern_recht_html", "law_pdf")  # doc_key = "<source>#<paragraph>" for these
 
 
 def contextual_header(draft: ChunkDraft, domain: str, keywords: list[str] | None = None) -> str:

@@ -1,0 +1,1042 @@
+{
+  "experiment": "answers-R5-holdout-20261122T031728Z",
+  "kind": "answers",
+  "variant": "R5",
+  "split": "holdout",
+  "config": {
+    "use_german_rewrite": true,
+    "use_multi_query": true,
+    "use_decomposition": true,
+    "use_bm25": true,
+    "use_filters": true,
+    "use_rerank": false,
+    "use_hyde": false,
+    "use_step_back": true,
+    "bm25_queries": "all",
+    "bm25_weight": 1.0,
+    "bm25_legal_refs": false,
+    "k_dense": 20,
+    "k_sparse": 20,
+    "k_final": 8,
+    "rrf_c": 60,
+    "judges": true,
+    "judge_model": "anthropic/claude-haiku-4.5"
+  },
+  "metrics": {
+    "groundedness": 1.0,
+    "correctness": 0.6666666666666666,
+    "citation_validity": 1.0,
+    "citation_coverage": 0.6151515151515151,
+    "citation_correctness": 0.7742424242424242,
+    "must_include": 0.7727272727272727,
+    "must_not_include": 1.0,
+    "tool_selection": 1.0,
+    "refusal_accuracy": 1.0,
+    "clarification": 1.0,
+    "total_tokens": 9873.5,
+    "cost_usd": 0.0045452,
+    "latency_p50_ms": 10657.0,
+    "latency_p95_ms": 17902.0
+  },
+  "per_slice": {
+    "bureaucracy": {
+      "groundedness": 1.0,
+      "correctness": 0.5,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6083333333333334,
+      "citation_correctness": 0.9166666666666666,
+      "must_include": 0.75,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 11862.75,
+      "cost_usd": 0.005367,
+      "latency_p50_ms": 11357.0,
+      "latency_p95_ms": 13185.6,
+      "n": 9.0
+    },
+    "category:legal_lookup": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6761904761904762,
+      "citation_correctness": 0.6904761904761905,
+      "must_include": 0.5714285714285714,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10118.57142857143,
+      "cost_usd": 0.004655828571428572,
+      "latency_p50_ms": 10155.0,
+      "latency_p95_ms": 12323.9,
+      "n": 7.0
+    },
+    "category:multi_domain": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4,
+      "citation_correctness": 1.0,
+      "must_include": 0.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": null,
+      "clarification": 1.0,
+      "total_tokens": 12848.0,
+      "cost_usd": 0.0059768,
+      "latency_p50_ms": 14163.0,
+      "latency_p95_ms": 14163.0,
+      "n": 1.0
+    },
+    "category:numeric": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4166666666666667,
+      "citation_correctness": 0.74,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": null,
+      "clarification": 1.0,
+      "total_tokens": 10455.2,
+      "cost_usd": 0.00481376,
+      "latency_p50_ms": 11357.0,
+      "latency_p95_ms": 19172.0,
+      "n": 5.0
+    },
+    "category:out_of_scope": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": null,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": 0.0,
+      "latency_p50_ms": 1.3299999991431832,
+      "latency_p95_ms": 1.3299999991431832,
+      "n": 1.0
+    },
+    "category:sensitive": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": 0.0,
+      "latency_p50_ms": 1.7245999770238996,
+      "latency_p95_ms": 1.7245999770238996,
+      "n": 1.0
+    },
+    "category:single_domain": {
+      "groundedness": 1.0,
+      "correctness": null,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.7595238095238095,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10013.714285714286,
+      "cost_usd": 0.004708857142857144,
+      "latency_p50_ms": 10733.0,
+      "latency_p95_ms": 13578.2,
+      "n": 9.0
+    },
+    "category:tool": {
+      "groundedness": 1.0,
+      "correctness": 0.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 15457.0,
+      "cost_usd": 0.0067432,
+      "latency_p50_ms": 13790.5,
+      "latency_p95_ms": 17661.85,
+      "n": 2.0
+    },
+    "family": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5833333333333334,
+      "citation_correctness": 0.6722222222222222,
+      "must_include": 0.8333333333333334,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10445.0,
+      "cost_usd": 0.004858,
+      "latency_p50_ms": 12058.0,
+      "latency_p95_ms": 19170.0,
+      "n": 7.0
+    },
+    "lang:de": {
+      "groundedness": 1.0,
+      "correctness": 0.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5833333333333334,
+      "citation_correctness": 0.8888888888888888,
+      "must_include": 0.6666666666666666,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 9802.75,
+      "cost_usd": 0.0044188000000000005,
+      "latency_p50_ms": 11635.0,
+      "latency_p95_ms": 17445.35,
+      "n": 4.0
+    },
+    "lang:en": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6201754385964913,
+      "citation_correctness": 0.756140350877193,
+      "must_include": 0.7894736842105263,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 9887.65,
+      "cost_usd": 0.00457048,
+      "latency_p50_ms": 10657.0,
+      "latency_p95_ms": 17173.55,
+      "n": 22.0
+    },
+    "multi_domain": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5333333333333333,
+      "citation_correctness": 0.75,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": null,
+      "clarification": 1.0,
+      "total_tokens": 12248.0,
+      "cost_usd": 0.005679200000000001,
+      "latency_p50_ms": 12372.0,
+      "latency_p95_ms": 13983.9,
+      "n": 2.0
+    },
+    "out_of_scope": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": 0.0,
+      "latency_p50_ms": 1.5272999880835414,
+      "latency_p95_ms": 1.7048699781298637,
+      "n": 2.0
+    },
+    "tenancy": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6833333333333332,
+      "citation_correctness": 0.6944444444444445,
+      "must_include": 0.8333333333333334,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": null,
+      "clarification": 1.0,
+      "total_tokens": 9149.333333333334,
+      "cost_usd": 0.004273733333333334,
+      "latency_p50_ms": 10444.0,
+      "latency_p95_ms": 15923.0,
+      "n": 6.0
+    },
+    "tool": {
+      "groundedness": 1.0,
+      "correctness": 0.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 15457.0,
+      "cost_usd": 0.0067432,
+      "latency_p50_ms": 13790.5,
+      "latency_p95_ms": 17661.85,
+      "n": 2.0
+    }
+  },
+  "n": 26,
+  "errors": 0,
+  "created_at": "2026-11-22T03:17:28.326263Z",
+  "mode": "langsmith",
+  "dataset": "expat-golden-v2",
+  "langsmith_experiment": "R5-answers-55852d22",
+  "per_example": [
+    {
+      "id": "bur-003",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.8,
+        "citation_correctness": 1.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 11160.0,
+        "cost_usd": 0.0052176
+      },
+      "latency_ms": 12593.0,
+      "error": null,
+      "details": {
+        "answer": "You generally need the confirmation from your landlord (Wohnungsgeberbestätigung) to register (Anmeldung) your address officially. This confirmation must state your move-in date and the landlord's details. Without it, the registration authority usually will not accept your registration application [S1].\n\nIf your landlord refuses or you do not receive this confirmation in time, you must inform the registration office (Meldebehörde) immediately about this situation [S1]. They may provide guidance or alternative steps.\n\nSo, you cannot normally register without the landlord's confirmation, but you should notify the registration office promptly if the landlord refuses to provide it [S1].\n\nYour next steps:\n- Contact your landlord again and request the written confirmation of your move-in.\n- If the landlord refuses, inform the registration office immediately about the refusal.\n- Follow any instructions from the registration office for alternative proof or procedures.\n\nThis is based on your profile as an EU citizen living in Munich, Bavaria, where this confirmation is mandatory for registration [S1].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51175. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51175. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51175. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "bur-007",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 0.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 1.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 18502.0,
+        "cost_usd": 0.0079696
+      },
+      "latency_ms": 9489.0,
+      "error": null,
+      "details": {
+        "answer": "Sie sollten die Verlängerung Ihrer Blauen Karte EU spätestens 8 Wochen vor Ablauf im März beantragen, also idealerweise bis Anfang Januar 2027. Die rechtzeitige Antragstellung sorgt dafür, dass Ihr Aufenthaltstitel während der Bearbeitung weiterhin gültig bleibt (Fiktionswirkung). Die Bearbeitung bei der Ausländerbehörde in München kann bis zu 7 Monate dauern, daher ist eine frühzeitige Antragstellung wichtig [T1][S2]. \n\nIhre nächsten Schritte:\n- Bereiten Sie die Unterlagen für die Verlängerung vor.\n- Reichen Sie den Antrag online oder persönlich bei der Ausländerbehörde München ein.\n- Speichern Sie die Bestätigung der Antragstellung als Nachweis.\n- Beachten Sie, dass Sie während der Bearbeitungszeit weiterhin arbeiten dürfen.",
+        "tool_calls": [
+          "calculate_deadline"
+        ],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general procedural question about when to apply for a Blue Card EU extension—this is general information about administrative processes, not individual legal advice. The rubric specifies that should_refuse is false, meaning the assistant should substantively answer the question with general information. The response does exactly this: it provides concrete, helpful procedural information (8 weeks before expiration, mentions Fiktionswirkung, processing times, and next steps) without giving individualized legal strategy or declining the question. The response includes source citations [T1][S2] and practical guidance appropriate for general information provision. It does not refuse or deflect the question, and it does not provide individual legal advice—it simply explains the standard procedure. Thus, the score should be: true.",
+        "groundedness_reasoning": "I need to evaluate whether the LLM output is well-grounded in the provided context.\n\n**Claims in the output:**\n\n1. \"Sie sollten die Verlängerung Ihrer Blauen Karte EU spätestens 8 Wochen vor Ablauf im März beantragen\" (You should apply for the extension at the latest 8 weeks before expiry in March)\n\n2. \"idealerweise bis Anfang Januar 2027\" (ideally by early January 2027)\n\n3. \"Die rechtzeitige Antragstellung sorgt dafür, dass Ihr Aufenthaltstitel während der Bearbeitung weiterhin gültig bleibt (Fiktionswirkung)\" (Timely application ensures the residence permit remains valid during processing - Fiktionswirkung)\n\n4. \"Die Bearbeitung bei der Ausländerbehörde in München kann bis zu 7 Monate dauern\" (Processing at Munich Ausländerbehörde can take up to 7 months)\n\n5. \"daher ist eine frühzeitige Antragstellung wichtig\" (therefore early application is important)\n\n6. \"Sie können Ihren Antrag online oder persönlich bei der Ausländerbehörde München einreichen\" (You can submit your application online or in person at Munich Ausländerbehörde)\n\n7. \"Speichern Sie die Bestätigung der Antragstellung als Nachweis\" (Save the confirmation of application as proof)\n\n8. \"Sie während der Bearbeitungszeit weiterhin arbeiten dürfen\" (You can continue working during processing time)\n\n**Checking against context:**\n\n- **8 weeks recommendation**: The tool output [T1] states \"Apply at least 8 weeks before expiry\" and \"recommended_by\": \"2027-01-04\". This is supported.\n\n- **Fiktionswirkung/Fiktionsbescheinigung**: [S2] § 81 Abs. 4 AufenthG explicitly states: \"Beantragt ein Ausländer vor Ablauf seines Aufenthaltstitels dessen Verlängerung oder die Erteilung eines anderen Aufenthaltstitels, gilt der bisherige Aufenthaltstitel vom Zeitpunkt seines Ablaufs bis zur Entscheidung der Ausländerbehörde als fortbestehend\" (If a foreigner applies for extension before expiry, the previous residence permit remains valid from the time of expiry until the decision). This is directly supported.\n\n- **7 months processing time**: [T1] caveats mention \"Processing at the Munich Ausländerbehörde can take up to 7 months\". This is supported by the tool output.\n\n- **Online or in-person submission**: [S7] states \"Sie können Ihren Antrag und die benötigten Unterlagen online einreichen\" (You can submit your application and required documents online). However, the context does not explicitly mention \"in person\" as an option for the extension application. [S7] only mentions online submission for the extension.\n\n- **Save confirmation as proof**: [S7] states \"Nachdem Sie Ihren Antrag versendet haben, wird Ihnen eine Bestätigung angezeigt. Diese können Sie als PDF-Datei für Ihre Unterlagen speichern\" and \"Die Bestätigung können Sie als Nachweis bei Behörden oder an Ihrem Arbeitsplatz vorlegen\" (After sending your application, you will receive a confirmation. You can save this as a PDF for your records. You can present the confirmation as proof to authorities or at your workplace). This is supported.\n\n- **Continue working during processing**: [S2] § 81 Abs. 5a states that work permission continues during processing: \"die in dem künftigen Aufenthaltstitel für einen Aufenthalt nach Kapitel 2 Abschnitt 3 und 4 beschriebene Erwerbstätigkeit ab Veranlassung der Ausstellung bis zur Ausgabe des Dokuments nach § 78 Absatz 1 Satz 1 als erlaubt\" (the work activity described in the future residence permit is permitted from the time of issuance until the document is issued). This is supported.\n\n**Potential issues:**\n\n1. The output says \"online oder persönlich\" (online or in person), but [S7] only explicitly mentions online submission for the extension application. The context does not provide information about in-person submission as an alternative for extensions. This is a minor addition beyond what the context explicitly states.\n\n2. The output references [T1] and [S2] but the specific 8-week recommendation comes from [T1], not from [S2]. The citation is technically correct but could be clearer.\n\nOverall, the output is largely well-grounded in the context. The main claims are supported by the provided sources. The only minor issue is the mention of \"in person\" submission, which is not explicitly stated in the context for extensions (though it's a reasonable inference that might be available, it goes slightly beyond what the context explicitly supports).\n\nThus, the score should be: TRUE (with minor reservations about the \"in person\" option not being explicitly mentioned in the context for extensions).",
+        "correctness_reasoning": "The output contains several issues when evaluated against the reference material and general accuracy:\n\n1. **Specific timeline claim (8 weeks)**: The output states \"spätestens 8 Wochen vor Ablauf\" (at the latest 8 weeks before expiration). However, the reference output only states that the extension \"muss vor Ablauf der Blauen Karte beantragt werden\" (must be applied for before expiration). The output provides a specific 8-week timeline that is not supported by the reference material and may be inaccurate or overly prescriptive.\n\n2. **Specific date reference (January 2027)**: The output mentions \"bis Anfang Januar 2027\" as the deadline. However, the input only states the card expires \"im März\" (in March) without specifying the year. The output assumes a specific year (2027) and calculates a specific date, which is problematic because:\n   - The year is not provided in the input\n   - This makes the answer potentially incorrect if the user meant a different year\n   - The calculation itself (8 weeks before March) would be mid-January, not \"early January\"\n\n3. **Processing time claim (7 months)**: The output states \"Die Bearbeitung bei der Ausländerbehörde in München kann bis zu 7 Monate dauern\" (processing can take up to 7 months). While the reference mentions that processing \"lange dauern kann\" (can take a long time), the specific claim of \"7 months\" is not substantiated in the reference material and may be inaccurate or an overestimation.\n\n4. **Location specificity**: The output repeatedly mentions \"München\" (Munich), but the input does not specify which city's Ausländerbehörde the user is dealing with. This is an assumption not warranted by the input.\n\n5. **Incomplete core information**: While the output does mention the key concept of \"Fiktionswirkung\" (continued validity during processing), it adds unverified specific timelines and details that go beyond what can be confirmed.\n\nThe reference output correctly emphasizes that the application must be submitted before expiration and that early submission is advisable, but does not provide the specific 8-week timeline or 7-month processing time that the evaluated output claims.\n\nThus, the score should be: false."
+      }
+    },
+    {
+      "id": "bur-010",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11480.0,
+        "cost_usd": 0.005100800000000001
+      },
+      "latency_ms": 11581.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, when you leave Germany permanently, you must deregister (Abmeldung) your residence with the local registration office (Meldebehörde) within two weeks after moving out. This deregistration is required if you do not take up a new residence within Germany. You can usually do this in writing or electronically. The deregistration can be done earliest one week before your move-out date, and the registration records will be updated to reflect your move-out date [S2].\n\nYour next steps:\n- Notify the local registration office (Meldebehörde) in Munich about your planned move-out.\n- Submit a deregistration (Abmeldung) either in person, by mail, or electronically.\n- Provide your personal identification and the date you will leave Germany.\n- Keep the confirmation of deregistration for your records.\n\nIf you want, I can provide more details on how to deregister in Munich specifically.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about whether they need to unregister when leaving Germany permanently. This is a straightforward administrative question that does not require individual legal advice—it asks about a standard procedural requirement, not a specific legal strategy or interpretation of their personal situation. The response appropriately provides substantive general information about the Abmeldung (deregistration) process, including the timeframe (within two weeks), the relevant authority (Meldebehörde), and the methods available (in person, by mail, or electronically). The response includes a source reference [S2] and offers practical next steps. It does not decline or deflect the question, and the brief offer to provide more details is helpful rather than evasive. Since should_refuse is false, the response should substantively answer the question (which it does) and not decline the whole question (which it doesn't). Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several claims about deregistration (Abmeldung) requirements for leaving Germany. Let me verify each claim against the provided context:\n\n1. **Claim: \"You must deregister your residence with the local registration office within two weeks after moving out\"**\n   - Supported by S2 (§ 17 Absatz 2): \"Wer aus einer Wohnung auszieht und keine neue Wohnung im Inland bezieht, hat sich innerhalb von zwei Wochen nach dem Auszug bei der Meldebehörde abzumelden.\" (Anyone who moves out of a residence and does not take up a new residence within Germany must deregister with the registration office within two weeks after moving out.)\n   - ✓ Directly supported\n\n2. **Claim: \"This deregistration is required if you do not take up a new residence within Germany\"**\n   - Supported by the same passage in S2\n   - ✓ Directly supported\n\n3. **Claim: \"You can usually do this in writing or electronically\"**\n   - Supported by S1 (§ 23 Absatz 6): \"Die Abmeldung in das Ausland kann schriftlich oder in entsprechender Anwendung des § 10 Absatz 2 und 3 elektronisch erfolgen.\" (Deregistration to abroad can be done in writing or electronically in corresponding application of § 10 paragraphs 2 and 3.)\n   - ✓ Directly supported\n\n4. **Claim: \"The deregistration can be done earliest one week before your move-out date\"**\n   - Supported by S2 (§ 17 Absatz 2): \"Eine Abmeldung ist frühestens eine Woche vor Auszug möglich\" (Deregistration is possible earliest one week before moving out)\n   - ✓ Directly supported\n\n5. **Claim: \"The registration records will be updated to reflect your move-out date\"**\n   - Supported by S2 (§ 17 Absatz 2): \"die Fortschreibung des Melderegisters erfolgt zum Datum des Auszugs\" (the registration records are updated to the date of moving out)\n   - ✓ Directly supported\n\n6. **Claim: \"Provide your personal identification and the date you will leave Germany\"**\n   - S1 (§ 23 Absatz 6) mentions that for electronic deregistration, identity can be proven through \"die Angabe des Familiennamens, des Vornamens, des Geburtsdatums und der Seriennummer des zuletzt im Melderegister gespeicherten Ausweises oder Passes\" (providing family name, first name, date of birth, and serial number of the last registered ID or passport)\n   - ✓ Supported by context\n\n7. **Claim: \"Keep the confirmation of deregistration for your records\"**\n   - S8 (§ 24 Absatz 2) states: \"Die meldepflichtige Person erhält unentgeltlich eine schriftliche oder, sofern die An- oder Abmeldung elektronisch durchgeführt wird, eine elektronische Bestätigung über die An- oder Abmeldung\" (The person required to register receives free written or electronic confirmation of registration or deregistration)\n   - ✓ Supported by context\n\nAll major claims in the output are directly supported by the provided context. The output stays within the scope of information provided, maintains the same meaning as the source material, and does not introduce unsupported external facts. The advice is practical and grounded in the legal requirements cited in the context.\n\nThus, the score should be: TRUE",
+        "correctness_reasoning": "The output provides accurate and complete information about deregistering from Germany. Let me verify against the reference and the rubric:\n\n**Factual Accuracy:**\n- The output correctly states that deregistration (Abmeldung) is required when leaving Germany permanently\n- It correctly identifies the two-week deadline after moving out (matching § 17 (2) BMG from the reference)\n- It correctly states that deregistration can be done up to one week before the move-out date\n- It correctly identifies the Meldebehörde (local registration office) as the responsible authority\n- It accurately describes the methods available (in person, by mail, or electronically)\n\n**Completeness:**\n- The response addresses the main question directly (yes, you need to unregister)\n- It provides the legal requirement and timeline\n- It includes practical next steps\n- It mentions the need for personal identification and move-out date\n- It suggests keeping confirmation for records\n\n**Terminology:**\n- Uses correct German terms (Abmeldung, Meldebehörde)\n- Uses precise legal language appropriately\n\n**Logical Consistency:**\n- All information is logically consistent and flows well\n- The steps provided are practical and follow logically from the requirement\n\n**Minor Note:**\n- The output mentions \"Munich specifically\" at the end, which appears to be a reference to a specific location, though the input doesn't mention Munich. This is a minor oddity but doesn't constitute a factual error since the general information applies to all of Germany.\n\nThe response is accurate, complete, addresses all parts of the question, uses correct terminology, and is logically consistent. It aligns well with the reference output while providing additional helpful context and practical steps.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "ten-004",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 9959.0,
+        "cost_usd": 0.0047096
+      },
+      "latency_ms": 17332.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are renting in Munich, Bavaria, and your landlord wants to raise your rent by 20%, here is the relevant information:\n\nA landlord can request a rent increase up to the local comparative rent (ortsübliche Vergleichsmiete) if the rent has been unchanged for at least 15 months. However, the rent increase is capped at 20% within three years in general. In areas where the supply of affordable housing is particularly endangered, this cap is reduced to 15% within three years.\n\nMunich is designated as such an area with a particularly endangered supply of affordable housing, according to the Bavarian Mieterschutzverordnung (MiSchuV) 2026–2029. Therefore, the rent increase cap of 15% within three years applies here, not 20%.\n\nAdditionally, the rent increase must be based on the local comparative rent, which in Munich is determined by the qualified rent index (qualifizierter Mietspiegel). The average net cold rent per square meter in Munich was about €15.38 in 2025.\n\nSo, a 20% rent increase in Munich would generally not be allowed under current law; the maximum increase is 15% within three years due to the housing situation in Munich.\n\nYour next steps:\n- Check when your last rent increase was and how long you have been paying the current rent.\n- Ask your landlord for the basis of the rent increase, referencing the qualified rent index.\n- If the increase exceeds 15% within three years, you can legally object to it.\n\n[S1][S2][S6][S7][S4][S5]",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51175. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51175. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51175. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "ten-008",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 9652.0,
+        "cost_usd": 0.004534
+      },
+      "latency_ms": 10155.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, you can pay less rent if the heating has been broken for 3 weeks and the landlord does nothing to fix it. According to German law (§ 536 BGB), if the rental property has a defect that makes it unsuitable for the agreed use—such as no heating in winter—the tenant is entitled to a reduction in rent for the period during which the defect exists. If the defect completely removes the property's suitability, you may be exempt from paying rent for that time. If the suitability is only reduced, you pay a correspondingly reduced rent. This applies unless the defect is insignificant [S1].\n\nYou must have informed the landlord about the defect immediately after noticing it (§ 536c BGB). If you did not notify the landlord, you may lose the right to reduce the rent or claim damages [S4].\n\nIf the landlord is responsible for the defect or delays fixing it, you may also claim damages or cover the cost of repairs yourself and demand reimbursement (§ 536a BGB) [S3].\n\nYour next steps:\n- Confirm you reported the heating defect to your landlord immediately.\n- Document the defect and the period without heating.\n- Calculate a reasonable rent reduction for the 3 weeks without heating.\n- Inform your landlord in writing about the rent reduction due to the defect.\n- If the landlord still does not act, consider seeking legal advice or tenant support organizations.\n\nAssuming you are a tenant renting in Munich with a standard residential lease contract [S1-S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 42683. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 42683. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 42683. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "ten-011",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 9282.0,
+        "cost_usd": 0.0044016
+      },
+      "latency_ms": 7491.0,
+      "error": null,
+      "details": {
+        "answer": "No, if your rental contract has a staffelmiete (graduated rent), the landlord cannot additionally demand a normal rent increase on top of the agreed graduated rent increases.\n\nDetails:\n- A staffelmiete means the rent is contractually agreed to increase at fixed intervals and amounts, usually yearly, and these increases must be stated in writing (§ 557a BGB) [S1].\n- During the period of a staffelmiete, the rent must remain unchanged for at least one year, and no further increases under the normal rent increase rules (§§ 558 to 559b BGB) are allowed (§ 557a Abs. 2 BGB) [S1].\n- This means the landlord cannot demand a separate rent increase based on the local comparative rent (ortsübliche Vergleichsmiete) or other statutory rent increase mechanisms while the staffelmiete is in effect [S1, S2].\n\nYour next steps:\n- Review your rental contract to confirm the staffelmiete terms and the schedule of rent increases.\n- If the landlord tries to impose an additional rent increase beyond the staffelmiete, you can refer to § 557a BGB to contest it.\n- For further clarification or disputes, consider consulting a tenants' association (Mieterverein) or legal advice.\n\nAssuming you are a tenant with a staffelmiete contract in Munich, Bavaria, this applies to your situation [S1, S2].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 49884. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 49884. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 49884. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "fam-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 12151.0,
+        "cost_usd": 0.0056188
+      },
+      "latency_ms": 8728.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, as a non-EU national holding a Blue Card EU, you are eligible to receive Kindergeld (child benefit) in Germany, provided certain conditions are met. Specifically, you must have a valid Blue Card EU that allows you to work in Germany for at least six months. This entitlement applies regardless of your nationality if you hold this residence status [S1][S7].\n\nKindergeld is paid for children living in your household, and you can receive it for each child up to certain age limits, generally until the child turns 18, with possible extensions up to 25 years under specific conditions such as education or disability [S6].\n\nYour next steps:\n- Ensure your Blue Card EU is valid and allows employment for at least six months.\n- Register your children’s residence in Germany.\n- Apply for Kindergeld at the Familienkasse (Family Benefits Office).\n- Provide necessary documents such as proof of residence, your Blue Card, and your children's birth certificates.\n\nIf you want, I can help you with the detailed checklist for the Kindergeld application.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general eligibility question about whether a non-EU Blue Card holder can receive Kindergeld in Germany. This is a request for general information, not individual legal advice, so should_refuse is correctly set to false. The response appropriately PASSES the rubric because it: (1) substantively answers the question by confirming eligibility and explaining the conditions required, (2) provides relevant general information about age limits and application procedures, (3) directs the user to the appropriate authority (Familienkasse), and (4) does not decline or deflect the question. The response includes helpful next steps and offers further assistance, which is appropriate for general information provision. There is no attempt to provide individual legal strategy or filled-in forms—just general guidance on the eligibility criteria and process. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several key claims about Kindergeld eligibility for a non-EU national with a Blue Card EU. Let me verify each claim against the provided context:\n\n1. **Claim: \"As a non-EU national holding a Blue Card EU, you are eligible to receive Kindergeld\"**\n   - This is directly supported by S1 (§ 62 EStG), section (2), which states that non-freedom-of-movement foreigners receive Kindergeld if they possess \"eine Blaue Karte EU\" (a Blue Card EU).\n   - Further confirmed by S7, which explicitly lists \"eine Blaue Karte EU\" as one of the conditions under which foreign parents can receive Kindergeld.\n\n2. **Claim: \"provided certain conditions are met\"**\n   - Supported by S1 (2) which specifies conditions for non-EU nationals, and S7 which outlines various eligibility criteria.\n\n3. **Claim: \"you must have a valid Blue Card EU that allows you to work in Germany for at least six months\"**\n   - S1 (2) states: \"eine Blaue Karte EU...die für einen Zeitraum von mindestens sechs Monaten zur Ausübung einer Erwerbstätigkeit berechtigen\" (a Blue Card EU that permits employment for a period of at least six months).\n   - This is accurately represented.\n\n4. **Claim: \"This entitlement applies regardless of your nationality if you hold this residence status\"**\n   - S7 confirms this: \"Sie haben eine gültige Niederlassungserlaubnis oder eine Erlaubnis zum Daueraufenthalt-EU, eine Blaue Karte EU...\" - showing that Blue Card holders can receive Kindergeld regardless of nationality.\n\n5. **Claim: \"Kindergeld is paid for children living in your household\"**\n   - S6 states: \"Das Kindergeld wird an Sie ausgezahlt, wenn Ihr Kind in Ihrem Haushalt lebt\" (Kindergeld is paid to you if your child lives in your household).\n\n6. **Claim: \"you can receive it for each child up to certain age limits, generally until the child turns 18, with possible extensions up to 25 years under specific conditions\"**\n   - S6 confirms: \"Grundsätzlich haben Sie ab der Geburt Ihres Kindes bis zum 18. Geburtstag Anspruch auf Kindergeld. Auch danach kann ein Anspruch auf Kindergeld bestehen, höchstens aber bis zum 25. Geburtstag\" (Generally you have entitlement from birth until the 18th birthday. After that, entitlement can exist, but at most until the 25th birthday).\n\n7. **Claim: \"€259.00 EUR per child\"**\n   - S6 states: \"Sie bekommen für jedes Kind 259,00 EUR\" (You receive €259.00 for each child).\n\n8. **Practical advice about next steps (registration, application, documents)**\n   - The advice to register children's residence, apply at Familienkasse, and provide proof of residence, Blue Card, and birth certificates is reasonable and consistent with standard German administrative procedures, though not explicitly detailed in the provided context. However, this is general administrative knowledge that doesn't contradict the context.\n\nAll major claims in the output are directly supported by the provided context. The output accurately represents the eligibility criteria, payment amounts, and age limits for Kindergeld. The practical advice, while not explicitly detailed in the context, is consistent with standard German administrative procedures and does not contradict any information provided.\n\nThus, the score should be: TRUE",
+        "correctness_reasoning": "The output provides accurate and complete information about Kindergeld eligibility for non-EU nationals holding a Blue Card EU. \n\nStrengths of the response:\n1. Correctly states that non-EU nationals with a Blue Card EU are eligible for Kindergeld\n2. Accurately identifies the key requirement: valid Blue Card EU allowing work in Germany\n3. Provides correct information about age limits (18 years, with extensions up to 25 under specific conditions)\n4. Correctly identifies the Familienkasse as the relevant office for applications\n5. Provides practical next steps and required documentation\n6. References the legal basis (§ 62 (2) EStG is implied through the reference to eligibility conditions)\n\nVerification against reference output:\n- The reference confirms non-EU citizens with residence titles allowing employment (including EU Blue Card) are entitled to Kindergeld\n- The reference cites § 62 (2) EStG, which aligns with the output's legal framework\n- Both sources agree on applying at the Familienkasse\n\nThe output goes beyond the reference by providing:\n- More detailed eligibility conditions\n- Age limits and extension possibilities\n- Practical application steps and required documents\n- Offer of additional help\n\nNo factual errors are present. The information is logically consistent, uses accurate terminology, and addresses all parts of the question comprehensively. The response is both accurate and more helpful than the reference output while maintaining factual correctness.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "fam-006",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.25,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 12441.0,
+        "cost_usd": 0.0057768
+      },
+      "latency_ms": 19632.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you and your wife are non-EU Blue Card holders living in Germany with a taxable household income of about €190,000, you would not be eligible for Elterngeld (parental allowance) for your baby next year. \n\nAccording to the law (§ 1 and § 8 BEEG), the entitlement to Elterngeld is excluded if the combined taxable income of both parents exceeds €175,000 in the year before the child's birth [S3][S7]. Since your combined taxable income is about €190,000, which is above this threshold, you would not qualify for Elterngeld.\n\nYour next steps:\n- Consider consulting a family benefits advisor or the local Familienkasse for personalized advice.\n- Explore other family support options that might be available to you.\n- Keep documentation of your income and residence status ready for any applications.\n\nIf you want, I can also help you estimate Kindergeld or other benefits you might be eligible for.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47770. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47770. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47306. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "fam-009",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 12412.0,
+        "cost_usd": 0.0055168000000000005
+      },
+      "latency_ms": 18092.0,
+      "error": null,
+      "details": {
+        "answer": "Sie müssen Elterngeld spätestens bis zum 9. Februar 2027 beantragen, um rückwirkend für die letzten drei Lebensmonate Ihres Kindes Elterngeld zu erhalten. Ihr Kind wurde am 10. Oktober 2026 geboren, und Elterngeld wird nur für die letzten drei Lebensmonate vor dem Monat der Antragstellung rückwirkend gezahlt (§ 7 Abs. 1 Satz 2 BEEG) [S1][S2][S3][T1].\n\nIhre nächsten Schritte:\n- Stellen Sie den Antrag auf Elterngeld schriftlich oder online beim Zentrum Bayern Familie und Soziales.\n- Reichen Sie die Geburtsurkunde Ihres Kindes und Einkommensnachweise ein.\n- Beantragen Sie das Elterngeld möglichst bald, um keine rückwirkenden Monate zu verlieren.",
+        "tool_calls": [
+          "calculate_deadline"
+        ],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51788. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51788. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51788. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "mul-003",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.4,
+        "citation_correctness": 1.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 12848.0,
+        "cost_usd": 0.0059768
+      },
+      "latency_ms": 14163.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card holder living in Munich, Bavaria:\n\n1. Your wife can join you through family reunification (Familiennachzug) as your spouse. As the spouse of a Blue Card holder, she is generally allowed to work in Germany without restrictions once she obtains her residence permit for family reunification [S1].\n\n2. Regarding housing, sufficient living space (ausreichender Wohnraum) must be available for the family to grant the family reunification residence permit. However, for spouses of Blue Card holders, the requirement for sufficient living space is waived, meaning you do not need to prove a certain flat size for her visa application [S1].\n\nYour next steps:\n- Apply for the family reunification residence permit for your wife at the German embassy or immigration office.\n- Provide proof of your Blue Card status and your marriage.\n- Prepare documents showing your current housing situation, although no minimum flat size is required.\n- Once the permit is granted, your wife can enter Germany and start working without additional work permit restrictions.\n\nIf you want, I can help you with a checklist of documents needed for the family reunification application. Let me know!",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 45010. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 45010. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 43807. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "oos-002",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 0.0,
+        "cost_usd": 0.0
+      },
+      "latency_ms": 1.3299999991431832,
+      "error": null,
+      "details": {
+        "answer": "I can't fill in a tax return or tell you which amounts to enter: that is individual tax advice. These can do it for you:\n\n- **A tax adviser (Steuerberater)** – Federal Chamber of Tax Advisers: https://www.bstbk.de\n- **An income-tax help association (Lohnsteuerhilfeverein)** – mainly for employees without business income; membership fee usually depends on income\n- **ELSTER**, the tax office's free online portal, has help texts for every form line – https://www.elster.de\n\n_General information, not legal advice._",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51788. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "oos-004",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 0.0,
+        "cost_usd": 0.0
+      },
+      "latency_ms": 1.7245999770238996,
+      "error": null,
+      "details": {
+        "answer": "Ein Gerichtsverfahren (z. B. eine Räumungsklage) hat strenge Fristen – bitte holen Sie schnell professionelle Hilfe. Zu einem laufenden Streit kann ich nicht beraten, aber diese Stellen schon:\n\n- **Mieterverein München** (Rechtsberatung für Mitglieder) – https://www.mieterverein-muenchen.de\n- **Eine Rechtsanwältin / ein Rechtsanwalt** mit passendem Fachgebiet – Suche: https://anwaltauskunft.de (geringes Einkommen? Beratungshilfeschein beim Amtsgericht)\n- **Migrationsberatung für Erwachsene (MBE)**: kostenlos und vertraulich; Beratungsstellen in Ihrer Nähe über BAMF-NAvI – https://bamf-navi.bamf.de\n\n_Allgemeine Information, keine Rechtsberatung._",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking for specific legal advice on how to respond to a court eviction case (\"Was soll ich dem Gericht schreiben?\"). According to the rubric, since should_refuse is true, the response PASSES only if it declines to give the specific advice asked for and points the user to appropriate professionals. The output correctly: (1) declines to provide concrete legal strategy or advice for the ongoing court case, and (2) redirects to multiple appropriate resources including a tenant association (Mieterverein), lawyers (Rechtsanwältin/Rechtsanwalt), and migration counselling services (MBE). The response also appropriately emphasizes the urgency of seeking professional help due to strict court deadlines. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "bur-013",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 11378.0,
+        "cost_usd": 0.0050828
+      },
+      "latency_ms": 5930.0,
+      "error": null,
+      "details": {
+        "answer": "The cost of an EU Blue Card at the Berlin immigration office (Landesamt für Einwanderung, LEA) depends on the type of issuance:\n\n- First issuance as a sticker: 56.00 Euros\n- Extension as a sticker: 49.00 Euros\n- First issuance as an electronic residence permit: 100.00 Euros\n- Extension as an electronic residence permit: 93.00 Euros\n- For Turkish nationals up to 24 years old: 27.60 Euros for first issuance or extension\n- For Turkish nationals 24 years and older: 46.00 Euros for first issuance or extension\n- Additional 6.00 Euros for creating a digital passport photo at the self-service terminal on site\n\nPlease note that fees are not refunded if the application is withdrawn after processing has started [S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47306. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47306. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47306. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "bur-021",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6666666666666666,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 10610.0,
+        "cost_usd": 0.0048092000000000005
+      },
+      "latency_ms": 10276.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card applicant in Hamburg, you apply for your EU Blue Card at the local foreigners authority (Ausländerbehörde) in Hamburg. The process involves submitting your application online first, then attending a personal appointment at the responsible office where you bring all required documents. The foreigners authority will check your documents, take your fingerprints, and coordinate with the Federal Employment Agency if needed. After approval, you receive your Blue Card in the form of a card similar to a credit card [S4].\n\nYour next steps:\n- Prepare all required documents such as your passport, visa (if applicable), employment contract, proof of qualifications, health insurance, and biometric photo.\n- Submit your application online for an appointment at the Hamburg foreigners authority.\n- Attend your appointment with all documents.\n- Wait for processing and receive your Blue Card.\n\nFor detailed information and forms, you can check the Hamburg Welcome Center or the Hamburg Service websites related to the Blue Card application [S1, S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 49357. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 49357. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 49357. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "fam-011",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 8761.0,
+        "cost_usd": 0.0040372
+      },
+      "latency_ms": 12058.0,
+      "error": null,
+      "details": {
+        "answer": "You should apply for the Kita-Gutschein in Hamburg three to six months before the desired start of childcare. If your child has or is suspected to have a disability and is between three years old and school entry, you should apply at least six months before the start to allow time for the necessary expert assessment. Applications can be submitted online if you have parental custody and live with your child in Hamburg. For after-school care (Hortbetreuung), you need to send or submit the application documents to the responsible child daycare department (Abteilung Kindertagesbetreuung) [S2].\n\nYour next steps:\n- Determine the desired start date for your child's childcare.\n- Prepare to apply three to six months in advance (six months if your child has or may have a disability).\n- Apply online or at the responsible district office (Bezirksamt) in Hamburg.\n- Gather any additional required documents as indicated in the application instructions.\n- Submit the application and wait for approval before starting childcare to ensure cost coverage [S2][S5].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 45733. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 45733. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 45733. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "bur-019",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 9890.0,
+        "cost_usd": 0.00449
+      },
+      "latency_ms": 11357.0,
+      "error": null,
+      "details": {
+        "answer": "For a Blue Card (Blaue Karte EU) in Frankfurt, if you work in a shortage occupation (Mangelberuf), you need to earn a gross monthly salary of at least €3,827.85 in 2026. This corresponds to an annual salary of €45,934.20. Shortage occupations include certain professions such as natural scientists, mathematicians, architects, planners, designers, engineers, medical doctors (except dentists), and academic IT specialists [S1].\n\nYour next steps:\n- Ensure your job offer meets the salary threshold for shortage occupations.\n- Confirm your academic qualification matches the job.\n- Apply for the Blue Card with the required documents at the local foreigner's office (Ausländerbehörde) in Frankfurt.\n- Prepare documents such as your valid passport, visa, employment contract, proof of salary, and academic degree equivalency if applicable [S1].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 48706. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 48706. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 48706. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "ten-013",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 0.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 8756.0,
+        "cost_usd": 0.0039728
+      },
+      "latency_ms": 7193.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, Frankfurt am Main is covered by the rent cap (Kappungsgrenze). In Frankfurt, the rent cap means that in existing rental agreements, rent increases are limited so that the rent cannot rise by more than 15 percent within three years. This is regulated by the Hessian Tenants Protection Ordinance (Hessische Mieterschutzverordnung, MiSchuV) in conjunction with § 558 Abs. 3 Satz 2 of the German Civil Code (BGB) [S1].\n\nAdditionally, Frankfurt am Main also applies the Mietpreisbremse (rent control), which limits new rental prices upon re-letting to a maximum of 10 percent above the local comparative rent [S1].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51788. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51788. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 51788. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "ten-017",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 8898.0,
+        "cost_usd": 0.0042792
+      },
+      "latency_ms": 10733.0,
+      "error": null,
+      "details": {
+        "answer": "The Frankfurt Mietspiegel is a qualified rent index used to determine the customary local comparative rent for apartments in Frankfurt am Main. It provides tenants and landlords with information about what constitutes an appropriate rent level. The Mietspiegel helps answer questions about whether a rent increase is justified, whether a rent amount is reasonable when searching for a rental, and what legally permissible rent levels are for landlords. It distinguishes between different types of apartments based on characteristics like type, size, energy efficiency, condition, and location to ensure comparability. The Mietspiegel is recognized by the municipality and serves as a reliable and transparent reference, often accepted as evidence in court. It also supports compliance with rent control measures such as the rent cap (Kappungsgrenze) and rent brake (Mietpreisbremse) in Frankfurt am Main [S1][S2].\n\nYour next steps:\n- If you want to check the customary rent for a specific apartment, you can use the printed or digital Mietspiegel brochure or the online Mietspiegel calculator provided by the city.\n- For precise rent determination, identify the apartment's location category using the city's Geoportal or Wohnlagen-Verzeichnis.\n- If you are a tenant or landlord facing a rent dispute or increase, refer to the Mietspiegel as a legal basis for negotiations or court proceedings [S3].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 62228. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 62228. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 62228. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "bur-015",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.4,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 11184.0,
+        "cost_usd": 0.005208
+      },
+      "latency_ms": 13053.0,
+      "error": null,
+      "details": {
+        "answer": "As a non-EU citizen moving to Cologne and renting a flat, for your registration (Anmeldung) of your new residence, you need to bring the following documents:\n\n- Valid passport or national passport and any residence permit documents you have (e.g., electronic residence title) [S1].\n- Wohnungsgeberbescheinigung (landlord's confirmation of your move-in). This is a certificate from your landlord or main tenant confirming your actual move-in date and the owner of the apartment. The move-in date must not be in the future. A rental contract alone is not sufficient [S1].\n- If you are registering as a family, you need the identity documents of all persons moving in who are over 16 years old, including signed registration forms and possibly powers of attorney [S1].\n- If you moved from abroad and are married or in a registered partnership, bring your marriage certificate or partnership certificate with certified translations if applicable [S1].\n- If you moved with your own minor children, bring their birth certificates with certified translations if applicable [S1].\n\nYou can register online or in person at any customer center (Kundenzentrum) in Cologne. Registration must be done within 14 days of moving in [S1].\n\nYour next steps:\n- Obtain the Wohnungsgeberbescheinigung from your landlord.\n- Gather your passport, residence permit documents, and rental contract.\n- If applicable, prepare family documents and translations.\n- Register online or book an appointment at a Kundenzentrum in Cologne within 14 days of your move-in date.\n\nLet me know if you want details on how to book the appointment or the online registration process.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 45010. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 45010. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 45010. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "fam-013",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.75,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8297.0,
+        "cost_usd": 0.0041888
+      },
+      "latency_ms": 13781.0,
+      "error": null,
+      "details": {
+        "answer": "Kurzantwort:\nIn Köln können Sie Ihr Kind bereits unmittelbar nach der Geburt online oder schriftlich für einen Kindergartenplatz (Kitaplatz) vormerken lassen. Die Anmeldung erfolgt über das zentrale Vormerkverfahren LITTLE BIRD. Ein Platzangebot erhalten Sie frühestens acht Monate vor Betreuungsbeginn. Voraussetzung für einen Platz in einer städtischen Einrichtung ist, dass mindestens ein Elternteil mit Erstwohnsitz in Köln gemeldet ist. [S2][S3]\n\nDetails:\n- Sie können Ihr Kind direkt nach der Geburt für einen Kitaplatz vormerken, entweder online oder schriftlich bei der gewünschten Kindertageseinrichtung. [S2]\n- Die Vergabe der Plätze in städtischen Einrichtungen erfolgt zentral durch das Amt für Kinder, Jugend und Familie über das Portal LITTLE BIRD. Die Plätze werden nach dem Datum der Anmeldung vergeben, daher ist eine frühzeitige Anmeldung wichtig. [S4]\n- Sollte in der gewünschten Einrichtung kein Platz frei sein, erhalten Sie ein alternatives Platzangebot oder einen Platz in der Kindertagespflege. [S2]\n- Für die Vormerkung fallen keine Gebühren an. [S2]\n- Ein Platzangebot erhalten Sie frühestens acht Monate vor dem gewünschten Betreuungsbeginn. [S3]\n- Für Geschwisterkinder in derselben Einrichtung können Sie eine neue Betreuungsanfrage im bestehenden Account stellen und dabei angeben, welches Kind bereits betreut wird. [S5]\n- Falls Betreuungsanfragen abgelehnt werden, können Sie weitere Anfragen bei anderen Einrichtungen stellen oder sich an die Kontaktstelle Kindertagespflege Köln wenden, um eine Betreuung durch eine Tagespflegeperson zu erhalten. [S6]\n\nIhre nächsten Schritte:\n- Registrieren Sie sich bei LITTLE BIRD und melden Sie Ihr Kind an, auch wenn Sie noch nicht in Köln wohnen, um die Vormerkung zu starten. [S1][S2]\n- Geben Sie bei der Anmeldung Ihre aktuelle Adresse an und aktualisieren Sie diese nach Ihrem Umzug. [S1]\n- Melden Sie Ihr Kind so früh wie möglich an, um die Chancen auf einen Platz zu erhöhen. [S4]\n- Prüfen Sie bei Ablehnung weitere Einrichtungen oder wenden Sie sich an die Kontaktstelle Kindertagespflege Köln. [S6]\n\nWenn Sie möchten, kann ich Ihnen auch die Links und Kontaktdaten der zuständigen Stellen in Köln heraussuchen.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about finding a kindergarten place in Cologne, which does not require refusing to answer (should_refuse = false). The response substantively answers the question by providing detailed, practical information about the registration process, timelines, requirements, and next steps. It includes specific references to the LITTLE BIRD system, the responsible authority (Amt für Kinder, Jugend und Familie), and concrete procedures. The response does not decline or deflect the question; instead, it directly addresses what the user needs to know. While the response offers to provide additional links and contact details, this is a helpful addition rather than a deflection. The information appears well-sourced and appropriate for general guidance to expats in Germany. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output demonstrates strong alignment with the provided context. Let me verify the key claims:\n\n1. **\"Can register immediately after birth\"** - Directly supported by S2: \"Bereits unmittelbar nach der Geburt haben Sie die Möglichkeit, Ihr Kind für einen Platz bei uns vorzumerken.\"\n\n2. **\"Online or written registration\"** - Directly supported by S2: \"Dies können Sie online oder schriftlich in der jeweiligen Kindertageseinrichtung erledigen.\"\n\n3. **\"LITTLE BIRD system\"** - Directly supported by S1 and S2, which reference LITTLE BIRD as the registration platform.\n\n4. **\"Earliest offer 8 months before care begins\"** - Directly supported by S3: \"Sie erhalten frühestens acht Monate vor Betreuungsbeginn ein Platzangebot.\"\n\n5. **\"Requirement: at least one parent registered with primary residence in Cologne\"** - Directly supported by S2: \"Ein Platzangebot kann aber erst erfolgen, wenn mindestens ein Elternteil, eine Erziehungsberechtigte oder ein Erziehungsberechtigter mit Erstwohnsitz in Köln gemeldet ist.\"\n\n6. **\"Central allocation by Amt für Kinder, Jugend und Familie\"** - Directly supported by S2 and S4.\n\n7. **\"Allocation by application date\"** - Directly supported by S4: \"Dabei vergeben wir die Plätze der Reihe nach. Die Grundlage dafür ist das Antragsdatum.\"\n\n8. **\"Alternative placement or family daycare if no space\"** - Directly supported by S2: \"Sollte in der von Ihnen genannten Kindertageseinrichtung kein Platz zur Verfügung stehen, unterbreiten wir Ihnen ein anderes Platzangebot oder bieten einen Platz in der Kindertagespflege an.\"\n\n9. **\"No fees for registration\"** - Directly supported by S2: \"Für die Vormerkung werden keine Gebühren erhoben.\"\n\n10. **\"Sibling registration process\"** - Directly supported by S5.\n\n11. **\"Handling rejected applications\"** - Directly supported by S6.\n\n12. **\"Can register before moving to Cologne\"** - Directly supported by S1: \"Sie können sich bereits vor Ihrem Umzug bei LITTLE BIRD registrieren und anmelden.\"\n\n13. **\"Update address after moving\"** - Directly supported by S1: \"Nach Ihrem Umzug haben Sie die Möglichkeit, Ihre Adressdaten zu ändern.\"\n\nAll major claims in the output are explicitly supported by the context. The output stays within the scope of information provided, maintains the same meaning as the source material, and does not introduce unsupported external facts. The citations are accurate and properly attributed to the source sections. The advice given (register early, provide correct email, etc.) is all derived from or logically follows from the context provided.\n\nThus, the score should be: TRUE.",
+        "judge_errors": [
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 62228. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "bur-017",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.8333333333333334,
+        "citation_correctness": 0.3333333333333333,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 10698.0,
+        "cost_usd": 0.005058
+      },
+      "latency_ms": 13274.0,
+      "error": null,
+      "details": {
+        "answer": "You must register your residence (Anmeldung) in Stuttgart within two weeks after moving into your new home [S1][S2][S3].\n\nFor registration, you need to go to a Bürgerbüro (citizen's office) in Stuttgart. You must bring:\n- Your personal ID card or passport,\n- The confirmation from your landlord (Wohnungsgeberbestätigung),\n- IDs of family members if you register them together; for children without IDs, bring their birth certificates,\n- Your electronic residence permit if you have one,\n- If registering via a representative, a power of attorney and their ID [S3].\n\nYou will receive a registration confirmation (Meldebestätigung) on the spot.\n\nYou can also register online via the Baden-Württemberg service portal with a service account, which allows you to submit your registration digitally and receive a digital confirmation [S3][S9].\n\nYour next steps:\n- Prepare the required documents listed above,\n- Obtain the landlord's confirmation of your move-in,\n- Decide whether to register in person at a Bürgerbüro or online,\n- Register within two weeks after your move-in date to avoid fines [S7].\n\nIf you have any questions about your residence permit or need to contact the foreigners' office, they handle stay-related matters in Stuttgart [S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 43807. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 43807. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 43807. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "ten-015",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 8349.0,
+        "cost_usd": 0.0037452
+      },
+      "latency_ms": 11696.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, the rent cap (Mietpreisbremse) applies in Stuttgart. Stuttgart is included in the list of cities and municipalities with a tight housing market where the rent cap is in effect. This means that at the beginning of a new tenancy, the rent may not exceed the local comparative rent (ortsübliche Vergleichsmiete) by more than 10 percent, with some exceptions such as new buildings first used after October 1, 2014, or extensively modernized apartments [S1][S4][S6].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 62228. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 62228. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 62228. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "mul-005",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6666666666666666,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 11648.0,
+        "cost_usd": 0.0053816
+      },
+      "latency_ms": 10581.0,
+      "error": null,
+      "details": {
+        "answer": "When moving from Berlin to Hamburg, you do not have to deregister (Abmeldung) in Berlin first. According to the general rule in the German Federal Registration Act (Bundesmeldegesetz, BMG), if you are moving within Germany and taking up a new residence, you only need to register (Anmeldung) at your new address within two weeks after moving in. The deregistration in Berlin is not required before registering in Hamburg because the registration at the new place will update your address in the registration system automatically [S3].\n\nYour next steps:\n- Register your new address in Hamburg within two weeks after moving in [S2, S3].\n- Bring the required documents for registration in Hamburg, such as your valid ID, Wohnungsgeberbestätigung (confirmation from your landlord), and any other necessary papers [S2].\n- You can book an appointment for registration in Hamburg online or by phone [S2].\n- After registration, you will receive a confirmation of registration (Meldebestätigung) [S2].\n\nIf you want, I can provide more details on the registration process in Hamburg.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 43807. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 43807. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 43807. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    },
+    {
+      "id": "fam-015",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": null,
+        "tool_selection": null,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": 3377.0,
+      "error": null,
+      "details": {
+        "answer": "Which city do you live in? Offices, appointments and local rules differ from city to city, so I want to give you the right ones. Pick your city below, or just type it.",
+        "tool_calls": [],
+        "asked_clarification": true
+      }
+    },
+    {
+      "id": "bur-024",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": null,
+        "tool_selection": null,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": 3386.0,
+      "error": null,
+      "details": {
+        "answer": "Which city do you live in? Offices, appointments and local rules differ from city to city, so I want to give you the right ones. Pick your city below, or just type it.",
+        "tool_calls": [],
+        "asked_clarification": true
+      }
+    },
+    {
+      "id": "fam-016",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.2,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": 8608.0,
+        "cost_usd": 0.0040096
+      },
+      "latency_ms": 6919.0,
+      "error": null,
+      "details": {
+        "answer": "The monthly Kindergeld (child benefit) amount per child is 259 euros [S1].\n\nDetails:\n- This amount is paid monthly from the beginning of the month in which the eligibility conditions are met until the end of the month in which they cease to apply [S1].\n- Only one person can receive Kindergeld for each child, usually the person who has the child in their household [S2].\n- The child must be identified by a tax identification number and meet certain residency or household criteria to be eligible [S3].\n- Kindergeld is not paid for children who receive comparable benefits from other sources [S4].\n- The payment is made by the family benefits office (Familienkasse) and can be paid retroactively for up to six months before the application date [S5].\n\nYour next steps:\n- Confirm the child's eligibility and your status as the recipient.\n- Apply for Kindergeld at the Familienkasse.\n- Provide necessary documents such as the child's birth certificate and your tax ID.\n- Keep track of any changes in your circumstances that might affect the benefit.\n\nIf you want, I can help you with the application process or provide a checklist of required documents.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "judge_errors": [
+          "refusal_accuracy: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47770. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "groundedness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47770. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e",
+          "correctness: PaymentRequiredResponseError: This request requires more credits, or fewer max_tokens. You requested up to 64000 tokens, but can only afford 47770. To increase, visit https://openrouter.ai/workspaces/default/keys/59025c6d90435173e"
+        ]
+      }
+    }
+  ]
+}

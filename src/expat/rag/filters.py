@@ -24,7 +24,7 @@ import re
 from collections.abc import Iterable
 from datetime import date
 
-from expat.schemas import Audience, ChunkMetadata, RankedHit, RetrievalConfig, SubQuery, UserProfile
+from expat.schemas import Audience, ChunkMetadata, Location, RankedHit, RetrievalConfig, SubQuery, UserProfile
 from expat.schemas.profile import Citizenship, Employment, FamilyStatus, ResidenceStatus
 from expat.store.vectorstore import days_since_epoch
 from expat.store.where import Where
@@ -88,19 +88,38 @@ def _and(clauses: list[Where]) -> Where | None:
     return clauses[0] if len(clauses) == 1 else {"$and": clauses}
 
 
+def location_from_profile(profile: UserProfile | None) -> Location:
+    """The profile's city/state as a Location (unknown fields -> empty lists)."""
+    if profile is None or not (profile.city or profile.state):
+        return Location()
+    return Location(
+        cities=[profile.city] if profile.city else [],
+        states=[profile.state] if profile.state else [],
+        source="profile",
+    )
+
+
 def build_where(
     profile: UserProfile | None,
     subquery: SubQuery,
     config: RetrievalConfig,
     today: date | None = None,
+    location: Location | None = None,
 ) -> Where | None:
-    """Build the HARD `where` filter for one sub-query (None = no filtering at all)."""
+    """Build the HARD `where` filter for one sub-query (None = no filtering at all).
+
+    Location: the per-question `location` (pipeline: places named in the question > profile) or, if not
+    given, the profile's. Local chunks must match one of its cities/states; nationwide chunks ("") always
+    pass. An unknown location therefore means "nationwide sources only", never another city's rules.
+    With neither a location nor a profile (bare eval/debug calls) no location filter is applied.
+    """
     if not config.use_filters:
         return None
     clauses: list[Where] = [{"valid_until_ts": {"$gte": days_since_epoch(today or date.today())}}]
-    if profile is not None:
-        clauses.append({"city": {"$in": [profile.city.lower(), ""]}})
-        clauses.append({"state": {"$in": [profile.state.upper(), ""]}})
+    if location is not None or profile is not None:
+        loc = location if location is not None else location_from_profile(profile)
+        clauses.append({"city": {"$in": [*loc.cities, ""]}})
+        clauses.append({"state": {"$in": [*loc.states, ""]}})
     if subquery.domain is not None and subquery.domain_confidence >= DOMAIN_HARD_THRESHOLD:
         clauses.append({"domain": subquery.domain.value})
     return _and(clauses)

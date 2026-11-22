@@ -24,6 +24,7 @@ from expat.store.synthetic import synthetic_chunks, synthetic_parents
 from expat.store.vectorstore import ChunkVectorStore
 
 SETTINGS = Settings(_env_file=None)
+MUNICH = UserProfile(city="munich")  # the synthetic corpus has Munich + Berlin procedures
 
 
 @pytest.fixture
@@ -96,7 +97,7 @@ def test_decomposition_off_merges_rewrites_into_one_sub_query() -> None:
 
 
 def test_r0_run_is_dense_only_and_unfiltered(retriever: HybridRetriever) -> None:
-    debug = retriever.retrieve_debug(_plan(), UserProfile(), RetrievalConfig.baseline())
+    debug = retriever.retrieve_debug(_plan(), MUNICH, RetrievalConfig.baseline())
     (sub,) = debug.sub_questions
     assert [lst.name for lst in sub.lists] == ["dense:en:0"]
     assert sub.where is None
@@ -104,7 +105,7 @@ def test_r0_run_is_dense_only_and_unfiltered(retriever: HybridRetriever) -> None
 
 
 def test_full_run_filters_and_finds_exact_paragraph(retriever: HybridRetriever) -> None:
-    result = retriever.retrieve(_plan(), UserProfile(), RetrievalConfig())
+    result = retriever.retrieve(_plan(), MUNICH, RetrievalConfig())
     tenancy, bureaucracy = result.sub_results
     assert tenancy.hits[0].metadata.doc_key == "bgb#573c"  # BM25 "573c" + § boost
     assert {"dense:en:0", "bm25:de:0"} <= set(tenancy.hits[0].ranks)
@@ -115,7 +116,7 @@ def test_full_run_filters_and_finds_exact_paragraph(retriever: HybridRetriever) 
 
 
 def test_parents_are_deduplicated_and_numbered(retriever: HybridRetriever) -> None:
-    result = retriever.retrieve(_plan(), UserProfile(), RetrievalConfig())
+    result = retriever.retrieve(_plan(), MUNICH, RetrievalConfig())
     parent_ids = [s.parent_id for s in result.parents]
     assert len(parent_ids) == len(set(parent_ids))
     assert [s.source_id for s in result.parents] == [f"S{i}" for i in range(1, len(parent_ids) + 1)]
@@ -129,7 +130,7 @@ def test_budget_falls_back_to_child_chunks(retriever: HybridRetriever) -> None:
     # Budget 40 -> quota 20 per sub-question. The § 573c parent (54 tok) never fits; in the second
     # pass its top child (~39 tok) does, so we get a small child-only block instead of no context.
     retriever.context_token_budget = 40
-    debug = retriever.retrieve_debug(_plan(), UserProfile(), RetrievalConfig())
+    debug = retriever.retrieve_debug(_plan(), MUNICH, RetrievalConfig())
     assert debug.context_tokens <= 40
     (source,) = debug.result.parents
     child_texts = {c.text for c in synthetic_chunks()}
@@ -138,7 +139,7 @@ def test_budget_falls_back_to_child_chunks(retriever: HybridRetriever) -> None:
 
 
 def test_all_doc_keys_ranked(retriever: HybridRetriever) -> None:
-    keys = retriever.retrieve(_plan(), UserProfile(), RetrievalConfig()).all_doc_keys()
+    keys = retriever.retrieve(_plan(), MUNICH, RetrievalConfig()).all_doc_keys()
     assert keys[0] == "bgb#573c"
     assert len(keys) == len(set(keys))
 

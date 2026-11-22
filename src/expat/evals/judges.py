@@ -52,6 +52,9 @@ First explain your reasoning in two or three sentences, then give the verdict: t
 """
 
 
+JUDGE_MAX_TOKENS = 1024  # reasoning (2-3 sentences) + verdict; see default_judge_model()
+
+
 class JudgeVerdict(BaseModel):
     """A binary verdict plus the judge's reasoning (kept for the human-calibration step)."""
 
@@ -139,6 +142,11 @@ def default_judge_model() -> "BaseChatModel":  # pragma: no cover - needs an API
         warnings.warn(
             f"judge model == answer model ({settings.model_judge}); expect self-preference bias", stacklevel=2
         )
+    # max_tokens: a verdict is a few sentences. Without a cap, OpenRouter reserves credit for the model's full output
+    # limit (64k tokens for Haiku 4.5) on every call and rejects requests once the key's remaining limit is lower.
     return ChatOpenRouter(
-        model_name=settings.model_judge, temperature=0, openrouter_api_key=settings.openrouter_api_key
+        model_name=settings.model_judge,
+        temperature=0,
+        max_tokens=JUDGE_MAX_TOKENS,
+        openrouter_api_key=settings.openrouter_api_key,
     )
