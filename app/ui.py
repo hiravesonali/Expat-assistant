@@ -348,6 +348,9 @@ def render_done(done: DoneEvent, mode: str) -> None:
 
 
 def render_error(err: ErrorEvent) -> None:
+    if err.code == "budget_exhausted":  # expected state of the public demo, not a crash: calm notice, no code
+        st.info(err.message, icon=":material/pause_circle:")
+        return
     st.error(t("went_wrong", code=err.code, message=err.message), icon=":material/error:")
 
 

@@ -142,3 +142,27 @@ def test_switching_to_german_translates_the_interface_and_the_answer_language():
     card = next(b for b in at.button if b.key == "example-1")
     assert "Wohnung kündigen" in card.label and "kündige" in (card.help or "")
     assert any("keine Rechts- oder Steuerberatung" in c.value for c in at.caption)
+
+
+def test_budget_exhausted_offers_demo_answers_and_switches_live_off(monkeypatch):
+    from expat.schemas import DoneEvent, ErrorEvent, TokenEvent
+
+    def fake_run(mode, question, history, profile):
+        if mode == pipeline_adapter.LIVE:
+            yield ErrorEvent(code="budget_exhausted", message="Live answers are paused.", retryable=False)
+        else:
+            yield TokenEvent(text=f"Demo answer to: {question}")
+        yield DoneEvent()
+
+    monkeypatch.setattr(pipeline_adapter, "has_api_key", lambda: True)  # Live available
+    monkeypatch.setattr(pipeline_adapter, "live_status", lambda: (True, ""))
+    monkeypatch.setattr(pipeline_adapter, "run_pipeline", fake_run)
+    at = _home()
+    at.chat_input[0].set_value("what should i do for the anmeldung").run()
+    assert not at.exception, at.exception
+    assert any("paused" in i.value for i in at.info) and not at.error  # calm notice, not a red error
+    next(b for b in at.button if b.key and b.key.startswith("demo-")).click().run()
+    assert not at.exception, at.exception
+    assert at.session_state.live_toggle is False
+    conv = at.session_state.conversations[at.session_state.current]
+    assert conv["messages"][-1]["content"] == "Demo answer to: what should i do for the anmeldung"

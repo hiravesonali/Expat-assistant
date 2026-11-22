@@ -120,6 +120,12 @@ def _on_example(prompt: str) -> None:
     st.session_state.pending_prompt = prompt
 
 
+def _on_use_demo() -> None:
+    """Budget used up: switch Live answers off and answer the same question with the demo pipeline."""
+    st.session_state.live_toggle = False  # callbacks run before the widget is drawn, so this is allowed
+    _on_retry()
+
+
 def _on_retry() -> None:
     """Drop the failed assistant turn + its question, and resubmit the question."""
     messages = current_conversation()["messages"]
@@ -369,6 +375,10 @@ def render_history(conv: dict[str, Any]) -> None:
             error = next((e for e in msg["events"] if isinstance(e, ErrorEvent)), None)
             if is_last and error and error.retryable:
                 st.button(t("try_again"), icon=":material/refresh:", key=f"retry-{i}", on_click=_on_retry)
+            if is_last and error and error.code == "budget_exhausted":
+                st.button(
+                    t("use_demo"), icon=":material/science:", type="primary", key=f"demo-{i}", on_click=_on_use_demo
+                )
             clarification = next((e for e in msg["events"] if isinstance(e, ClarificationEvent)), None)
             if is_last and clarification:
                 render_city_picker(clarification)

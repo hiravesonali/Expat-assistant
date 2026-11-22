@@ -110,7 +110,8 @@ STRINGS: dict[str, dict[str, str]] = {
         "no_hits": "No hits.",
         "waiting_tool": "Waiting for the tool…",
         "budget": "Live answers are paused: this public demo has used up its AI budget for now. "
-        "Switch **Live answers** off in Settings to explore the demo answers, or try again later.",
+        "You can still explore the app with demo answers.",
+        "use_demo": "Use demo answers",
     },
     "de": {
         "tagline": "Ihr Wegweiser fürs Ankommen in Deutschland",
@@ -190,8 +191,8 @@ STRINGS: dict[str, dict[str, str]] = {
         "no_hits": "Keine Treffer.",
         "waiting_tool": "Warte auf das Werkzeug…",
         "budget": "Live-Antworten sind pausiert: Diese öffentliche Demo hat ihr KI-Budget vorerst aufgebraucht. "
-        "Schalten Sie **Live-Antworten** in den Einstellungen aus, um die Demo-Antworten anzusehen, oder versuchen "
-        "Sie es später erneut.",
+        "Sie können die App weiterhin mit Demo-Antworten ausprobieren.",
+        "use_demo": "Demo-Antworten verwenden",
     },
 }
 
