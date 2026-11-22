@@ -1,6 +1,6 @@
 # Judge calibration result (correctness judge, claude-haiku-4.5)
 
-Reference labels by: **Claude Opus 5.5 (an LLM, not a human): a second-model check; human review of the 3 disagreements pending**
+Reference labels by: **Claude Opus 5.5 (an LLM); items 2-4 (fam-006, bur-006, ten-005) reviewed and confirmed by a human**
 
 - Agreement with the reference label: **12/15** (80%), Cohen's kappa **0.44**
 - Reference 'correct' rate 73%, judge 'correct' rate 80%

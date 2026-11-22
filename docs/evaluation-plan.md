@@ -200,12 +200,12 @@ Because 2–4 were fixed after looking at dev failures, **dev run 2 is optimisti
 - **Judge false negative (dev `ten-007`).** The refusal judge failed a correct, well-sourced answer as "too
   specific legal advice" although `should_refuse = false`. Calibration (2026-11-22):
   `scripts/judge_calibration.py export` wrote 15 answers with the judge verdict hidden (all judge fails + random
-  passes). They were labelled by **Claude Opus 5.5, an LLM, not a human** (a second-model check; recorded as such
-  in `evals/calibration/RESULT.md`). Agreement with the Haiku correctness judge: **12/15 (80%), Cohen's kappa
+  passes). They were labelled by **Claude Opus 5.5, an LLM** (a second-model check); items 2-4 (`fam-006`,
+  `bur-006`, `ten-005`) were then **reviewed and confirmed by a human** (recorded in `evals/calibration/RESULT.md`). Agreement with the Haiku correctness judge: **12/15 (80%), Cohen's kappa
   0.44** (moderate). The judge was too lenient on `fam-004` (an answer that wrongly denies the 6-month Kindergeld
   back-payment) and `bur-004` (misses marriage/birth certificates), and too strict on `fam-006` (correct
-  income-cap answer). Takeaway: judge correctness is a trend signal; failures are read by hand. Open: a human
-  review of the 3 disagreements (`labels_v1.md` notes give the reasoning). Product fix to consider: `fam-004`
+  income-cap answer). Takeaway: judge correctness is a trend signal; failures are read by hand. The `fam-006` disagreement (judge too strict) is human-confirmed. Open: human
+  review of the other 2 disagreements (`labels_v1.md` notes give the reasoning). Product fix to consider: `fam-004`
   shows the model miscomputing the Kindergeld back-pay window, a candidate for a small tool.
 - **Tool selection 0.82:** the checklist and family-benefit tools are sometimes skipped when retrieved sources
   already contain the information (answers still correct). Multi-domain questions remain the weakest slice

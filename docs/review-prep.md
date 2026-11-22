@@ -78,11 +78,10 @@ metrics (hit@5, recall@10, MRR) and answer metrics (faithful, correct, citations
 Judge = Claude Haiku 4.5, a different family than the answer model (GPT-4.1-mini); binary rubrics,
 reasoning first. I read every failure: one was a judge mistake (it failed a correct answer as "too
 specific"), one was unfair (it couldn't see the user profile – fixed). Calibration sheet: 15
-answers with the verdicts hidden (`evals/calibration/`). A second-model check (labelled by Claude Opus, an LLM, so
-not human calibration) agreed with the judge on **12/15 (kappa 0.44)**. The judge was **too lenient twice**: it
+answers with the verdicts hidden (`evals/calibration/`). A second-model check (labelled by Claude Opus, an LLM;
+3 items confirmed by a human, including one disagreement) agreed with the judge on **12/15 (kappa 0.44)**. The judge was **too lenient twice**: it
 passed an answer that wrongly denied the Kindergeld back-payment, and one that missed documents a foreign family
-needs. So I treat judge scores as a trend signal and read the failures myself. Next: a human review of the 3
-disagreements.
+needs. So I treat judge scores as a trend signal and read the failures myself. Next: human review of the remaining 2 disagreements.
 
 **8. "Error scenarios and edge cases?"** Analysis model down → falls back to the raw question (R0 quality, no
 crash). Provider timeouts → retries, then an error card with Retry. Empty retrieval → "insufficient

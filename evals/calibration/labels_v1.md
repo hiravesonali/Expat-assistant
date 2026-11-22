@@ -51,7 +51,7 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 
 **Your label (yes / no):** yes
 
-**Note (optional):** 175k cap correctly applied. (labelled by Claude, not a human)
+**Note (optional):** 175k cap correctly applied. (labelled by a human)
 
 ---
 
@@ -80,7 +80,7 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 
 **Your label (yes / no):** yes
 
-**Note (optional):** 21 months with B1 / 27 with A1, correct. (labelled by Claude, not a human)
+**Note (optional):** 21 months with B1 / 27 with A1, correct. (labelled by a human)
 
 ---
 
@@ -108,7 +108,7 @@ is fine. A note is optional. Then run `uv run python scripts/judge_calibration.p
 
 **Your label (yes / no):** yes
 
-**Note (optional):** 10% cap, Munich covered; exceptions and the complaint requirement not mentioned. (labelled by Claude, not a human)
+**Note (optional):** 10% cap, Munich covered; exceptions and the complaint requirement not mentioned. (labelled by a human)
 
 ---
 
