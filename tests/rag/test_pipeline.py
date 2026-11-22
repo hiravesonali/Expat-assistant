@@ -314,3 +314,10 @@ def test_federal_question_without_a_city_is_answered_from_nationwide_sources():
     events = _run_with("How much Kindergeld?", UserProfile(), example=4, retriever=retriever)  # not location-dependent
     assert not [e for e in events if isinstance(e, ClarificationEvent)]
     assert retriever.calls[0][0].location.known is False
+
+
+def test_unsupported_city_counts_as_known_location_and_is_not_asked_for():
+    """'I live in Leipzig': no local Leipzig sources, but asking "Which city?" again would be absurd."""
+    location = pipeline.resolve_location("Where do I register? I live in Leipzig.", "", UserProfile(), "Leipzig")
+    assert location.known and location.cities == ["leipzig"] and location.states == []
+    assert pipeline.resolve_location("x", "", UserProfile(), "München").cities == ["munich"]  # alias still resolves

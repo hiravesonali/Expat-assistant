@@ -62,12 +62,25 @@ def render_retrieval_table(runs: Sequence[ExperimentResult]) -> str:
                 delta,
                 fmt(r.metrics.get("recall@10")),
                 fmt(r.metrics.get("mrr@10")),
+                fmt(r.metrics.get("leak@10")),  # share of questions with another place's local chunk in the top 10
                 fmt_ms(r.metrics.get("latency_p50_ms")),
                 fmt_ms(r.metrics.get("latency_p95_ms")),
                 str(r.errors),
             ]
         )
-    header = ["Variant", "What", "n", "hit@5", "Δ hit@5 vs R0", "recall@10", "MRR@10", "p50 ms", "p95 ms", "errors"]
+    header = [
+        "Variant",
+        "What",
+        "n",
+        "hit@5",
+        "Δ hit@5 vs R0",
+        "recall@10",
+        "MRR@10",
+        "leak@10",
+        "p50 ms",
+        "p95 ms",
+        "errors",
+    ]
     return _table(header, rows)
 
 
@@ -96,6 +109,7 @@ ANSWER_COLUMNS = (
     ("must_include", "Must-incl."),
     ("tool_selection", "Tool sel."),
     ("refusal_accuracy", "Refusal acc."),
+    ("clarification", "Asks city ok"),
 )
 
 

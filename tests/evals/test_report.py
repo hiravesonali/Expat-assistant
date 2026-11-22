@@ -37,7 +37,10 @@ def test_latest_runs_keeps_newest_per_variant_and_sorts_naturally() -> None:
 def test_render_report_tables() -> None:
     text = render_report([_result("R0", 0.5), _result("R4", 0.86)], now=datetime(2026, 11, 17, tzinfo=UTC))
     assert "## Split: dev" in text
-    r0_row = "| R0 | Vector only, raw query, no filters (baseline) | 25 | 0.50 | +0.00 | 0.50 | 0.25 | 120 | 300 | 0 |"
+    # leak@10 is "–": fake runs carry no metadata
+    r0_row = (
+        "| R0 | Vector only, raw query, no filters (baseline) | 25 | 0.50 | +0.00 | 0.50 | 0.25 | – | 120 | 300 | 0 |"
+    )
     assert r0_row in text
     assert "| R4 | R3 + BM25 hybrid | 25 | 0.86 | +0.36 |" in text
     # per-slice: primary slices first in fixed order, then cross-cutting tags

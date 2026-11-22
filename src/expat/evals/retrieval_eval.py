@@ -21,6 +21,7 @@ from expat.evals.results import (
     experiment_name,
     write_result,
 )
+from expat.places import find_cities
 from expat.schemas import RetrievalConfig, RetrievalPlan, RetrievalResult, Retriever, UserProfile
 
 Mode = Literal["local", "langsmith"]
@@ -32,7 +33,7 @@ Analyzer = Callable[[str, UserProfile], RetrievalPlan]
 HIT_K = 5
 RECALL_K = 10
 MRR_K = 10
-RETRIEVAL_METRICS = ("hit@5", "recall@10", "mrr@10")
+RETRIEVAL_METRICS = ("hit@5", "recall@10", "mrr@10", "leak@10")
 
 
 # --- the ablation matrix ---------------------------------------------------------------------------------------
@@ -153,26 +154,52 @@ def score_retrieval(example: GoldenExample, doc_keys: Sequence[str]) -> dict[str
     }
 
 
+def _failed_metrics() -> dict[str, float | None]:
+    """A crash scores 0 on the quality metrics; leak is unknown (None), not "no leak"."""
+    return {m: None if m == "leak@10" else 0.0 for m in RETRIEVAL_METRICS}
+
+
+def location_leak(example: GoldenExample, output: RetrievalOutput) -> float | None:
+    """1.0 if any of the top-10 hits of any sub-question is a LOCAL chunk of another place, else 0.0.
+
+    The example's place = supported cities named in the question, else the profile's city/state; with no place
+    at all, every local chunk counts as a leak (policy: unknown location -> nationwide sources only). Lower is
+    better; R0 (no filters) shows the baseline leak rate. None for plain doc_key lists (no metadata).
+    """
+    if not isinstance(output, RetrievalResult):
+        return None
+    named = find_cities(example.question)
+    cities = {c.slug for c in named} or ({example.profile.city} if example.profile.city else set())
+    states = {c.state for c in named} or ({example.profile.state} if example.profile.state else set())
+    for sub in output.sub_results:
+        for hit in sub.hits[:RECALL_K]:
+            m = hit.metadata
+            if (m.city and m.city not in cities) or (m.state and m.state not in states):
+                return 1.0
+    return 0.0
+
+
 def retrieval_examples(examples: Iterable[GoldenExample]) -> list[GoldenExample]:
-    """Refusal examples have no expected sources (and the pipeline skips retrieval for them), so they are excluded."""
-    return [e for e in examples if not e.should_refuse]
+    """Only examples with expected sources: refusals (no retrieval) and "which city?" clarifications are excluded."""
+    return [e for e in examples if not e.should_refuse and e.required_doc_keys]
 
 
 def _run_one(target: RetrievalTarget, example: GoldenExample) -> ExampleScore:
     start = time.perf_counter()
     try:
-        keys = doc_keys_of(target(example.question, example.profile))
+        output = target(example.question, example.profile)
+        keys = doc_keys_of(output)
     except Exception as exc:  # one failing example must not abort a whole (paid) eval run
         # A crash is a retrieval failure from the user's point of view, so it scores 0 (and is counted in `errors`).
         return ExampleScore(
             id=example.id,
-            metrics={m: 0.0 for m in RETRIEVAL_METRICS},
+            metrics=_failed_metrics(),
             error=f"{type(exc).__name__}: {exc}",
         )
     latency_ms = (time.perf_counter() - start) * 1000
     return ExampleScore(
         id=example.id,
-        metrics=score_retrieval(example, keys),
+        metrics={**score_retrieval(example, keys), "leak@10": location_leak(example, output)},
         latency_ms=latency_ms,
         details={"doc_keys": keys[:RECALL_K]},
     )
@@ -247,12 +274,15 @@ def _run_langsmith(
     Recomputing locally (instead of reading LangSmith feedback back) keeps one aggregation code path for both modes.
     """
     wanted = {e.id for e in examples}
+    by_question = {e.question: e for e in examples}
 
     def ls_target(inputs: dict[str, Any]) -> dict[str, Any]:
         profile = UserProfile.model_validate(inputs["profile"])
         start = time.perf_counter()
-        keys = doc_keys_of(target(inputs["question"], profile))
-        return {"doc_keys": keys, "latency_ms": (time.perf_counter() - start) * 1000}
+        output = target(inputs["question"], profile)
+        example = by_question.get(inputs["question"])
+        leak = location_leak(example, output) if example else None
+        return {"doc_keys": doc_keys_of(output), "leak": leak, "latency_ms": (time.perf_counter() - start) * 1000}
 
     data = [
         ex
@@ -274,15 +304,13 @@ def _run_langsmith(
         example = examples_by_id[row["example"].metadata["id"]]
         run = row["run"]
         if run.error or not run.outputs:
-            scores.append(
-                ExampleScore(id=example.id, metrics={m: 0.0 for m in RETRIEVAL_METRICS}, error=str(run.error))
-            )
+            scores.append(ExampleScore(id=example.id, metrics=_failed_metrics(), error=str(run.error)))
             continue
         keys = list(run.outputs["doc_keys"])
         scores.append(
             ExampleScore(
                 id=example.id,
-                metrics=score_retrieval(example, keys),
+                metrics={**score_retrieval(example, keys), "leak@10": run.outputs.get("leak")},
                 latency_ms=run.outputs.get("latency_ms"),
                 details={"doc_keys": keys[:RECALL_K]},
             )

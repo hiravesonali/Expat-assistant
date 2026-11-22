@@ -65,6 +65,7 @@ FEW_SHOT_EXAMPLES: list[FewShotExample] = [
                     "legal_references": ["§ 17 BMG"],
                 }
             ],
+            "mentioned_city": "Munich",
             "location_dependent": False,
             "needs_clarification": None,
         },
@@ -92,6 +93,7 @@ FEW_SHOT_EXAMPLES: list[FewShotExample] = [
                     "legal_references": ["§ 573c BGB"],
                 }
             ],
+            "mentioned_city": None,
             "location_dependent": False,
             "needs_clarification": None,
         },
@@ -150,6 +152,7 @@ FEW_SHOT_EXAMPLES: list[FewShotExample] = [
                     "legal_references": [],
                 },
             ],
+            "mentioned_city": "Munich",
             "location_dependent": True,
             "needs_clarification": None,
         },
@@ -187,6 +190,7 @@ FEW_SHOT_EXAMPLES: list[FewShotExample] = [
                     "legal_references": ["§ 573c BGB"],
                 },
             ],
+            "mentioned_city": None,
             "location_dependent": False,
             "needs_clarification": None,
         },
@@ -219,6 +223,7 @@ FEW_SHOT_EXAMPLES: list[FewShotExample] = [
                     "legal_references": [],
                 },
             ],
+            "mentioned_city": None,
             "location_dependent": False,
             "needs_clarification": None,
         },
@@ -233,6 +238,7 @@ FEW_SHOT_EXAMPLES: list[FewShotExample] = [
             "intent": "sensitive",
             "domains": [],
             "sub_questions": [],
+            "mentioned_city": None,
             "location_dependent": False,
             "needs_clarification": None,
         },
@@ -246,6 +252,7 @@ FEW_SHOT_EXAMPLES: list[FewShotExample] = [
             "intent": "out_of_scope",
             "domains": [],
             "sub_questions": [],
+            "mentioned_city": "Munich",
             "location_dependent": False,
             "needs_clarification": None,
         },
@@ -270,6 +277,7 @@ FEW_SHOT_EXAMPLES: list[FewShotExample] = [
                     "legal_references": [],
                 }
             ],
+            "mentioned_city": None,
             "location_dependent": True,
             "needs_clarification": None,
         },
@@ -332,6 +340,8 @@ Fill every field of the schema:
     fees, steps, legal_basis, contact, other. Use [] if unsure.
   - legal_references: paragraphs the user mentions or that clearly apply, written like
     "§ 573c BGB". Use [] if you are not sure. Never invent paragraph numbers.
+- mentioned_city: the German city or town the user lives in or asks about, also from the history
+  (e.g. "Munich", "Leipzig"; a district like "Schwabing" -> its city). null if none is named.
 - location_dependent: true if the answer differs by city or state: which office to go to, booking an
   appointment, local fees, the local foreign office (Ausländerbehörde), Kita places, the local rent index
   (Mietspiegel), the rent cap (Mietpreisbremse). false for federal rules that are the same everywhere:

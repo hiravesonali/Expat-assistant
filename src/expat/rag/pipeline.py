@@ -212,7 +212,7 @@ def _run_traced(
 
         # Where is the question about? Places named in the question (or kept from the history by the
         # standalone rewrite) win over the profile; unknown -> nationwide sources only.
-        location = resolve_location(question, analysis.standalone_question, profile)
+        location = resolve_location(question, analysis.standalone_question, profile, analysis.mentioned_city)
         plan = plan.model_copy(update={"location": location})
         if analysis.location_dependent and not location.known:
             yield from _ask_for_location(question, language)
@@ -284,13 +284,18 @@ def _run_traced(
         yield ErrorEvent(code=f"{stage}_failed", message=str(exc)[:500], retryable=is_transient_error(exc))
 
 
-def resolve_location(question: str, standalone_question: str, profile: UserProfile | None) -> Location:
-    """Location for this turn: supported cities named in the question > the profile > unknown."""
-    cities = find_cities(f"{question}\n{standalone_question}")
+def resolve_location(
+    question: str, standalone_question: str, profile: UserProfile | None, mentioned_city: str | None = None
+) -> Location:
+    """Location for this turn: supported cities named in the question > another city the analysis heard
+    ("I live in Leipzig": known, but no local sources -> nationwide only) > the profile > unknown."""
+    cities = find_cities(" \n".join((question, standalone_question, mentioned_city or "")))
     if cities:
         return Location(
             cities=[c.slug for c in cities], states=list(dict.fromkeys(c.state for c in cities)), source="question"
         )
+    if mentioned_city and mentioned_city.strip():
+        return Location(cities=[mentioned_city.strip().lower()], source="question")
     return location_from_profile(profile)
 
 
@@ -502,8 +507,13 @@ class Pipeline:
     _static_agent: AnswerAgent | None = None
 
     def analyze(self, question: str, history: History = (), profile: UserProfile | None = None) -> RetrievalPlan:
-        """Query analysis only (debugger / retrieval evals). Never raises; falls back to the raw question."""
-        return analyze(question, convert_to_messages(list(history)), profile, self.analysis_llm).to_plan()
+        """Query analysis only (debugger / retrieval evals). Never raises; falls back to the raw question.
+
+        Resolves the location exactly like `run()` does, so evals and the debugger filter like the chat.
+        """
+        analysis = analyze(question, convert_to_messages(list(history)), profile, self.analysis_llm)
+        location = resolve_location(question, analysis.standalone_question, profile, analysis.mentioned_city)
+        return analysis.to_plan().model_copy(update={"location": location})
 
     def tools_for(self, profile: UserProfile | None) -> list[BaseTool]:
         """Static calculators + the profile-bound checklist tool (when we know who is asking)."""
