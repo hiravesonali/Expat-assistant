@@ -19,6 +19,7 @@ import os
 from collections.abc import Callable, Iterator
 from typing import Any
 
+import i18n
 import streamlit as st
 from demo_pipeline import DemoRetriever, demo_analyze, demo_run
 
@@ -116,15 +117,12 @@ def run_pipeline(
 # Provider messages that mean "the API key has no budget left" (OpenRouter 402/403). Visitors can't fix that,
 # and the raw text links to the key's management page, so it is replaced by an actionable message.
 _BUDGET_ERRORS = ("key limit exceeded", "requires more credits", "insufficient credits", "payment required")
-BUDGET_MESSAGE = (
-    "Live answers are paused: this public demo has used up its AI budget for now. "
-    "Switch **Live answers** off in Settings to explore the demo answers, or try again later."
-)
+BUDGET_MESSAGE = i18n.STRINGS["en"]["budget"]
 
 
 def friendly_error(event: ErrorEvent) -> ErrorEvent:
     if any(marker in event.message.lower() for marker in _BUDGET_ERRORS):
-        return ErrorEvent(code="budget_exhausted", message=BUDGET_MESSAGE, retryable=False)
+        return ErrorEvent(code="budget_exhausted", message=i18n.t("budget"), retryable=False)
     return event
 
 

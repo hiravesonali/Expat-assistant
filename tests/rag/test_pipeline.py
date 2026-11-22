@@ -321,3 +321,11 @@ def test_unsupported_city_counts_as_known_location_and_is_not_asked_for():
     location = pipeline.resolve_location("Where do I register? I live in Leipzig.", "", UserProfile(), "Leipzig")
     assert location.known and location.cities == ["leipzig"] and location.states == []
     assert pipeline.resolve_location("x", "", UserProfile(), "München").cities == ["munich"]  # alias still resolves
+
+
+def test_chosen_answer_language_wins_over_the_question_language():
+    """The app's language switch sets profile.answer_language; an English question is then answered in German."""
+    de = _run_with("Where do I book an appointment for the Anmeldung?", UserProfile(answer_language="de"), example=7)
+    assert "In welcher Stadt" in _text(de)
+    unset = _run_with("Where do I book an appointment for the Anmeldung?", UserProfile(), example=7)
+    assert "Which city" in _text(unset)  # no choice: follow the (English) question

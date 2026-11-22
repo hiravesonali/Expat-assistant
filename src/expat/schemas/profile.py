@@ -61,7 +61,9 @@ class UserProfile(BaseModel):
     children_count: int = Field(default=0, ge=0, le=10)
     youngest_child_age: int | None = Field(default=None, ge=0, le=25)
     housing: Housing = Housing.UNKNOWN
-    answer_language: str = Field(default="en", pattern=r"^(en|de)$")
+    # Set by the app's language switch (English | Deutsch). None = answer in the language of the question
+    # (evals, API callers without a preference).
+    answer_language: str | None = Field(default=None, pattern=r"^(en|de)$")
 
     @model_validator(mode="after")
     def _normalise_location(self) -> "UserProfile":

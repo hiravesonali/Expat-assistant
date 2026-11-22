@@ -125,3 +125,20 @@ def test_budget_errors_become_an_actionable_message_without_provider_links():
     assert "openrouter.ai" not in friendly.message and "Live answers" in friendly.message
     other = ErrorEvent(code="generation_failed", message="timeout", retryable=True)
     assert pipeline_adapter.friendly_error(other) is other
+
+
+def test_english_is_the_default_for_interface_and_answers():
+    at = _home()
+    assert at.session_state.lang == "en" and at.session_state.profile.answer_language == "en"
+    assert at.segmented_control(key="lang_switch").value == "en"
+    assert any("not legal or tax advice" in c.value for c in at.caption)
+
+
+def test_switching_to_german_translates_the_interface_and_the_answer_language():
+    at = _home()
+    at.segmented_control(key="lang_switch").set_value("de").run()
+    assert not at.exception, at.exception
+    assert at.session_state.lang == "de" and at.session_state.profile.answer_language == "de"
+    card = next(b for b in at.button if b.key == "example-1")
+    assert "Wohnung kündigen" in card.label and "kündige" in (card.help or "")
+    assert any("keine Rechts- oder Steuerberatung" in c.value for c in at.caption)

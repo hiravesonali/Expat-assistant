@@ -22,7 +22,9 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import i18n
 import streamlit as st
+from i18n import t
 
 from expat.config import get_settings
 from expat.guards import estimate_cost_usd
@@ -38,11 +40,11 @@ from expat.schemas import (
     ToolResultEvent,
 )
 
-DISCLAIMER = "General information, not legal or tax advice. Official German texts are binding."
+DISCLAIMER = i18n.STRINGS["en"]["disclaimer"]  # English text (tests, exports); the UI uses t("disclaimer")
 
 # ---- Brand ("Ankommen" = German for "to arrive / to settle in") ------------------------------------
 BRAND_NAME = "Ankommen"
-BRAND_TAGLINE = "Your guide to settling in Germany"
+BRAND_TAGLINE = i18n.STRINGS["en"]["tagline"]
 ASSETS = Path(__file__).resolve().parent / "assets"
 LOGO_SVG = (ASSETS / "logo-mark.svg").read_text(encoding="utf-8")
 LOGO_PNG = str(ASSETS / "logo-mark-256.png")  # favicon + assistant avatar (raster: works everywhere)
@@ -61,7 +63,7 @@ def brand_header() -> None:
     """Sidebar brand: logo tile + wordmark + tagline (inline SVG, so it uses the page fonts)."""
     st.html(
         f'<div class="ank-brand">{logo_svg(36, "side")}'
-        f'<div><div class="ank-wordmark">{BRAND_NAME}</div><div class="ank-sub">Germany · official sources</div></div>'
+        f'<div><div class="ank-wordmark">{BRAND_NAME}</div><div class="ank-sub">{t("brand_sub")}</div></div>'
         "</div>"
     )
 
@@ -71,48 +73,45 @@ def hero() -> None:
     st.html(
         '<div class="ank-hero">'
         f'<div class="ank-hero-logo">{logo_svg(64, "hero")}</div>'
-        '<div class="ank-eyebrow">📍 All of Germany · 6 cities in detail · English & Deutsch</div>'
-        '<h1 class="ank-title">Settle into Germany <span class="ank-gradient">with confidence</span></h1>'
-        '<p class="ank-lead">Registration, residence permits, renting and family benefits, answered from '
-        "official German sources with every claim cited. Local details for Berlin, Hamburg, Munich, Cologne, "
-        "Frankfurt and Stuttgart.</p>"
+        f'<div class="ank-eyebrow">{t("eyebrow")}</div>'
+        f'<h1 class="ank-title">{t("title_a")} <span class="ank-gradient">{t("title_b")}</span></h1>'
+        f'<p class="ank-lead">{t("lead")}</p>'
         "</div>"
     )
 
 
 def trust_row() -> None:
     """Three short promises under the start-screen cards."""
-    items = [
-        ("📚", "Cited official sources", "Laws and city pages, with dates"),
-        ("🧮", "Calculated, not guessed", "Deadlines and amounts by tested tools"),
-        ("🛡️", "Knows its limits", "Refers you to experts when needed"),
-    ]
     cells = "".join(
         f'<div class="ank-trust-item"><span class="ank-trust-icon">{icon}</span>'
         f"<div><b>{title}</b><br><span>{text}</span></div></div>"
-        for icon, title, text in items
+        for icon, title, text in i18n.pick(i18n.TRUST)
     )
     st.html(f'<div class="ank-trust">{cells}</div>')
 
 
-STEP_LABELS: dict[str, tuple[str, str]] = {
-    # name: (icon, label)
-    "query_analysis": (":material/manage_search:", "Understanding your question"),
-    "retrieval": (":material/travel_explore:", "Searching official sources"),
-    "rerank": (":material/sort:", "Re-ranking the best passages"),
-    "tool_call": (":material/calculate:", "Calculating with a tool"),
-    "generation": (":material/edit_note:", "Writing the answer"),
-    "safety": (":material/shield:", "Safety check"),
-    "clarification": (":material/help:", "Asking a follow-up question"),
+STEP_ICONS = {
+    "query_analysis": ":material/manage_search:",
+    "retrieval": ":material/travel_explore:",
+    "rerank": ":material/sort:",
+    "tool_call": ":material/calculate:",
+    "generation": ":material/edit_note:",
+    "safety": ":material/shield:",
+    "clarification": ":material/help:",
 }
+# English (icon, label) pairs, kept for callers/tests that read the table directly.
+STEP_LABELS: dict[str, tuple[str, str]] = {k: (v, i18n.STEP_LABELS["en"][k]) for k, v in STEP_ICONS.items()}
+TOOL_LABELS = i18n.TOOL_LABELS["en"]
 
-TOOL_LABELS = {
-    "calculate_tenancy_notice": "Tenancy notice calculator",
-    "calculate_deadline": "Deadline calculator",
-    "estimate_family_benefits": "Family benefits estimator",
-    "generate_document_checklist": "Document checklist",
-    "schengen_days_calculator": "Schengen 90/180 checker",
-}
+
+def step_label(name: str) -> tuple[str, str]:
+    """(icon, label) of a pipeline step in the current interface language."""
+    return STEP_ICONS.get(name, ""), i18n.pick(i18n.STEP_LABELS).get(name, name)
+
+
+def tool_label(name: str) -> str:
+    return i18n.pick(i18n.TOOL_LABELS).get(name, name)
+
 
 _CSS = (ASSETS / "ankommen.css").read_text(encoding="utf-8")
 
@@ -125,7 +124,7 @@ def inject_css() -> None:
 
 def disclaimer_footer() -> None:
     with st.container(key="fineprint"):
-        st.caption(f"Answers cite official German sources. {DISCLAIMER}")
+        st.caption(t("footer", disclaimer=t("disclaimer")))
 
 
 # ------------------------------------------------------------------------------------------------
@@ -154,7 +153,7 @@ def citation_label(c: Citation) -> str:
 
 def chip_label(c: Citation, max_len: int = 34) -> str:
     """Short pill text: 'S1 · § 573c BGB' or 'S3 · Wohnsitzanmeldung'. Details live in the dialog."""
-    name = TOOL_LABELS.get(c.title, c.title) if c.kind == "tool" else (c.legal_reference or c.title or c.source_name)
+    name = tool_label(c.title) if c.kind == "tool" else (c.legal_reference or c.title or c.source_name)
     if len(name) > max_len:
         name = name[: max_len - 1].rstrip() + "…"
     return f"{c.id} · {name}"
@@ -192,7 +191,8 @@ def hit_row(hit: dict[str, Any], rank: int) -> dict[str, Any]:
 
 def render_step(event: StepEvent) -> None:
     """Render one COMPLETED/FAILED step inside the current container (the st.status box)."""
-    icon, label = STEP_LABELS.get(event.name, (":material/circle:", event.name))
+    icon, label = step_label(event.name)
+    icon = icon or ":material/circle:"
     if event.status == "failed":
         st.markdown(f"{icon} **{label}** · :red[failed]")
         if event.detail:
@@ -213,29 +213,29 @@ def render_step(event: StepEvent) -> None:
 
 def _render_query_analysis(d: dict[str, Any]) -> None:
     if d.get("standalone_question"):
-        st.caption(f"Standalone question: *{d['standalone_question']}*")
+        st.caption(t("standalone", q=d["standalone_question"]))
     subs = d.get("sub_queries", [])
     for i, sq in enumerate(subs, start=1):
         domain = f" · `{sq['domain']}`" if sq.get("domain") else ""
         st.markdown(f"**{i}. {sq.get('text', '')}**{domain}" if len(subs) > 1 else f"**{sq.get('text', '')}**{domain}")
         cols = st.columns(2)
         with cols[0]:
-            st.caption("English rewrites")
+            st.caption(t("en_rewrites"))
             for q in sq.get("queries_en") or ["—"]:
                 st.markdown(f"- {q}")
         with cols[1]:
-            st.caption("German rewrites 🇩🇪")
+            st.caption(t("de_rewrites"))
             for q in sq.get("queries_de") or ["—"]:
                 st.markdown(f"- {q}")
         if sq.get("step_back"):
-            st.caption(f"Step-back question: *{sq['step_back']}*")
+            st.caption(t("step_back", q=sq["step_back"]))
         if sq.get("legal_references"):
-            st.caption("Legal references: " + ", ".join(f"`{r}`" for r in sq["legal_references"]))
+            st.caption(t("legal_refs") + ", ".join(f"`{r}`" for r in sq["legal_references"]))
 
 
 def _render_retrieval(d: dict[str, Any], top_n: int = 5) -> None:
     for sub in d.get("sub_results", []):
-        st.caption(f"Top hits for: *{sub.get('sub_question', '')}*")
+        st.caption(t("top_hits", q=sub.get("sub_question", "")))
         rows = [hit_row(h, i) for i, h in enumerate(sub.get("hits", [])[:top_n], start=1)]
         if rows:
             st.dataframe(
@@ -245,7 +245,7 @@ def _render_retrieval(d: dict[str, Any], top_n: int = 5) -> None:
                 column_config={"score": st.column_config.NumberColumn(format="%.4f")},
             )
         else:
-            st.caption("No hits.")
+            st.caption(t("no_hits"))
 
 
 def _tool_state(result: ToolResultEvent | None) -> str:
@@ -258,12 +258,12 @@ def _tool_state(result: ToolResultEvent | None) -> str:
 
 def render_tool_line(call: ToolCallEvent, result: ToolResultEvent | None) -> None:
     """One quiet line while the answer streams: 'Family benefits estimator · done'."""
-    st.caption(f":material/calculate: {TOOL_LABELS.get(call.name, call.name)} · {_tool_state(result)}")
+    st.caption(f":material/calculate: {tool_label(call.name)} · {_tool_state(result)}")
 
 
 def render_tool_card(call: ToolCallEvent, result: ToolResultEvent | None) -> None:
     """A tool card: args -> result. Rendered inside the "How I got this answer" fold (no nested expander)."""
-    title = TOOL_LABELS.get(call.name, call.name)
+    title = tool_label(call.name)
     with st.container(border=True):
         st.markdown(f":material/calculate: **{title}** · {_tool_state(result)}")
         c1, c2 = st.columns(2)
@@ -273,7 +273,7 @@ def render_tool_card(call: ToolCallEvent, result: ToolResultEvent | None) -> Non
         with c2:
             st.caption("Result")
             if result is None:
-                st.caption("Waiting for the tool…")
+                st.caption(t("waiting_tool"))
             elif result.error:
                 st.error(result.error)
             else:
@@ -294,8 +294,8 @@ def citation_dialog(c: Citation) -> None:
         st.caption(c.title)
     meta_cols = st.columns(3)
     meta_cols[0].metric("Source", c.source_name or "—")
-    meta_cols[1].metric("Verified", format_date(c.last_verified) if c.last_verified else "—")
-    meta_cols[2].metric("Type", "Tool result" if c.kind == "tool" else "Official source")
+    meta_cols[1].metric(t("verified"), format_date(c.last_verified) if c.last_verified else "—")
+    meta_cols[2].metric(t("type"), t("tool_result") if c.kind == "tool" else t("official_source"))
     if c.heading_path:
         st.caption(f":material/account_tree: {c.heading_path}")
     if c.quote:
@@ -303,7 +303,7 @@ def citation_dialog(c: Citation) -> None:
     if c.source_url:
         st.link_button("Open the official source", c.source_url, icon=":material/open_in_new:")
     if c.kind == "source":
-        st.caption("The official German text is binding. Translations and summaries are for orientation only.")
+        st.caption(t("binding"))
 
 
 def render_citations(citations: list[Citation], key_prefix: str) -> None:
@@ -320,24 +320,18 @@ def render_citations(citations: list[Citation], key_prefix: str) -> None:
 def render_answer_meta(meta: AnswerMetaEvent) -> None:
     if meta.confidence == "insufficient":
         st.warning(
-            "I couldn't find enough in my official sources to answer this reliably. "
-            "Please check with the responsible authority.",
+            t("insufficient"),
             icon=":material/search_off:",
         )
     elif meta.confidence == "partial":
         st.info("Parts of this answer are not covered by my sources.", icon=":material/info:")
     if meta.stale_sources:
         st.warning(
-            f"Some sources were last verified a while ago ({', '.join(meta.stale_sources)}). "
-            "Rules may have changed; check the official page.",
+            t("stale", sources=", ".join(meta.stale_sources)),
             icon=":material/history:",
         )
     if meta.unverified_refs:
-        st.caption(
-            ":orange[:material/report: Mentions not found in the cited sources: "
-            + ", ".join(meta.unverified_refs)
-            + "]"
-        )
+        st.caption(":orange[:material/report: " + t("unverified") + ", ".join(meta.unverified_refs) + "]")
 
 
 def render_done(done: DoneEvent, mode: str) -> None:
@@ -354,7 +348,7 @@ def render_done(done: DoneEvent, mode: str) -> None:
 
 
 def render_error(err: ErrorEvent) -> None:
-    st.error(f"**Something went wrong** ({err.code}): {err.message}", icon=":material/error:")
+    st.error(t("went_wrong", code=err.code, message=err.message), icon=":material/error:")
 
 
 # ------------------------------------------------------------------------------------------------
@@ -384,7 +378,7 @@ def split_events(events: list[PipelineEvent]) -> dict[str, Any]:
 
 
 def timeline_label(n_steps: int, done: DoneEvent | None) -> str:
-    label = f"How I got this answer · {n_steps} steps"
+    label = t("how_i_got", n=n_steps)
     if done:
         label += f" · {done.latency_ms / 1000:.1f} s"
     return label

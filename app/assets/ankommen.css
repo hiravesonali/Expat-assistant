@@ -122,3 +122,12 @@
 @media (max-width: 640px) {
     .st-key-suggestions, .ank-trust { grid-template-columns: 1fr; }
 }
+
+/* ---- Language switch (English | Deutsch), pinned top-right, left of Streamlit's toolbar ------------- */
+.st-key-lang-switch {
+    position: fixed; top: .6rem; right: 7.5rem; z-index: 999990; width: auto !important;
+}
+.st-key-lang-switch [data-testid="stButtonGroup"] button {
+    min-height: 1.9rem; padding: .15rem .8rem; font-size: .82rem; background: #FFFFFF;
+}
+@media (max-width: 640px) { .st-key-lang-switch { right: 4rem; } }

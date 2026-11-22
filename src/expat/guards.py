@@ -25,7 +25,9 @@ _MANY_NEWLINES = re.compile(r"\n{3,}")
 @dataclass(frozen=True)
 class QuestionCheck:
     text: str  # the cleaned question (empty if invalid)
-    error: str | None  # user-facing reason, None if valid
+    error: str | None  # user-facing reason in English, None if valid
+    reason: str | None = None  # machine-readable: "empty" | "too_long" (the UI translates from this)
+    length: int = 0
 
 
 def check_question(raw: str | None, max_chars: int) -> QuestionCheck:
@@ -33,10 +35,13 @@ def check_question(raw: str | None, max_chars: int) -> QuestionCheck:
     text = _CONTROL_CHARS.sub("", (raw or "").replace("\r\n", "\n"))
     text = _MANY_NEWLINES.sub("\n\n", text).strip()
     if not text or not any(ch.isalnum() for ch in text):
-        return QuestionCheck("", "Please type a question.")
+        return QuestionCheck("", "Please type a question.", reason="empty")
     if len(text) > max_chars:
         return QuestionCheck(
-            "", f"That message is {len(text):,} characters long; please keep questions under {max_chars:,}."
+            "",
+            f"That message is {len(text):,} characters long; please keep questions under {max_chars:,}.",
+            reason="too_long",
+            length=len(text),
         )
     return QuestionCheck(text, None)
 

@@ -27,12 +27,14 @@ from typing import Any
 
 import _bootstrap  # noqa: F401  (must be first: makes `expat` importable on Streamlit Cloud)
 import export
+import i18n
 import streamlit as st
 import ui
+from i18n import t
 from pipeline_adapter import DEMO, LIVE, live_status, run_pipeline, sync_secrets_to_env
 
 from expat.config import get_settings
-from expat.guards import DailyCap, SlidingWindowLimiter, check_question
+from expat.guards import DailyCap, QuestionCheck, SlidingWindowLimiter, check_question
 from expat.places import STATES, SUPPORTED_CITIES, city_label
 from expat.schemas import (
     AnswerMetaEvent,
@@ -45,83 +47,26 @@ from expat.schemas import (
     ToolResultEvent,
     UserProfile,
 )
-from expat.schemas.profile import Citizenship, Employment, FamilyStatus, Housing, ResidenceStatus
+from expat.schemas.profile import Citizenship, Housing, ResidenceStatus
 
 # `set_page_config` must be the first Streamlit call of the run.
-st.set_page_config(page_title=f"{ui.BRAND_NAME} · {ui.BRAND_TAGLINE}", page_icon=ui.LOGO_PNG, layout="centered")
+st.set_page_config(page_title=f"{ui.BRAND_NAME} · {t('tagline')}", page_icon=ui.LOGO_PNG, layout="centered")
 ui.inject_css()
 sync_secrets_to_env()
 
-PREFER = "Prefer not to say"
 OTHER_CITY = "__other__"
-PLACEHOLDER = "Ask about Anmeldung, renting, Blue Card, Kindergeld… in any German city"
-
-# Topic cards on the start screen: (icon, title, one-line description, full prompt that is sent)
-EXAMPLES = [
-    (
-        ":material/how_to_reg:",
-        "Anmeldung",
-        "Register your new address",
-        "I just moved to Berlin on a Blue Card. What do I need for the Anmeldung, and by when?",
-    ),
-    (
-        ":material/key:",
-        "End my lease",
-        "Notice periods and end dates",
-        "I rent a flat in Hamburg since 2021. If I give notice today, when does my tenancy end?",
-    ),
-    (
-        ":material/child_care:",
-        "Kindergeld & Elterngeld",
-        "What your family can get",
-        "We're expecting a baby in March. How much Kindergeld and Elterngeld can we get?",
-    ),
-    (
-        ":material/verified_user:",
-        "Permanent residence",
-        "Settlement permit with a Blue Card",
-        "When can I apply for a settlement permit (Niederlassungserlaubnis) with my Blue Card?",
-    ),
-]
 ASSISTANT_AVATAR = ui.LOGO_PNG
 
-# Labels for the generated profile form. Keys are UserProfile field names; enum values map to labels.
-PROFILE_UI: dict[str, tuple[str, dict[str, str]]] = {
-    "citizenship": (
-        "Citizenship",
-        {Citizenship.EU: "EU / EEA / Swiss", Citizenship.NON_EU: "Non-EU", Citizenship.GERMAN: "German"},
-    ),
-    "residence_status": (
-        "Residence status",
-        {
-            ResidenceStatus.BLUE_CARD: "EU Blue Card",
-            ResidenceStatus.WORK_PERMIT: "Work permit",
-            ResidenceStatus.STUDENT: "Student visa",
-            ResidenceStatus.FAMILY_REUNION: "Family reunion",
-            ResidenceStatus.SETTLEMENT: "Settlement permit",
-            ResidenceStatus.EU_FREEDOM: "EU freedom of movement",
-            ResidenceStatus.OTHER: "Other",
-        },
-    ),
-    "employment": (
-        "Employment",
-        {
-            Employment.EMPLOYEE: "Employee",
-            Employment.FREELANCER: "Freelancer",
-            Employment.SELF_EMPLOYED: "Self-employed",
-            Employment.STUDENT: "Student",
-            Employment.UNEMPLOYED: "Not working",
-        },
-    ),
-    "family_status": (
-        "Family status",
-        {FamilyStatus.SINGLE: "Single", FamilyStatus.MARRIED: "Married", FamilyStatus.PARTNERSHIP: "Partnership"},
-    ),
-    "housing": (
-        "Housing",
-        {Housing.RENTING: "Renting", Housing.OWNING: "Owning", Housing.LOOKING: "Looking for a flat"},
-    ),
-}
+
+def examples() -> list[tuple[str, str, str, str]]:
+    """Topic cards on the start screen, in the interface language: (icon, title, description, prompt)."""
+    return i18n.pick(i18n.EXAMPLES)
+
+
+def profile_ui() -> dict[str, tuple[str, dict[str, str]]]:
+    """Profile form labels in the interface language: field -> (label, {enum value: label})."""
+    return i18n.pick(i18n.PROFILE_LABELS)
+
 
 ADMIN_PAGES = [
     ("pages/1_🔎_Retrieval_Debugger.py", "Retrieval debugger", ":material/search_insights:"),
@@ -144,7 +89,8 @@ def _new_conversation() -> str:
 
 
 def init_state() -> None:
-    st.session_state.setdefault("profile", UserProfile())
+    st.session_state.setdefault("lang", i18n.DEFAULT_LANGUAGE)  # English unless the user switches
+    st.session_state.setdefault("profile", UserProfile(answer_language=st.session_state.lang))
     st.session_state.setdefault("profile_saved", False)
     st.session_state.setdefault("conversations", {})
     if not st.session_state.get("current") or st.session_state.current not in st.session_state.conversations:
@@ -190,14 +136,14 @@ def _on_retry() -> None:
 
 def _select_profile_field(name: str, current: Any) -> Any:
     """One selectbox per enum field, generated from the UserProfile model (UNKNOWN = prefer not to say)."""
-    label, labels = PROFILE_UI.get(name, (name.replace("_", " ").capitalize(), {}))
+    label, labels = profile_ui().get(name, (name.replace("_", " ").capitalize(), {}))
     enum_cls = type(current)
     options = [v for v in enum_cls if v.value != "unknown"] + [enum_cls("unknown")]
     return st.selectbox(
         label,
         options,
         index=options.index(current),
-        format_func=lambda v: PREFER if v.value == "unknown" else labels.get(v, v.value.replace("_", " ").title()),
+        format_func=lambda v: t("prefer") if v.value == "unknown" else labels.get(v, v.value.replace("_", " ").title()),
         key=f"pf_{name}",
     )
 
@@ -205,18 +151,18 @@ def _select_profile_field(name: str, current: Any) -> Any:
 def profile_short() -> str:
     """Popover label: 'Blue Card · 2 kids · renting', or a call to action before the profile is set."""
     if not st.session_state.profile_saved:
-        return "Personalise answers"
+        return t("personalise")
     p: UserProfile = st.session_state.profile
     bits: list[str] = [city_label(p.city)] if p.city else ([STATES[p.state].split(" (")[0]] if p.state else [])
     if p.residence_status != ResidenceStatus.UNKNOWN:
-        bits.append(PROFILE_UI["residence_status"][1].get(p.residence_status, p.residence_status.value))
+        bits.append(profile_ui()["residence_status"][1].get(p.residence_status, p.residence_status.value))
     elif p.citizenship != Citizenship.UNKNOWN:
-        bits.append(PROFILE_UI["citizenship"][1].get(p.citizenship, p.citizenship.value))
+        bits.append(profile_ui()["citizenship"][1].get(p.citizenship, p.citizenship.value))
     if p.children_count:
         bits.append(f"{p.children_count} kid{'s' if p.children_count > 1 else ''}")
     if p.housing != Housing.UNKNOWN:
         bits.append(p.housing.value)
-    return " · ".join(bits[:3]) or "Your profile"
+    return " · ".join(bits[:3]) or t("your_profile")
 
 
 CITY_OPTIONS = ["", *SUPPORTED_CITIES, OTHER_CITY]
@@ -232,22 +178,22 @@ def render_location_fields(profile: UserProfile) -> dict[str, Any]:
     """
     supported = profile.city in SUPPORTED_CITIES
     city_choice = st.selectbox(
-        "City",
+        t("city"),
         CITY_OPTIONS,
         index=CITY_OPTIONS.index(profile.city if supported else (OTHER_CITY if profile.city else "")),
-        format_func=lambda v: PREFER if v == "" else "Other city…" if v == OTHER_CITY else city_label(v),
-        help="Local offices, appointments and rules differ by city. Six cities have detailed local sources.",
+        format_func=lambda v: t("prefer") if v == "" else t("other_city_option") if v == OTHER_CITY else city_label(v),
+        help=t("city_help"),
         key="pf_city",
     )
     other_name = st.text_input(
-        "Other city (if not listed)", value="" if supported else (profile.city or "").title(), key="pf_city_other"
+        t("other_city"), value="" if supported else (profile.city or "").title(), key="pf_city_other"
     )
     state = st.selectbox(
-        "State (Bundesland)",
+        t("state"),
         STATE_OPTIONS,
         index=STATE_OPTIONS.index(profile.state or ""),
-        format_func=lambda v: PREFER if v == "" else STATES[v],
-        help="Filled in automatically for the listed cities.",
+        format_func=lambda v: t("prefer") if v == "" else STATES[v],
+        help=t("state_help"),
         key="pf_state",
     )
     if city_choice == OTHER_CITY:
@@ -257,8 +203,8 @@ def render_location_fields(profile: UserProfile) -> dict[str, Any]:
 
 def render_profile_form() -> None:
     profile: UserProfile = st.session_state.profile
-    st.markdown("**Your situation**")
-    st.caption("Optional. Lets me apply the rules that fit you. Kept only in this browser tab.")
+    st.markdown(f"**{t('your_situation')}**")
+    st.caption(t("situation_caption"))
     # A form batches its widgets: changing a selectbox does NOT rerun the script, only the submit does.
     with st.form("profile_form", border=False):
         values: dict[str, Any] = render_location_fields(profile)
@@ -268,60 +214,52 @@ def render_profile_form() -> None:
             if name == "children_count":
                 # -1 = "prefer not to say". (A None option would render as an empty "Choose an option".)
                 kids = st.selectbox(
-                    "Children",
+                    t("children"),
                     [-1, *range(0, 11)],
                     index=0 if not st.session_state.profile_saved else profile.children_count + 1,
-                    format_func=lambda v: PREFER if v < 0 else str(v),
+                    format_func=lambda v: t("prefer") if v < 0 else str(v),
                     key="pf_children_count",
                 )
                 values[name] = max(kids, 0)
             elif name == "youngest_child_age":
                 ages = [-1, *range(0, 26)]
                 age = st.selectbox(
-                    "Youngest child's age",
+                    t("youngest_age"),
                     ages,
                     index=ages.index(-1 if profile.youngest_child_age is None else profile.youngest_child_age),
-                    format_func=lambda v: PREFER if v < 0 else f"{v} years",
-                    help="Only used when you have children (Kindergeld, Elterngeld, Kita).",
+                    format_func=lambda v: t("prefer") if v < 0 else t("years", n=v),
+                    help=t("youngest_help"),
                     key="pf_youngest_child_age",
                 )
                 values[name] = None if age < 0 else age
             elif name == "answer_language":
-                langs = ["en", "de"]
-                values[name] = st.selectbox(
-                    "Answer language",
-                    langs,
-                    index=langs.index(profile.answer_language),
-                    format_func={"en": "English", "de": "Deutsch"}.get,
-                    key="pf_answer_language",
-                )
+                values[name] = i18n.lang()  # set by the language switch at the top, not in this form
             else:
                 values[name] = _select_profile_field(name, getattr(profile, name))  # enum fields
-        if st.form_submit_button("Save profile", type="primary", width="stretch"):
+        if st.form_submit_button(t("save_profile"), type="primary", width="stretch"):
             if not values["children_count"]:
                 values["youngest_child_age"] = None
             st.session_state.profile = UserProfile(**values)
             st.session_state.profile_saved = True
-            st.toast("Saved. Answers now take your situation into account.", icon=":material/check:")
+            st.toast(t("saved"), icon=":material/check:")
             st.rerun()  # refresh the popover label
 
 
 def render_settings() -> str:
     available, reason = live_status()
-    st.markdown("**Settings**")
+    st.markdown(f"**{t('settings')}**")
     live = st.toggle(
-        "Live answers",
+        t("live_answers"),
         value=available,
         disabled=not available,
         key="live_toggle",
-        help="On: real search over official sources + AI answer (OpenRouter). "
-        "Off: demo mode with scripted answers, no API calls." + ("" if available else f"\n\n{reason}"),
+        help=t("live_help") + ("" if available else f"\n\n{reason}"),
     )
-    st.caption("Developer tools")
+    st.caption(t("dev_tools"))
     for path, label, icon in ADMIN_PAGES:
         st.page_link(path, label=label, icon=icon)
     st.divider()
-    st.caption(f":material/gavel: {ui.DISCLAIMER} Your profile and chats live only in this browser tab.")
+    st.caption(f":material/gavel: {t('disclaimer')} {t('privacy')}")
     return LIVE if (live and available) else DEMO
 
 
@@ -329,7 +267,7 @@ def render_conversation_list() -> None:
     started = [(cid, c) for cid, c in reversed(st.session_state.conversations.items()) if c["messages"]]
     if not started:
         return
-    st.caption("Recents")
+    st.caption(t("recents"))
     with st.container(key="recents", gap=None):
         for cid, conv in started:
             st.button(
@@ -347,7 +285,7 @@ def render_sidebar() -> str:
         ui.brand_header()
         with st.container(key="new-chat"):
             st.button(
-                "New chat",
+                t("new_chat"),
                 icon=":material/edit_square:",
                 type="tertiary",
                 width="stretch",
@@ -359,9 +297,9 @@ def render_sidebar() -> str:
                 render_profile_form()
             conv = current_conversation()
             if conv["messages"]:
-                with st.popover("Export chat", icon=":material/download:", width="stretch"):
+                with st.popover(t("export_chat"), icon=":material/download:", width="stretch"):
                     render_export(conv)
-            with st.popover("Settings", icon=":material/tune:", width="stretch"):
+            with st.popover(t("settings"), icon=":material/tune:", width="stretch"):
                 mode = render_settings()
     return mode
 
@@ -388,7 +326,7 @@ def render_export(conv: dict[str, Any]) -> None:
         width="stretch",
         on_click="ignore",
     )
-    st.caption("Includes sources, calculations and token costs. Nothing is stored on the server.")
+    st.caption(t("export_caption"))
 
 
 # ------------------------------------------------------------------------------------------------
@@ -401,9 +339,9 @@ def render_empty_state() -> str | None:
     ui.hero()
     # Inside a container, st.chat_input renders inline (here: centred) instead of pinned to the bottom.
     with st.container():
-        prompt = st.chat_input(PLACEHOLDER, key="composer", max_chars=get_settings().max_question_chars)
+        prompt = st.chat_input(t("placeholder"), key="composer", max_chars=get_settings().max_question_chars)
     with st.container(key="suggestions"):
-        for i, (icon, title, blurb, full_prompt) in enumerate(EXAMPLES):
+        for i, (icon, title, blurb, full_prompt) in enumerate(examples()):
             st.button(
                 f"**{title}**\n{blurb}",  # CSS `white-space: pre-line` turns the newline into a second line
                 icon=icon,
@@ -430,7 +368,7 @@ def render_history(conv: dict[str, Any]) -> None:
             is_last = i == len(messages) - 1
             error = next((e for e in msg["events"] if isinstance(e, ErrorEvent)), None)
             if is_last and error and error.retryable:
-                st.button("Try again", icon=":material/refresh:", key=f"retry-{i}", on_click=_on_retry)
+                st.button(t("try_again"), icon=":material/refresh:", key=f"retry-{i}", on_click=_on_retry)
             clarification = next((e for e in msg["events"] if isinstance(e, ClarificationEvent)), None)
             if is_last and clarification:
                 render_city_picker(clarification)
@@ -449,10 +387,10 @@ def render_city_picker(clarification: ClarificationEvent) -> None:
                 on_click=_on_pick_location,
                 args=(value, None, clarification.original_question),
             )
-    with st.expander("Another city or region", icon=":material/map:"), st.form("other-city-form", border=False):
-        name = st.text_input("City", placeholder="e.g. Leipzig")
-        state = st.selectbox("State (Bundesland)", list(STATES), format_func=STATES.get)
-        if st.form_submit_button("Use this place", type="primary"):
+    with st.expander(t("another_city"), icon=":material/map:"), st.form("other-city-form", border=False):
+        name = st.text_input(t("city"), placeholder=t("city_placeholder"))
+        state = st.selectbox(t("state"), list(STATES), format_func=STATES.get)
+        if st.form_submit_button(t("use_place"), type="primary"):
             _on_pick_location(name.strip() or None, state, clarification.original_question)
             st.rerun()
 
@@ -481,6 +419,13 @@ def _daily_cap() -> DailyCap:
     return DailyCap(get_settings().daily_question_cap)
 
 
+def question_error(check: QuestionCheck) -> str:
+    """The validation message in the interface language."""
+    if check.reason == "too_long":
+        return t("too_long", n=check.length, max=get_settings().max_question_chars)
+    return t("empty_question")
+
+
 def admit_question(raw: str, mode: str) -> str | None:
     """Validate the question and apply the usage limits (Live mode only). Returns the cleaned text or None.
 
@@ -490,23 +435,20 @@ def admit_question(raw: str, mode: str) -> str | None:
     s = get_settings()
     check = check_question(raw, s.max_question_chars)
     if check.error:
-        st.warning(check.error, icon=":material/edit_note:")
+        st.warning(question_error(check), icon=":material/edit_note:")
         return None
     if mode != LIVE:
         return check.text  # demo answers are scripted and free
     limiter = st.session_state.setdefault("limiter", SlidingWindowLimiter(s.questions_per_hour, 3600))
     if (wait := limiter.try_acquire(time.monotonic())) is not None:
         st.warning(
-            f"You've asked {s.questions_per_hour} questions in the last hour, the limit for this public demo. "
-            f"Please try again in about {math.ceil(wait / 60)} min, or switch **Live answers** off in Settings "
-            "to explore the demo answers.",
+            t("rate_limited", n=s.questions_per_hour, minutes=math.ceil(wait / 60)),
             icon=":material/hourglass_top:",
         )
         return None
     if not _daily_cap().try_acquire(date.today()):
         st.warning(
-            "The public demo has reached its daily limit of live answers. Please come back tomorrow, or switch "
-            "**Live answers** off in Settings to explore the demo answers.",
+            t("daily_cap"),
             icon=":material/hourglass_top:",
         )
         return None
@@ -525,7 +467,7 @@ def handle_prompt(prompt: str, mode: str) -> None:
 
     with st.chat_message("assistant", avatar=ASSISTANT_AVATAR):
         # Containers are created up-front, then filled while the generator runs (like refs to DOM nodes).
-        status = st.status("Thinking…", expanded=False)
+        status = st.status(t("thinking"), expanded=False)
         tool_area = st.container()
         events: list[PipelineEvent] = []
         tool_slots: dict[str, Any] = {}
@@ -538,7 +480,7 @@ def handle_prompt(prompt: str, mode: str) -> None:
                 if isinstance(ev, TokenEvent):
                     yield ev.text
                 elif isinstance(ev, StepEvent) and ev.status == "started":
-                    _, label = ui.STEP_LABELS.get(ev.name, ("", ev.name))
+                    _, label = ui.step_label(ev.name)
                     status.update(label=f"{label}…", state="running")
                 elif isinstance(ev, ToolCallEvent):
                     calls[ev.call_id] = ev
@@ -551,7 +493,7 @@ def handle_prompt(prompt: str, mode: str) -> None:
 
         # write_stream pulls from the generator and renders text as it arrives (typewriter effect).
         answer = st.write_stream(token_stream())
-        status.update(label="Done", state="complete")
+        status.update(label=t("done"), state="complete")
 
     # Persist the post-checked text (invalid citations stripped) rather than the raw streamed tokens.
     final = next((ev.final_answer for ev in events if isinstance(ev, AnswerMetaEvent) and ev.final_answer), None)
@@ -561,18 +503,41 @@ def handle_prompt(prompt: str, mode: str) -> None:
     st.rerun()
 
 
+def _on_language_change() -> None:
+    """The switch sets the interface language AND the answer language (profile.answer_language)."""
+    choice = st.session_state.get("lang_switch")
+    if choice in i18n.LANGUAGES:  # a segmented control can be clicked "off" (None): keep the current language
+        st.session_state.lang = choice
+        st.session_state.profile = st.session_state.profile.model_copy(update={"answer_language": choice})
+
+
+def render_language_switch() -> None:
+    """Compact English | Deutsch switch, pinned to the top-right corner (CSS: .st-key-lang-switch)."""
+    with st.container(key="lang-switch"):
+        st.segmented_control(
+            t("language"),
+            list(i18n.LANGUAGES),
+            default=i18n.lang(),
+            format_func=i18n.LANGUAGES.get,
+            key="lang_switch",
+            on_change=_on_language_change,
+            label_visibility="collapsed",
+        )
+
+
 def main() -> None:
     init_state()
+    render_language_switch()
     mode = render_sidebar()
     if mode == DEMO:
-        st.badge("Demo mode · scripted answers", icon=":material/science:", color="orange")
+        st.badge(t("demo_badge"), icon=":material/science:", color="orange")
 
     conv = current_conversation()
     pending = st.session_state.pop("pending_prompt", None)  # from a suggestion, retry or the hero composer
     if not conv["messages"] and not pending:
         prompt = render_empty_state()
-        if prompt and (error := check_question(prompt, get_settings().max_question_chars).error):
-            st.warning(error, icon=":material/edit_note:")  # stay on the start screen
+        if prompt and (check := check_question(prompt, get_settings().max_question_chars)).error:
+            st.warning(question_error(check), icon=":material/edit_note:")  # stay on the start screen
         elif prompt:
             # Switch to the chat layout first, so the greeting doesn't stay above the streaming answer.
             st.session_state.pending_prompt = prompt
@@ -581,7 +546,7 @@ def main() -> None:
 
     render_history(conv)
     # Called at the top level, st.chat_input is pinned to the bottom of the page.
-    prompt = st.chat_input(PLACEHOLDER, key="composer", max_chars=get_settings().max_question_chars) or pending
+    prompt = st.chat_input(t("placeholder"), key="composer", max_chars=get_settings().max_question_chars) or pending
     if prompt and (question := admit_question(prompt, mode)):
         handle_prompt(question, mode)
 

@@ -171,7 +171,8 @@ def _run_traced(
     started = time.perf_counter()
     settings = get_settings()
     usage = _Usage()
-    language = profile.answer_language if profile else "en"
+    chosen_language = profile.answer_language if profile else None  # the app's language switch, if set
+    language = chosen_language or "en"
     stage = "safety"
 
     def done() -> DoneEvent:
@@ -201,8 +202,8 @@ def _run_traced(
         usage.output_tokens += analysis.usage[1]
         plan = analysis.to_plan()
         yield StepEvent(name="query_analysis", status="completed", detail=_analysis_detail(analysis, plan))
-        if analysis.language in ("en", "de"):
-            language = analysis.language  # answer in the language the user wrote in
+        if chosen_language is None and analysis.language in ("en", "de"):
+            language = analysis.language  # no explicit choice: answer in the language the user wrote in
 
         category = category_for_intent(analysis.intent)
         if category is not None:
