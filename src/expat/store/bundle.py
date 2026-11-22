@@ -17,8 +17,10 @@ alternatives suspend after ~1 week of inactivity, which breaks a demo that is op
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any, Literal
 
 from expat.config import Settings, get_settings
@@ -27,6 +29,8 @@ from expat.store.bm25 import RECORDS_FILE
 MANIFEST_FILE = "index_manifest.json"
 BUNDLE_PATTERNS = ["chroma/**", "bm25/**", "docstore.sqlite", MANIFEST_FILE]
 REPO_TYPE = "dataset"
+
+logger = logging.getLogger(__name__)
 
 
 class IndexBundleError(RuntimeError):
@@ -78,16 +82,49 @@ def _check_model(settings: Settings, manifest: dict[str, Any]) -> None:
         )
 
 
-def ensure_index(settings: Settings | None = None, download: Any = None) -> IndexStatus:
-    """Make sure the index files are on disk; download the bundle if not. Call once per process.
+def remote_manifest(settings: Settings) -> dict[str, Any]:
+    """The manifest of the published bundle (one small file download)."""
+    from huggingface_hub import hf_hub_download
 
-    `download` is injectable for tests (defaults to `huggingface_hub.snapshot_download`).
+    path = hf_hub_download(
+        repo_id=settings.index_repo or "",
+        filename=MANIFEST_FILE,
+        repo_type=REPO_TYPE,
+        revision=settings.index_revision,
+        token=_token(settings),
+    )
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _published_newer(settings: Settings, local: dict[str, Any], fetch_remote: Any) -> bool:
+    """True if INDEX_REPO holds a bundle published AFTER the local one.
+
+    Without this, a server that kept its files across a reboot would serve the old index forever. "Newer" (not
+    "different") so an index built locally but not yet published is never overwritten. Network errors -> False
+    (keep serving the local index rather than failing the app).
+    """
+    if not settings.index_repo:
+        return False
+    try:
+        remote = fetch_remote(settings)
+    except Exception as exc:  # offline, HF down, bad token: the local index still works
+        logger.warning("Could not check the published index (%s); using the local one.", exc)
+        return False
+    return str(remote.get("published_at", "")) > str(local.get("published_at", ""))
+
+
+def ensure_index(settings: Settings | None = None, download: Any = None, fetch_remote: Any = None) -> IndexStatus:
+    """Make sure the index files are on disk and current; download the bundle if missing or a newer one was
+    published. Call once per process.
+
+    `download` / `fetch_remote` are injectable for tests (defaults: `snapshot_download` / `remote_manifest`).
     """
     s = settings or get_settings()
     if index_present(s):
         manifest = read_manifest(s)
-        _check_model(s, manifest)
-        return IndexStatus("local", manifest)
+        if not _published_newer(s, manifest, fetch_remote or remote_manifest):
+            _check_model(s, manifest)
+            return IndexStatus("local", manifest)
     if not s.index_repo:
         raise IndexBundleError(
             "No index on disk and INDEX_REPO is not set. Locally: run `uv run expat-index`. "

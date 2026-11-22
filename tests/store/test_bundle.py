@@ -13,6 +13,7 @@ MODEL = "qwen/qwen3-embedding-8b"
 
 
 def _settings(data_dir: Path, **kw) -> Settings:
+    kw.setdefault("index_repo", None)  # never the real INDEX_REPO from .env
     return Settings(data_dir=data_dir, embedding_model=MODEL, hf_token=None, index_revision=None, **kw)
 
 
@@ -77,3 +78,29 @@ def test_index_built_with_another_embedding_model_is_rejected(tmp_path):
 def test_publish_refuses_without_a_built_index(tmp_path):
     with pytest.raises(IndexBundleError, match="build the index first"):
         publish_bundle(_settings(tmp_path, index_repo="me/x"), chunks=0, parents=0, api=object())
+
+
+def test_newer_published_index_replaces_the_local_one(tmp_path):
+    """A server that kept its files across a reboot must pick up a newly published index."""
+    laptop, server = tmp_path / "laptop", tmp_path / "server"
+    _fake_index(laptop)
+    hub = FakeHub(tmp_path)
+    publish_bundle(_settings(laptop, index_repo="me/x"), chunks=941, parents=442, api=hub)
+    ensure_index(_settings(server, index_repo="me/x"), download=hub.download, fetch_remote=lambda s: {})
+    newer = {"published_at": "2999-01-01T00:00:00+00:00"}
+    publish_bundle(_settings(laptop, index_repo="me/x"), chunks=1205, parents=602, api=hub)
+    status = ensure_index(_settings(server, index_repo="me/x"), download=hub.download, fetch_remote=lambda s: newer)
+    assert status.source == "downloaded" and status.manifest["chunks"] == 1205
+
+
+def test_same_or_unreachable_remote_keeps_the_local_index(tmp_path):
+    _fake_index(tmp_path)
+    (tmp_path / MANIFEST_FILE).write_text(json.dumps({"published_at": "2026-11-22T10:00:00+00:00"}))
+    same = {"published_at": "2026-11-22T10:00:00+00:00"}
+
+    def offline(settings):
+        raise OSError("no network")
+
+    for fetch in (lambda s: same, offline):
+        status = ensure_index(_settings(tmp_path, index_repo="me/x"), download=pytest.fail, fetch_remote=fetch)
+        assert status.source == "local"
