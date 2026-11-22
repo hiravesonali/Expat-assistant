@@ -1,0 +1,77 @@
+[
+  {
+    "id": "fam-004",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "fam-006",
+    "split": "holdout",
+    "judge": false
+  },
+  {
+    "id": "bur-006",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "ten-005",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "fam-009",
+    "split": "holdout",
+    "judge": true
+  },
+  {
+    "id": "bur-005",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "mul-003",
+    "split": "holdout",
+    "judge": true
+  },
+  {
+    "id": "fam-002",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "bur-004",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "ten-006",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "mul-004",
+    "split": "dev",
+    "judge": false
+  },
+  {
+    "id": "fam-005",
+    "split": "dev",
+    "judge": false
+  },
+  {
+    "id": "fam-008",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "bur-002",
+    "split": "dev",
+    "judge": true
+  },
+  {
+    "id": "ten-004",
+    "split": "holdout",
+    "judge": true
+  }
+]

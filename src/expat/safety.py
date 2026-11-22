@@ -24,6 +24,7 @@ class SafetyCategory(StrEnum):
     LEGAL_DISPUTE = "legal_dispute"  # court case with deadlines, e.g. eviction lawsuit
     CRIMINAL = "criminal"  # police letter / criminal proceedings (often with residence consequences)
     MEDICAL = "medical"  # health / medication questions: doctor, 116117, 112
+    TAX_ADVICE = "tax_advice"  # "fill out my tax return / what do I enter": Steuerberater, Lohnsteuerhilfeverein
     SENSITIVE = "sensitive"  # flagged by the LLM intent without a more specific keyword
     OUT_OF_SCOPE = "out_of_scope"
     CHITCHAT = "chitchat"
@@ -72,6 +73,18 @@ _KEYWORDS: list[tuple[SafetyCategory, re.Pattern[str]]] = [
         re.compile(
             r"\b(fever|fieber|which medicine|what medicine|medication|medikament|dosage|dosierung|painkiller|"
             r"schmerzmittel|ibuprofen|paracetamol|symptom)",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        # Narrow on purpose: tax INFORMATION from our sources (e.g. Kindergeld in the EStG, "do I have to file?")
+        # stays in scope; only doing someone's return or telling them what to enter is redirected.
+        SafetyCategory.TAX_ADVICE,
+        re.compile(
+            r"\b(fill (out|in) my (tax|steuer)|do my tax(es| return)|"
+            r"what (numbers|amounts|figures) (do|should) i (put|enter|write)|"
+            r"anlage (n|kind|v|so|vorsorgeaufwand)\b|steuererklärung (für mich )?(aus)?füllen|"
+            r"(aus)?füllen sie (meine|die) steuererklärung)",
             re.IGNORECASE,
         ),
     ),
@@ -142,6 +155,16 @@ _MEDICAL_LINES = {
     "ist) – https://www.116117.de\n"
     "- **Ihre Hausarzt- oder Kinderarztpraxis**, oder eine Apotheke zur Beratung über Medikamente",
 }
+_TAX_HELP = {
+    "en": "- **A tax adviser (Steuerberater)** – Federal Chamber of Tax Advisers: https://www.bstbk.de\n"
+    "- **An income-tax help association (Lohnsteuerhilfeverein)** – mainly for employees without business "
+    "income; membership fee usually depends on income\n"
+    "- **ELSTER**, the tax office's free online portal, has help texts for every form line – https://www.elster.de",
+    "de": "- **Steuerberaterin / Steuerberater** – Bundessteuerberaterkammer: https://www.bstbk.de\n"
+    "- **Lohnsteuerhilfeverein** – vor allem für Arbeitnehmer ohne gewerbliche Einkünfte; Beitrag meist "
+    "einkommensabhängig\n"
+    "- **ELSTER**, das kostenlose Portal der Finanzverwaltung, mit Hilfetexten zu jeder Zeile – https://www.elster.de",
+}
 _REFUGEE_COUNCIL = {
     "en": "- **Bayerischer Flüchtlingsrat** (refugee council Bavaria) – https://www.fluechtlingsrat-bayern.de",
     "de": "- **Bayerischer Flüchtlingsrat** – https://www.fluechtlingsrat-bayern.de",
@@ -174,6 +197,12 @@ _INTRO = {
         "en": "I can't give medical advice. Please get help from a professional:",
         "de": "Medizinische Ratschläge kann ich nicht geben. Bitte wenden Sie sich an:",
     },
+    SafetyCategory.TAX_ADVICE: {
+        "en": "I can't fill in a tax return or tell you which amounts to enter: that is individual tax advice. "
+        "These can do it for you:",
+        "de": "Eine Steuererklärung ausfüllen oder sagen, welche Beträge Sie eintragen, kann ich nicht – das ist "
+        "individuelle Steuerberatung. Das übernehmen:",
+    },
     SafetyCategory.SENSITIVE: {
         "en": "This sounds like a situation that needs individual, professional advice. I can't give reliable "
         "advice on it, but these services can help:",
@@ -188,6 +217,7 @@ _REFERRALS = {
     SafetyCategory.LEGAL_DISPUTE: [_MIETERVEREIN, _LAWYER, _MBE],
     SafetyCategory.CRIMINAL: [_CRIMINAL_LAWYER, _MBE],
     SafetyCategory.MEDICAL: [_MEDICAL_LINES],
+    SafetyCategory.TAX_ADVICE: [_TAX_HELP],
     SafetyCategory.SENSITIVE: [_MBE, _LAWYER, _MIETERVEREIN],
 }
 

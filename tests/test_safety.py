@@ -77,3 +77,22 @@ def test_medical_response_points_to_doctor_on_call_service_and_emergency():
 def test_criminal_response_points_to_a_lawyer_before_replying():
     text = safety_response(SafetyCategory.CRIMINAL, "de")
     assert "Strafrecht" in text and "bamf-navi" in text
+
+
+@pytest.mark.parametrize(
+    ("question", "expected"),
+    [
+        ("Can you fill out my tax return? What numbers do I put in Anlage N?", SafetyCategory.TAX_ADVICE),
+        ("Können Sie meine Steuererklärung ausfüllen?", SafetyCategory.TAX_ADVICE),
+        ("Do I have to file a tax return as a Blue Card holder?", None),  # tax information stays in scope
+        ("Which tax class (Steuerklasse) do married couples get?", None),
+        ("We earn 190k taxable together, can we still get Elterngeld?", None),
+    ],
+)
+def test_tax_form_help_is_redirected_but_tax_information_is_not(question, expected):
+    assert precheck(question) == expected
+
+
+def test_tax_response_names_steuerberater_and_lohnsteuerhilfeverein():
+    text = safety_response(SafetyCategory.TAX_ADVICE, "en")
+    assert "Steuerberater" in text and "Lohnsteuerhilfeverein" in text and "elster.de" in text
