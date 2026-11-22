@@ -7,6 +7,33 @@ An English-language assistant that helps expats in **Munich** (MVP persona: a no
 > Turing College AI Engineering, Sprint 2: advanced RAG with query translation, structured retrieval and tool calling.
 > ⚠️ General information only. **Not legal or tax advice.**
 
+![An answer with a cited law paragraph and a tool calculation](docs/images/answer.png)
+
+<details>
+<summary>More screenshots: start screen, "How I got this answer"</summary>
+
+![Start screen with suggested topics](docs/images/home.png)
+![Query analysis: standalone question, English and German rewrites](docs/images/how-i-got-this-answer.png)
+</details>
+
+## How it works
+
+```mermaid
+flowchart LR
+    Q[Question + profile] --> S{Safety pre-check}
+    S -- sensitive --> R[Fixed referral<br/>lawyer, 116117, MBE ...]
+    S -- ok --> A[Query analysis<br/>EN/DE rewrites, sub-questions, filters]
+    A --> H[Hybrid retrieval<br/>Chroma vectors + German BM25, RRF]
+    H --> P[Parent expansion<br/>full § / page section]
+    P --> G[Answer agent<br/>GPT-4.1-mini + tools]
+    G --> T[(Tools: notice periods,<br/>deadlines, benefits ...)]
+    G --> C[Citation check<br/>S# sources, T# tools]
+    C --> U[Streamlit UI<br/>chips, steps, sources]
+```
+
+The index (Chroma + BM25 + parent store) is built locally from official sources and shipped to the deployed app
+as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Every turn is traced in LangSmith.
+
 ## Highlights
 - **Cross-lingual RAG:** English questions → German official sources (EN↔DE query rewriting, multi-query + RAG-Fusion, decomposition, step-back)
 - **Structured retrieval:** rich metadata (domain, section kind, jurisdiction, audience, validity) with filters from the question *and* the user profile; § / Absatz-aware chunking with parent expansion
@@ -24,7 +51,7 @@ An English-language assistant that helps expats in **Munich** (MVP persona: a no
 Retrieval ablation, before/after runs, failure analysis and known issues: [`docs/evaluation-plan.md`](docs/evaluation-plan.md).
 
 ## Status
-🚧 Sprint in progress. See [`docs/PLAN.md`](docs/PLAN.md) and [`docs/milestones.md`](docs/milestones.md).
+Deployed and evaluated (Nov 2026): live at https://expat-assistant.streamlit.app/. Plan and milestones: [`docs/PLAN.md`](docs/PLAN.md), [`docs/milestones.md`](docs/milestones.md).
 
 ## Quick start
 ```bash
