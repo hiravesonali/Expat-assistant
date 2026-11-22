@@ -112,7 +112,7 @@ def test_run_answer_eval_local_writes_json(tmp_path: Path) -> None:
     variants = {"R0": RetrievalConfig.baseline()}
     [result] = run_answer_eval(factory, variants, split="holdout", judges=_fake_judges(), results_dir=tmp_path)
     data = json.loads(next(tmp_path.glob("answers-R0-holdout-*.json")).read_text(encoding="utf-8"))
-    assert data["n"] == 12 and data["kind"] == "answers"
+    assert data["n"] == len(load_golden(DEFAULT_GOLDEN_PATH, split="holdout")) and data["kind"] == "answers"
     assert data["metrics"]["must_include"] == 1.0
     assert data["metrics"]["groundedness"] == 1.0
     assert 0.0 < data["metrics"]["tool_selection"] < 1.0  # tool examples fail because the fake never calls tools

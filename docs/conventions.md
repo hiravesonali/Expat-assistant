@@ -23,6 +23,19 @@
 | `bamf-<slug>` | BAMF EN pages, e.g. `bamf-blue-card`, `bamf-family-reunification` | guide |
 | `miig-<slug>` | make-it-in-germany (manual save), e.g. `miig-blue-card`, `miig-family-reunification` | guide |
 | `rb-<slug>` | rundfunkbeitrag.de, e.g. `rb-registration`, `rb-fee` | guide / faq |
+| `ber-<slug>` | Berlin (service.berlin.de, mietspiegel.berlin.de), e.g. `ber-anmeldung`, `ber-lea-blaue-karte`, `ber-kita` | procedure / guide |
+| `ham-<slug>` | Hamburg (hamburg.de, Hamburg Welcome Center), e.g. `ham-anmeldung`, `ham-welcome-blaue-karte`, `ham-kita` | procedure / guide |
+| `fra-<slug>` | Frankfurt am Main (frankfurt.de), e.g. `fra-auslaenderbehoerde-blaue-karte`, `fra-kita`, `fra-mietspiegel` | procedure / guide |
+| `cgn-<slug>` | Köln / Cologne (stadt-koeln.de), e.g. `cgn-anmeldung`, `cgn-kita`, `cgn-mietpreisueberhoehung` | procedure |
+| `str-<slug>` | Stuttgart (stuttgart.de, welcome.stuttgart.de), e.g. `str-anmeldung`, `str-kita`, `str-mietspiegel` | procedure / guide |
+| `be-<slug>` | Berlin state rules: `be-mietpreisbremse` (Mietenbegrenzungsverordnung 2026–2029, gazette PDF) | regulation |
+| `hh-<slug>` | Hamburg state rules: `hh-mietpreisbremse` (gazette PDF), `hh-mietpreisbremse-info` (explainer) | regulation / guide |
+| `he-<slug>` | Hesse: `he-mietpreisbremse` (Mieterschutzverordnung 17.11.2026, Annex 1 lists Frankfurt am Main) | regulation |
+| `nw-<slug>` | North Rhine-Westphalia: `nw-mietpreisbremse` (recht.nrw.de), `nw-mietpreisbremse-anlage` (municipality list) | regulation |
+| `bw-<slug>` | Baden-Württemberg: `bw-mietpreisbremse-info` (ministry explainer; law PDFs parked) | guide |
+
+City slugs in chunk metadata (`city`): `munich`, `berlin`, `hamburg`, `frankfurt`, `cologne`, `stuttgart`
+(`expat/places.py`); state codes (`state`): ISO 3166-2:DE without `DE-` (`BY`, `BE`, `HH`, `HE`, `NW`, `BW`, …).
 
 New sources: add a row here **and** in `sources.yaml` in the same commit.
 

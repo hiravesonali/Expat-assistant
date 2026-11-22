@@ -13,11 +13,14 @@ from expat.evals.retrieval_eval import (
     ablation_variants,
     make_target_factory,
     needs_query_analysis,
+    retrieval_examples,
     run_retrieval_ablation,
 )
 from expat.schemas import RetrievalConfig, RetrievalPlan, RetrievalResult, UserProfile
 
 GOLDEN = {e.question: e for e in load_golden(DEFAULT_GOLDEN_PATH)}
+# Dev examples that have expected sources (refusals and "which city?" clarifications have none).
+N_DEV_RETRIEVAL = len(retrieval_examples(load_golden(DEFAULT_GOLDEN_PATH, split="dev")))
 
 
 def oracle_factory(config: RetrievalConfig):
@@ -54,7 +57,7 @@ def test_run_retrieval_ablation_local_writes_json(tmp_path: Path) -> None:
     data = json.loads(next(f for f in files if "-R4-" in f.name).read_text(encoding="utf-8"))
     # required keys of the documented format
     assert {"experiment", "config", "metrics", "per_slice", "n", "created_at"} <= data.keys()
-    assert data["n"] == 25  # 28 dev examples minus 3 dev refusal examples
+    assert data["n"] == N_DEV_RETRIEVAL
     assert data["metrics"]["hit@5"] == 1.0
     assert data["metrics"]["recall@10"] == 1.0
     assert data["metrics"]["mrr@10"] == 1.0
@@ -62,7 +65,9 @@ def test_run_retrieval_ablation_local_writes_json(tmp_path: Path) -> None:
     assert data["config"]["use_bm25"] is True
     assert "out_of_scope" not in data["per_slice"]
     assert data["per_slice"]["tenancy"]["hit@5"] == 1.0
-    assert data["per_slice"]["lang:de"]["n"] == 5
+    assert data["per_slice"]["lang:de"]["n"] == sum(
+        1 for e in retrieval_examples(load_golden(DEFAULT_GOLDEN_PATH, split="dev")) if e.language == "de"
+    )
 
     r0 = next(r for r in results if r.variant == "R0")
     assert r0.metrics["hit@5"] == 0.0 and r0.metrics["mrr@10"] == 0.0
@@ -77,7 +82,8 @@ def test_failing_target_counts_as_miss_and_error(tmp_path: Path) -> None:
 
     variants = {"R0": RetrievalConfig.baseline()}
     [result] = run_retrieval_ablation(factory, variants, split="holdout", results_dir=tmp_path)
-    assert result.errors == result.n == 10  # 12 holdout - 2 refusals
+    n_holdout = len(retrieval_examples(load_golden(DEFAULT_GOLDEN_PATH, split="holdout")))
+    assert result.errors == result.n == n_holdout
     assert result.metrics["hit@5"] == 0.0
     assert "chroma down" in (result.per_example[0].error or "")
 
@@ -163,6 +169,6 @@ def test_langsmith_mode_also_writes_local_json(tmp_path: Path) -> None:
     )
     assert result.mode == "langsmith"
     assert result.langsmith_experiment == "R4-retrieval-abc"
-    assert result.n == 25 and result.metrics["hit@5"] == 1.0
+    assert result.n == N_DEV_RETRIEVAL and result.metrics["hit@5"] == 1.0
     assert client.evaluate_kwargs["metadata"]["config"]["use_bm25"] is True
     assert len(list(tmp_path.glob("*.json"))) == 1
