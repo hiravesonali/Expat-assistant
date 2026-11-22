@@ -78,6 +78,10 @@ class QueryAnalysis(BaseModel):
     intent: Intent
     domains: list[DomainScore]
     sub_questions: list[SubQuestion]
+    location_dependent: bool = Field(
+        description="True if the answer differs by city or state (local office, appointment, Kita, rent index, "
+        "rent cap); false for federal rules that are the same everywhere."
+    )
     needs_clarification: str | None = Field(description="A question to ask the user, or null.")
 
     _fallback_reason: str | None = PrivateAttr(default=None)
@@ -111,6 +115,7 @@ class QueryAnalysis(BaseModel):
             intent="info",
             domains=[],
             sub_questions=[],
+            location_dependent=False,  # degrade gracefully: never block an answer on a broken analysis
             needs_clarification=None,
         )
         analysis._fallback_reason = reason

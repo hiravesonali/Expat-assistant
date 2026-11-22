@@ -46,7 +46,9 @@ def test_collection_name_encodes_model_and_schema():
 
 
 def test_profile_summary_mentions_key_facts():
-    p = UserProfile(citizenship="non_eu", residence_status="blue_card", children_count=2, youngest_child_age=3)
+    p = UserProfile(
+        city="munich", citizenship="non_eu", residence_status="blue_card", children_count=2, youngest_child_age=3
+    )
     s = p.summary()
     assert "NON-EU" in s and "blue card" in s and "2 children" in s and "Munich" in s
 

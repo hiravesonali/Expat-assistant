@@ -5,7 +5,7 @@ Stored only in the Streamlit session (st.session_state); never persisted server-
 
 from enum import StrEnum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class Citizenship(StrEnum):
@@ -50,8 +50,10 @@ class Housing(StrEnum):
 
 
 class UserProfile(BaseModel):
-    city: str = "munich"
-    state: str = "BY"
+    # Where the user lives. None = unknown (the assistant asks when the answer depends on it). `city` is a
+    # chunk-metadata slug for supported cities ("berlin", "cologne"; see expat.places) or a free name.
+    city: str | None = None
+    state: str | None = None  # state code, e.g. "BE"
     citizenship: Citizenship = Citizenship.UNKNOWN
     residence_status: ResidenceStatus = ResidenceStatus.UNKNOWN
     employment: Employment = Employment.UNKNOWN
@@ -60,6 +62,17 @@ class UserProfile(BaseModel):
     youngest_child_age: int | None = Field(default=None, ge=0, le=25)
     housing: Housing = Housing.UNKNOWN
     answer_language: str = Field(default="en", pattern=r"^(en|de)$")
+
+    @model_validator(mode="after")
+    def _normalise_location(self) -> "UserProfile":
+        """Slugs lower-case, state codes upper-case; a supported city implies its state."""
+        from expat.places import state_for_city  # local import: places has no deps, avoids import cycles
+
+        self.city = self.city.strip().lower() or None if self.city else None
+        self.state = self.state.strip().upper() or None if self.state else None
+        if self.city and (implied := state_for_city(self.city)):
+            self.state = implied
+        return self
 
     def summary(self) -> str:
         """Compact one-line description for the system prompt."""
@@ -83,5 +96,11 @@ class UserProfile(BaseModel):
             parts.append(kids)
         if self.housing != Housing.UNKNOWN:
             parts.append(self.housing.value)
-        parts.append(f"lives in {self.city.title()} ({self.state})")
+        if self.city or self.state:
+            from expat.places import STATES, city_label
+
+            where = city_label(self.city) if self.city else STATES.get(self.state or "", self.state or "")
+            parts.append(f"lives in {where}" + (f" ({self.state})" if self.city and self.state else ""))
+        else:
+            parts.append("location unknown")
         return "User: " + ", ".join(parts) + "."

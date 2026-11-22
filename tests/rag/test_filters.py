@@ -14,7 +14,7 @@ from expat.rag.filters import (
     profile_audiences,
     soft_boost,
 )
-from expat.schemas import Audience, Domain, RetrievalConfig, SectionKind, SubQuery, UserProfile
+from expat.schemas import Audience, Domain, Location, RetrievalConfig, SectionKind, SubQuery, UserProfile
 from expat.schemas.profile import Citizenship, Employment, ResidenceStatus
 from expat.store.synthetic import synthetic_chunks
 from expat.store.vectorstore import days_since_epoch, to_chroma_metadata
@@ -49,7 +49,7 @@ def test_unsure_domain_is_not_a_hard_filter_and_no_profile_means_validity_only()
 
 def test_where_semantics_on_synthetic_corpus() -> None:
     """Berlin and the expired regulation drop out; federal + Munich + open-ended chunks stay."""
-    where = build_where(UserProfile(), SubQuery(text="q"), RetrievalConfig(), today=TODAY)
+    where = build_where(UserProfile(city="munich"), SubQuery(text="q"), RetrievalConfig(), today=TODAY)
     kept = {c.metadata.doc_key for c in synthetic_chunks() if matches_where(to_chroma_metadata(c.metadata), where)}
     assert "ber-anmeldung#documents" not in kept
     assert "by-mieterschutzv#1" not in kept
@@ -109,3 +109,20 @@ def test_soft_boost_components() -> None:
         PENALTY_AUDIENCE + BOOST_SOFT_DOMAIN
     )
     assert soft_boost(_meta("bgb#573"), family, SubQuery(text="q")) == 0.0
+
+
+def test_unknown_location_keeps_only_nationwide_chunks():
+    """No city known: federal sources only, never another city's rules (docs/plan-germany-wide.md)."""
+    where = build_where(UserProfile(), SubQuery(text="q"), RetrievalConfig(), today=TODAY)
+    kept = {c.metadata.doc_key for c in synthetic_chunks() if matches_where(to_chroma_metadata(c.metadata), where)}
+    assert "muc-anmeldung#documents" not in kept and "ber-anmeldung#documents" not in kept
+    assert {"bgb#573c", "fp-kindergeld#faq-hoehe"} <= kept
+
+
+def test_location_from_the_question_overrides_the_profile_and_allows_several_cities():
+    location = Location(cities=["berlin", "munich"], states=["BE", "BY"], source="question")
+    where = build_where(
+        UserProfile(city="cologne"), SubQuery(text="q"), RetrievalConfig(), today=TODAY, location=location
+    )
+    kept = {c.metadata.doc_key for c in synthetic_chunks() if matches_where(to_chroma_metadata(c.metadata), where)}
+    assert {"muc-anmeldung#documents", "ber-anmeldung#documents"} <= kept

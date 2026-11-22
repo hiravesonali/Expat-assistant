@@ -34,6 +34,22 @@ class SubQuery(BaseModel):
     legal_references: list[str] = Field(default_factory=list)  # e.g. ["§ 573c BGB"]
 
 
+class Location(BaseModel):
+    """Where the question is about, resolved once per turn (docs/plan-germany-wide.md, "Location rules").
+
+    Local chunks are kept only if their city/state is listed here; nationwide chunks ("") always stay.
+    Empty lists = location unknown = nationwide sources only (never another city's rules).
+    """
+
+    cities: list[str] = Field(default_factory=list)  # chunk `city` slugs, e.g. ["berlin", "munich"]
+    states: list[str] = Field(default_factory=list)  # state codes, e.g. ["BE", "BY"]
+    source: Literal["question", "profile", "unknown"] = "unknown"
+
+    @property
+    def known(self) -> bool:
+        return bool(self.cities or self.states)
+
+
 class RetrievalPlan(BaseModel):
     """The hand-off contract between query analysis and hybrid retrieval.
 
@@ -43,6 +59,7 @@ class RetrievalPlan(BaseModel):
 
     standalone_question: str
     sub_queries: list[SubQuery]
+    location: Location | None = None  # None = derive from the profile (older callers, eval plans)
 
     @classmethod
     def from_raw(cls, question: str) -> "RetrievalPlan":

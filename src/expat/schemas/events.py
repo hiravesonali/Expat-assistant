@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 class StepEvent(BaseModel):
     type: Literal["step"] = "step"
-    name: Literal["query_analysis", "retrieval", "rerank", "tool_call", "generation", "safety"]
+    name: Literal["query_analysis", "retrieval", "rerank", "tool_call", "generation", "safety", "clarification"]
     status: Literal["started", "completed", "failed"]
     detail: dict[str, Any] = Field(default_factory=dict)
 
@@ -79,6 +79,25 @@ class ErrorEvent(BaseModel):
     retryable: bool = False
 
 
+class ClarificationEvent(BaseModel):
+    """The assistant needs one fact before it can answer (today: the city). The question text itself is
+    streamed as TokenEvents; this event tells the UI to offer one-click answers. Picking one stores it
+    in the profile and re-sends the original question (`original_question`)."""
+
+    type: Literal["clarification"] = "clarification"
+    kind: Literal["location"] = "location"
+    original_question: str
+    options: list[tuple[str, str]] = Field(default_factory=list)  # (value, label), e.g. ("berlin", "Berlin")
+
+
 PipelineEvent = (
-    StepEvent | ToolCallEvent | ToolResultEvent | TokenEvent | CitationsEvent | AnswerMetaEvent | DoneEvent | ErrorEvent
+    StepEvent
+    | ToolCallEvent
+    | ToolResultEvent
+    | TokenEvent
+    | CitationsEvent
+    | AnswerMetaEvent
+    | ClarificationEvent
+    | DoneEvent
+    | ErrorEvent
 )

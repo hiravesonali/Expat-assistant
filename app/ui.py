@@ -42,7 +42,7 @@ DISCLAIMER = "General information, not legal or tax advice. Official German text
 
 # ---- Brand ("Ankommen" = German for "to arrive / to settle in") ------------------------------------
 BRAND_NAME = "Ankommen"
-BRAND_TAGLINE = "Your guide to settling in Munich"
+BRAND_TAGLINE = "Your guide to settling in Germany"
 ASSETS = Path(__file__).resolve().parent / "assets"
 LOGO_SVG = (ASSETS / "logo-mark.svg").read_text(encoding="utf-8")
 LOGO_PNG = str(ASSETS / "logo-mark-256.png")  # favicon + assistant avatar (raster: works everywhere)
@@ -61,7 +61,7 @@ def brand_header() -> None:
     """Sidebar brand: logo tile + wordmark + tagline (inline SVG, so it uses the page fonts)."""
     st.html(
         f'<div class="ank-brand">{logo_svg(36, "side")}'
-        f'<div><div class="ank-wordmark">{BRAND_NAME}</div><div class="ank-sub">Munich · official sources</div></div>'
+        f'<div><div class="ank-wordmark">{BRAND_NAME}</div><div class="ank-sub">Germany · official sources</div></div>'
         "</div>"
     )
 
@@ -71,10 +71,11 @@ def hero() -> None:
     st.html(
         '<div class="ank-hero">'
         f'<div class="ank-hero-logo">{logo_svg(64, "hero")}</div>'
-        '<div class="ank-eyebrow">📍 Munich · Official sources · English & Deutsch</div>'
-        '<h1 class="ank-title">Settle into Munich <span class="ank-gradient">with confidence</span></h1>'
+        '<div class="ank-eyebrow">📍 All of Germany · 6 cities in detail · English & Deutsch</div>'
+        '<h1 class="ank-title">Settle into Germany <span class="ank-gradient">with confidence</span></h1>'
         '<p class="ank-lead">Registration, residence permits, renting and family benefits, answered from '
-        "official German sources, with every claim cited.</p>"
+        "official German sources with every claim cited. Local details for Berlin, Hamburg, Munich, Cologne, "
+        "Frankfurt and Stuttgart.</p>"
         "</div>"
     )
 
@@ -102,6 +103,7 @@ STEP_LABELS: dict[str, tuple[str, str]] = {
     "tool_call": (":material/calculate:", "Calculating with a tool"),
     "generation": (":material/edit_note:", "Writing the answer"),
     "safety": (":material/shield:", "Safety check"),
+    "clarification": (":material/help:", "Asking a follow-up question"),
 }
 
 TOOL_LABELS = {
@@ -399,7 +401,9 @@ def render_assistant_message(events: list[PipelineEvent], content: str, key_pref
         st.markdown(decorate_markers(content))
     if parts.get("error"):
         render_error(parts["error"])
-    if parts["meta"]:
+    # Safety referrals and "Which city?" are deliberate fixed replies, not failed searches: no warning banner.
+    fixed_reply = any(isinstance(e, StepEvent) and e.name in ("safety", "clarification") for e in events)
+    if parts["meta"] and not fixed_reply:
         render_answer_meta(parts["meta"])
     render_citations(parts["citations"], key_prefix)
     if parts["steps"] or parts["calls"]:

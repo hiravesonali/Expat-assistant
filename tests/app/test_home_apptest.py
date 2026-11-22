@@ -84,3 +84,27 @@ def test_export_buttons_appear_once_the_chat_has_messages():
     next(b for b in at.button if b.key and b.key.startswith("example-")).click().run()
     assert not at.exception, at.exception
     assert [d.proto.label for d in at.get("download_button")] == ["Markdown (.md)", "JSON (.json)"]
+
+
+def test_which_city_follow_up_saves_the_city_and_answers_the_original_question(monkeypatch):
+    """Pipeline asks for the city -> user clicks "Berlin" -> profile updated, question re-asked and answered."""
+    from expat.schemas import ClarificationEvent, DoneEvent, TokenEvent
+
+    def fake_run(mode, question, history, profile):
+        if profile.city is None:
+            yield TokenEvent(text="Which city do you live in?")
+            yield ClarificationEvent(original_question=question, options=[("berlin", "Berlin"), ("other", "Other city")])
+        else:
+            yield TokenEvent(text=f"Answer for {profile.city}.")
+        yield DoneEvent()
+
+    monkeypatch.setattr(pipeline_adapter, "run_pipeline", fake_run)
+    at = _home()
+    at.chat_input[0].set_value("Where do I register my address?").run()
+    assert not at.exception, at.exception
+    next(b for b in at.button if b.key == "pick-city-berlin").click().run()
+    assert not at.exception, at.exception
+
+    assert at.session_state.profile.city == "berlin" and at.session_state.profile.state == "BE"
+    conv = at.session_state.conversations[at.session_state.current]
+    assert [m["content"] for m in conv["messages"]] == ["Where do I register my address?", "Answer for berlin."]

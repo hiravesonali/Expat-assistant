@@ -55,7 +55,7 @@ SOURCES = [
     _source("S1", "Mitzubringen: Personalausweis oder Reisepass, Wohnungsgeberbestätigung."),
     _source("S2", "Für Kinder: Geburtsurkunde. Die Anmeldung ist gebührenfrei."),
 ]
-PROFILE = UserProfile(family_status=FamilyStatus.MARRIED, children_count=2)
+PROFILE = UserProfile(city="munich", family_status=FamilyStatus.MARRIED, children_count=2)
 
 
 DRAFT = {
