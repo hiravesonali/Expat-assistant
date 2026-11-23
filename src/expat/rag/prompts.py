@@ -347,8 +347,11 @@ Fill every field of the schema:
 - location_dependent: true if the answer differs by city or state: which office to go to, booking an
   appointment, local fees, the local foreign office (Ausländerbehörde), Kita places, the local rent index
   (Mietspiegel), the rent cap (Mietpreisbremse). false for federal rules that are the same everywhere:
-  BGB notice periods, the 2-week Anmeldung deadline, Kindergeld/Elterngeld amounts, Blue Card criteria.
-  Do NOT ask for the city in needs_clarification; the system handles a missing location itself.
+  BGB notice periods, the 2-week Anmeldung deadline, Kindergeld/Elterngeld amounts, Blue Card criteria,
+  health insurance, naturalisation requirements, converting a foreign driving licence, tax ID and tax
+  classes. A federal rule stays false even if you apply at a local office, unless the user asks about
+  that office (where, appointment, local fee). Do NOT ask for the city in needs_clarification; the
+  system handles a missing location itself.
 - needs_clarification: a short question to the user if a missing fact (other than the location)
   changes the answer and is not in the profile (e.g. "Are you an EU citizen?"). Otherwise null.
 

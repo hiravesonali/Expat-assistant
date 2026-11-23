@@ -147,8 +147,8 @@ NEW = [
         sources=[("fev#anlage11", True), ("fev#31", False)],
         domains=B,
         must=["Japan"],
-        ref="No. Japan is listed in Anlage 11 FeV for all classes with no theory and no practical test, so the licence is converted without tests (§ 31 FeV). Apply at your local driving licence office (Fahrerlaubnisbehörde).",
-        notes="Answerable only from the Anlage 11 table (law_xml include_annexes).",
+        ref="Normally no. Japan is listed in Anlage 11 FeV for all classes with no theory and no practical test, so the licence is converted without tests (§ 31 (1) FeV). Only if facts suggest you no longer have the necessary knowledge and skills can the office order a test (§ 31 (1a) FeV). Apply at your local driving licence office (Fahrerlaubnisbehörde).",
+        notes="Answerable only from the Anlage 11 table (law_xml include_annexes). Reference extended with § 31 (1a) after the 2026-11-23 run: an answer naming that exception is correct.",
     ),
     q(
         "bur-032",

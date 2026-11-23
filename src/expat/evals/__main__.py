@@ -63,6 +63,8 @@ def _print_report(results_dir: Path) -> None:
     from expat.evals.report import write_report
 
     path, text = write_report(results_dir)
+    # The report has "Δ" and "§"; a Windows console (cp1252) can't print them and would crash after the run.
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[union-attr]
     print(text)
     print(f"written to {path}")
 
