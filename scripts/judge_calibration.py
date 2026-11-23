@@ -2,6 +2,7 @@
 
     uv run python scripts/judge_calibration.py export   # writes evals/calibration/labels_v1.md (fill it in)
     uv run python scripts/judge_calibration.py score    # compares your labels with the judge -> RESULT.md
+    uv run python scripts/judge_calibration.py rejudge  # same answers, current MODEL_JUDGE -> RESULT_<model>.md
 
 The sheet deliberately does NOT show the judge's verdict, so the human label is not anchored on it.
 The judge verdicts are kept in key_v1.json next to the sheet. Sampling: every answer the judge failed
@@ -85,12 +86,56 @@ def export() -> None:
     print(f"wrote {SHEET.relative_to(REPO)} ({len(sample)} answers: {len(fails)} judge fails + random passes)")
 
 
-def score(labeller: str = "human") -> None:
-    key = json.loads(KEY.read_text(encoding="utf-8"))
+def _labels(key: list[dict]) -> dict[int, str]:
     labels = {int(n): v.strip().lower() for n, v in _LABEL_RE.findall(SHEET.read_text(encoding="utf-8"))}
     missing = [n for n in range(1, len(key) + 1) if labels.get(n) not in ("yes", "no")]
     if missing:
         sys.exit(f"Please label every answer with yes or no; missing/invalid: {missing}")
+    return labels
+
+
+def _sheet_answers() -> dict[int, str]:
+    """The assistant's answer per item, read back from the sheet's quoted block."""
+    answers: dict[int, str] = {}
+    for block in re.split(r"^### ", SHEET.read_text(encoding="utf-8"), flags=re.MULTILINE)[1:]:
+        number = int(block.split(".", 1)[0])
+        body = block.split("**Assistant's answer:**", 1)[1].split("**Your label", 1)[0]
+        quoted = [
+            line[2:] if line.startswith("> ") else "" for line in body.strip().splitlines() if line.startswith(">")
+        ]
+        answers[number] = "\n".join(quoted).strip()
+    return answers
+
+
+def rejudge(labeller: str = "human") -> None:
+    """Judge the SAME labelled answers again with the current MODEL_JUDGE and score its agreement.
+
+    Use it before switching judge models: the new judge must agree with the reference labels at least as well as
+    the old one (RESULT.md) before its numbers replace the old ones. Costs 15 judge calls.
+    """
+    from expat.config import get_settings
+    from expat.evals.judges import default_judge_model, make_correctness_judge
+
+    model_name = get_settings().model_judge
+    judge = make_correctness_judge(default_judge_model())
+    golden = {g.id: g for g in load_golden()}
+    key = json.loads(KEY.read_text(encoding="utf-8"))
+    answers = _sheet_answers()
+    items = []
+    for n, item in enumerate(key, 1):
+        g = golden[item["id"]]
+        verdict = judge(question=g.question, answer=answers[n], reference=g.reference_answer)
+        items.append({**item, "judge": verdict.score})
+        print(f"{n:2}. {item['id']:8} old judge {item['judge']!s:5} -> {model_name}: {verdict.score}")
+    slug = model_name.split("/")[-1]
+    score(labeller, key=items, judge_name=model_name, result=OUT / f"RESULT_{slug}.md")
+
+
+def score(
+    labeller: str = "human", key: list[dict] | None = None, judge_name: str = "claude-haiku-4.5", result: Path = RESULT
+) -> None:
+    key = key if key is not None else json.loads(KEY.read_text(encoding="utf-8"))
+    labels = _labels(key)
     pairs = [(labels[n] == "yes", item["judge"], item["id"]) for n, item in enumerate(key, 1)]
     agree = sum(h == j for h, j, _ in pairs)
     total = len(pairs)
@@ -104,7 +149,7 @@ def score(labeller: str = "human") -> None:
     too_lenient = [i for h, j, i in pairs if j and not h]
     text = "\n".join(
         [
-            "# Judge calibration result (correctness judge, claude-haiku-4.5)",
+            f"# Judge calibration result (correctness judge, {judge_name})",
             "",
             f"Reference labels by: **{labeller}**",
             "",
@@ -117,13 +162,15 @@ def score(labeller: str = "human") -> None:
             "the agreement here is a conservative estimate for the full run.",
         ]
     )
-    RESULT.write_text(text + "\n", encoding="utf-8")
+    result.write_text(text + "\n", encoding="utf-8")
     print(text)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("command", choices=("export", "score"))
+    parser.add_argument("command", choices=("export", "score", "rejudge"))
     parser.add_argument("--labeller", default="human", help='who filled the sheet, e.g. "Claude (not a human)"')
     args = parser.parse_args()
-    export() if args.command == "export" else score(args.labeller)
+    {"export": lambda: export(), "score": lambda: score(args.labeller), "rejudge": lambda: rejudge(args.labeller)}[
+        args.command
+    ]()

@@ -160,3 +160,19 @@ def test_groundedness_judge_sees_question_and_profile() -> None:
     score_answer(EXAMPLES["ten-001"], output, judges)
     assert seen["context"].startswith("[USER QUESTION]\n" + EXAMPLES["ten-001"].question)
     assert "[USER PROFILE]" in seen["context"] and "[S1]" in seen["context"]
+
+
+def test_groundedness_can_be_skipped_without_counting_as_a_failure() -> None:
+    called: list[str] = []
+
+    def grounded(**kwargs):
+        called.append("groundedness")
+        return JudgeVerdict(key="g", score=True)
+
+    ok = _fake_judges()
+    judges = JudgeSet(groundedness=grounded, correctness=ok.correctness, refusal=ok.refusal)
+    output = AnswerOutput(answer="Your landlord must give 6 months' notice [S1].", contexts=[_ctx("S1", "bgb#573c")])
+    score = score_answer(EXAMPLES["ten-001"], output, judges, with_groundedness=False)
+    assert called == []
+    assert score.metrics["groundedness"] is None  # drops out of the average (not 0)
+    assert score.metrics["correctness"] == 1.0

@@ -314,10 +314,38 @@ out of the report (`evals/results/_failed/`).
 - **Tracing:** `LANGSMITH_TRACING=true`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`, `LANGSMITH_ENDPOINT=https://eu.api.smith.langchain.com` (EU region). Newer "agent-based workspaces" may use `LANGSMITH_AGENT_ID` instead of the project. Check your workspace type on Day 1.
 - **Free tier:** 5k traces/month, **14-day retention**. `report.py` exports every experiment's metrics to `evals/results/*.json` + markdown, so your review numbers don't expire.
 
-## 5. Budget estimate
-- Retrieval evals: query analysis ≈ 1 cheap LLM call/question → 50 × 8 variants ≈ 400 calls → **< $0.50**.
-- Answer evals: 50 × 2 configs × (answer + 3 judge calls) ≈ 400 calls → **≈ $1–4** depending on the judge model.
-- Re-run freely. The sprint budget ($10–30) holds even with ~5 full cycles.
+## 5. Budget (measured 2026-11-23)
+
+**What one day of evals cost with Claude Haiku 4.5 as judge** (LangSmith token counts × OpenRouter prices):
+judges $4.06 (groundedness $2.52: 6.65k input + 790 output tokens per call, because it reads the whole context
+and wrote a claim-by-claim essay; correctness $0.81; refusal $0.62), answer pipeline (GPT-4.1-mini) $0.83,
+retrieval evals ≈ $0.10. The old estimate here ("≈ $1–4 per cycle") was written for 50 questions and a short
+judge output; the 85-question set with Haiku cost ≈ $4.30 per full cycle and hit the key limit mid-run.
+
+**Changes (cost per full cycle, both splits, R0 + R5: ≈ $4.30 → ≈ $0.96):**
+1. **Judge model `google/gemini-2.5-flash-lite`** ($0.10 / $0.40 per M tokens vs $1 / $5): a different family than
+   the answer model, structured output, no hidden reasoning tokens. Before its numbers replace Haiku's, it is
+   re-scored on the 15 labelled calibration answers: `uv run python scripts/judge_calibration.py rejudge`
+   (≈ $0.001) -> `evals/calibration/RESULT_<model>.md`. *Pending: the key had no credit left on 2026-11-23.*
+2. **Groundedness only for R5** (default; `--groundedness-all` for every variant): the naive-vs-system
+   headline uses correctness; groundedness was ~60% of the judge cost.
+3. **Short reasoning** (`judges-v2` prompts): at most 60 words, only the claims that fail.
+4. **Verdict cache** (`evals/.judge_cache.jsonl`, git-ignored): an identical judge call is never paid twice
+   (resumed runs, re-scoring, fixed replies). Prompt version and model are part of the key.
+5. **Spend guard:** every `answers` run first prints an estimate from live prices and the key's remaining
+   credit, and stops before spending if estimate × 1.25 doesn't fit (`--force` overrides). `--dry-run` prints the
+   estimate only.
+
+| Run (85 questions) | Estimate |
+|---|---|
+| dev, R0 + R5 | ≈ $0.60 (answers $0.53, judges $0.07) |
+| holdout, R0 + R5 | ≈ $0.36 |
+| a targeted recheck (`--ids`, 10 questions, R5) | ≈ $0.06 |
+| retrieval ablation, both splits (R0–R5) | ≈ $0.15 |
+
+The answer pipeline is now the main cost (~$0.005 per answer). Rerun only what a change can affect
+(`--variants R5`, `--ids`), and run dev and holdout one after the other, not in parallel, so the guard sees the
+real remaining credit.
 
 ## 6. Online/production signals (stretch)
 - 👍/👎 → LangSmith feedback on the `run_id`.

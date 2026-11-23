@@ -33,3 +33,6 @@ Thumbs.db
 
 # Claude Code agent worktrees
 .claude/worktrees/
+
+# Judge verdict cache (evals); regenerable, may contain answer text
+evals/.judge_cache.jsonl

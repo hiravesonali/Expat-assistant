@@ -92,6 +92,15 @@ fix: the deadline tool now says from which month a late application is still pai
 The judge also errs the other way: it failed a correct licence answer because my reference missed § 31 (1a)
 FeV, so I fixed the reference.
 
+**7a. "What did evaluation cost, and how did you control it?"** I measured it from the traces: one day of
+evals cost $4.97, and **82% was the judge**. The groundedness judge alone was $2.52: it reads the whole retrieved
+context (6.6k tokens) and wrote a 790-token justification per call, at Haiku's $5/M output price. So I switched
+to a cheap judge from another family (Gemini 2.5 Flash-Lite, 10× cheaper input, 12× cheaper output), asked for
+60-word verdicts, judge groundedness only for the production variant, cache verdicts, and added a spend guard
+that stops a run before it starts if the estimate doesn't fit the key's credit. A full cycle went from ≈ $4.30
+to ≈ $0.96. The trade-off: a cheaper judge must prove itself on the same 15 labelled answers before its numbers
+replace the old ones (`judge_calibration.py rejudge`).
+
 **8. "Error scenarios and edge cases?"** Analysis model down → falls back to the raw question (R0 quality, no
 crash). Provider timeouts → retries, then an error card with Retry. Empty retrieval → "insufficient
 context" instead of guessing. Over-long or empty input → validation message. Abuse → per-session and daily

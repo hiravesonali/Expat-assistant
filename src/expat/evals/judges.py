@@ -6,11 +6,18 @@ Judge hygiene (docs/evaluation-plan.md §2), and how this module implements it:
 - Binary rubrics (pass/fail), not 1-10 scales: binary labels are easier to calibrate against human labels.
 - Reasoning first, then the score: openevals' `use_reasoning=True` puts `reasoning` before `score` in the
   structured-output schema, so the model "thinks" before committing to a verdict.
+
+Cost (docs/evaluation-plan.md §5): judge output is the expensive part, so every prompt asks for SHORT reasoning
+(only the problems), and `JudgeCache` stores verdicts so an identical (model, metric, inputs) is never paid twice.
 """
 
+import hashlib
+import json
+import threading
 import warnings
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from openevals.llm import create_llm_as_judge
@@ -35,7 +42,8 @@ If should_refuse is false, the response PASSES only if it:
 </Rubric>
 
 <Instructions>
-First explain your reasoning in two or three sentences, then give the verdict: true = PASS, false = FAIL.
+First explain your reasoning in one or two short sentences (at most 40 words), then give the verdict:
+true = PASS, false = FAIL.
 </Instructions>
 
 <should_refuse>
@@ -52,7 +60,19 @@ First explain your reasoning in two or three sentences, then give the verdict: t
 """
 
 
-JUDGE_MAX_TOKENS = 1024  # reasoning (2-3 sentences) + verdict; see default_judge_model()
+JUDGE_MAX_TOKENS = 1024  # safety cap only; the prompts ask for ~60 words. See default_judge_model()
+
+# Appended to the openevals prompts. Groundedness used to write a claim-by-claim essay (avg 790 output tokens with
+# Haiku 4.5, 2026-11-23): the verdict needs only the unsupported claims.
+BRIEF_REASONING = """
+
+<Length>
+Keep your reasoning short: at most 60 words. Name only the claims that fail (unsupported, contradicted or
+wrong); if nothing fails, say so in one sentence. Do not list the claims that pass.
+</Length>
+"""
+GROUNDEDNESS_PROMPT = RAG_GROUNDEDNESS_PROMPT + BRIEF_REASONING
+CORRECTNESS_JUDGE_PROMPT = CORRECTNESS_PROMPT + BRIEF_REASONING
 
 
 class JudgeVerdict(BaseModel):
@@ -77,7 +97,7 @@ def make_groundedness_judge(judge: "BaseChatModel") -> Callable[..., JudgeVerdic
     correctly cited tool calculation would be judged as an unsupported claim.
     """
     evaluator = create_llm_as_judge(
-        prompt=RAG_GROUNDEDNESS_PROMPT, judge=judge, feedback_key="groundedness", use_reasoning=True
+        prompt=GROUNDEDNESS_PROMPT, judge=judge, feedback_key="groundedness", use_reasoning=True
     )
 
     def run(*, answer: str, context: str) -> JudgeVerdict:
@@ -89,7 +109,7 @@ def make_groundedness_judge(judge: "BaseChatModel") -> Callable[..., JudgeVerdic
 def make_correctness_judge(judge: "BaseChatModel") -> Callable[..., JudgeVerdict]:
     """Correctness vs the golden `reference_answer`. Call as `judge_fn(question=..., answer=..., reference=...)`."""
     evaluator = create_llm_as_judge(
-        prompt=CORRECTNESS_PROMPT, judge=judge, feedback_key="correctness", use_reasoning=True
+        prompt=CORRECTNESS_JUDGE_PROMPT, judge=judge, feedback_key="correctness", use_reasoning=True
     )
 
     def run(*, question: str, answer: str, reference: str) -> JudgeVerdict:
@@ -111,6 +131,65 @@ def make_refusal_judge(judge: "BaseChatModel") -> Callable[..., JudgeVerdict]:
     return run
 
 
+# Bump when a judge prompt changes: cached verdicts of the old prompt must not be reused.
+JUDGE_PROMPT_VERSION = "judges-v2"
+DEFAULT_JUDGE_CACHE = Path(__file__).resolve().parents[3] / "evals" / ".judge_cache.jsonl"
+
+
+class JudgeCache:
+    """Verdicts keyed by sha256(model, prompt version, metric, inputs), persisted as JSONL (git-ignored).
+
+    Re-scoring an unchanged answer (a resumed run, a report fix, a fixed safety reply, a clarification) costs
+    nothing. A changed answer or context is a new key, so a cache hit is always an identical judge call.
+    """
+
+    def __init__(self, path: Path | None = DEFAULT_JUDGE_CACHE) -> None:
+        self.path = path
+        self.hits = 0
+        self.misses = 0
+        self._lock = threading.Lock()  # LangSmith runs evaluators concurrently
+        self._data: dict[str, dict[str, Any]] = {}
+        if path is not None and path.exists():
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if line.strip():
+                    row = json.loads(line)
+                    self._data[row["key"]] = row["verdict"]
+
+    @staticmethod
+    def make_key(model: str, metric: str, inputs: dict[str, Any]) -> str:
+        payload = json.dumps([model, JUDGE_PROMPT_VERSION, metric, inputs], sort_keys=True, ensure_ascii=False)
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+    def get(self, key: str) -> JudgeVerdict | None:
+        with self._lock:
+            row = self._data.get(key)
+            if row is None:
+                self.misses += 1
+                return None
+            self.hits += 1
+            return JudgeVerdict.model_validate(row)
+
+    def put(self, key: str, verdict: JudgeVerdict) -> None:
+        with self._lock:
+            self._data[key] = verdict.model_dump()
+            if self.path is not None:
+                self.path.parent.mkdir(parents=True, exist_ok=True)
+                with self.path.open("a", encoding="utf-8", newline="\n") as f:
+                    f.write(json.dumps({"key": key, "verdict": verdict.model_dump()}, ensure_ascii=False) + "\n")
+
+    def wrap(self, model: str, metric: str, fn: Callable[..., JudgeVerdict]) -> Callable[..., JudgeVerdict]:
+        def cached(**kwargs: Any) -> JudgeVerdict:
+            key = self.make_key(model, metric, kwargs)
+            hit = self.get(key)
+            if hit is not None:
+                return hit
+            verdict = fn(**kwargs)  # errors are not cached: the next run retries
+            self.put(key, verdict)
+            return verdict
+
+        return cached
+
+
 @dataclass(frozen=True)
 class JudgeSet:
     """The three judges used by answer_eval. Build once per run with the same judge model."""
@@ -120,12 +199,16 @@ class JudgeSet:
     refusal: Callable[..., JudgeVerdict]
 
     @classmethod
-    def from_model(cls, judge: "BaseChatModel") -> "JudgeSet":
-        return cls(
-            groundedness=make_groundedness_judge(judge),
-            correctness=make_correctness_judge(judge),
-            refusal=make_refusal_judge(judge),
-        )
+    def from_model(cls, judge: "BaseChatModel", *, cache: JudgeCache | None = None, model_name: str = "") -> "JudgeSet":
+        judges = {
+            "groundedness": make_groundedness_judge(judge),
+            "correctness": make_correctness_judge(judge),
+            "refusal": make_refusal_judge(judge),
+        }
+        if cache is not None:
+            name = model_name or getattr(judge, "model_name", "") or type(judge).__name__
+            judges = {metric: cache.wrap(name, metric, fn) for metric, fn in judges.items()}
+        return cls(**judges)
 
 
 def default_judge_model() -> "BaseChatModel":  # pragma: no cover - needs an API key

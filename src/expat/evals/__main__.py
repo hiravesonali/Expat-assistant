@@ -52,7 +52,15 @@ def build_parser() -> argparse.ArgumentParser:
     answers.add_argument("--no-judge", action="store_true", help="deterministic metrics only (free)")
     answers.add_argument("--price-in", type=float, help="USD per 1M input tokens (enables cost_usd)")
     answers.add_argument("--price-out", type=float, help="USD per 1M output tokens")
-    answers.add_argument("--ids", help="comma-separated golden ids, for a cheap smoke run (local mode)")
+    answers.add_argument("--ids", help="comma-separated golden ids, for a cheap smoke run")
+    answers.add_argument(
+        "--groundedness-all",
+        action="store_true",
+        help="run the groundedness judge for every variant (default: R5 only; it is the most expensive judge)",
+    )
+    answers.add_argument("--no-cache", action="store_true", help="ignore cached judge verdicts")
+    answers.add_argument("--dry-run", action="store_true", help="print the cost estimate and exit (free)")
+    answers.add_argument("--force", action="store_true", help="run even if the estimate exceeds the key's credit")
 
     report = sub.add_parser("report", help="render evals/results/*.json to REPORT.md")
     report.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR)
@@ -70,6 +78,10 @@ def _print_report(results_dir: Path) -> None:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    # Output has "≈", "Δ" and "§"; a Windows console (cp1252) can't print them.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     args = build_parser().parse_args(argv)
 
     if args.command == "upload":
@@ -101,25 +113,57 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
     elif args.command == "answers":
         from expat.evals.answer_eval import default_answer_target_factory, default_answer_variants, run_answer_eval
-        from expat.evals.judges import JudgeSet, default_judge_model
+        from expat.evals.judges import JudgeCache, JudgeSet, default_judge_model
         from expat.evals.retrieval_eval import ablation_variants
 
         all_variants = ablation_variants(include_stretch=True)
         variants = _select(all_variants, args.variants) if args.variants else default_answer_variants()
         from expat.config import get_settings
 
+        settings = get_settings()
         price = (args.price_in, args.price_out) if args.price_in is not None and args.price_out is not None else None
+        ids = [i.strip() for i in args.ids.split(",")] if args.ids else None
+        grounded_variants = None if args.groundedness_all else {"R5"}
+
+        # Spend guard (free calls): estimate from live prices, compare with the key's remaining credit.
+        from expat.evals.budget import check_budget, estimate_answer_eval, key_remaining_usd, model_price
+
+        examples = [e for e in load_golden(split=args.split) if not ids or e.id in ids]
+        answer_price = price or (settings.price_in_per_mtok, settings.price_out_per_mtok)
+        judge_price = None if args.no_judge else (model_price(settings.model_judge) or answer_price)
+        estimate = estimate_answer_eval(
+            examples, variants, answer_price=answer_price, judge_price=judge_price,
+            groundedness_variants=grounded_variants,
+        )  # fmt: skip
+        key = settings.openrouter_api_key
+        secret = key.get_secret_value() if key is not None and hasattr(key, "get_secret_value") else key
+        remaining = key_remaining_usd(str(secret)) if secret else None
+        print(
+            f"Estimate: {estimate.pipeline_runs} answers + {estimate.judge_calls} judge calls "
+            f"({'no judge' if args.no_judge else settings.model_judge}) ≈ ${estimate.total_usd:.2f} "
+            f"(answers ${estimate.answers_usd:.2f}, judges ${estimate.judges_usd:.2f}); "
+            f"key credit left: {'no limit' if remaining is None else f'${remaining:.2f}'}"
+        )
+        if args.dry_run:
+            return 0
+        problem = check_budget(estimate, remaining)
+        if problem and not args.force:
+            print(f"Stopped before spending anything: {problem}", file=sys.stderr)
+            return 3
+
         judges, judge_model = None, None
+        cache: JudgeCache | None = None
         if not args.no_judge:
             model = default_judge_model()
-            judge_model = get_settings().model_judge
+            judge_model = settings.model_judge
             try:  # pre-flight: a blocked/unknown judge must fail in seconds, not after N paid pipeline runs
                 model.invoke("Reply with OK.")
             except Exception as exc:
                 print(f"Judge model {judge_model!r} is not usable: {exc}", file=sys.stderr)
                 print("Set MODEL_JUDGE to an allowed model, or run with --no-judge.", file=sys.stderr)
                 return 2
-            judges = JudgeSet.from_model(model)
+            cache = None if args.no_cache else JudgeCache()
+            judges = JudgeSet.from_model(model, cache=cache, model_name=judge_model)
         run_answer_eval(
             default_answer_target_factory(),
             variants,
@@ -131,8 +175,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             results_dir=args.results_dir,
             dataset_name=args.dataset,
             max_concurrency=args.max_concurrency,
-            ids=[i.strip() for i in args.ids.split(",")] if args.ids else None,
+            ids=ids,
+            groundedness_variants=grounded_variants,
         )
+        if cache is not None:
+            print(f"Judge cache: {cache.hits} hits (free), {cache.misses} new verdicts")
     _print_report(args.results_dir)
     return 0
 

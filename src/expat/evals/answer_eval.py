@@ -6,7 +6,7 @@ are the expensive part. The pipeline is injected as a target factory, exactly li
 
 import json
 import time
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Collection, Iterable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
@@ -183,8 +183,12 @@ def score_answer(
     output: AnswerOutput,
     judges: JudgeSet | None = None,
     price_per_mtok: tuple[float, float] | None = None,
+    with_groundedness: bool = True,
 ) -> ExampleScore:
     """All answer metrics for one example. Metrics that don't apply are None and drop out of the averages.
+
+    with_groundedness=False skips the groundedness judge (the most expensive call: it reads the whole context);
+    the metric is then None, not 0, so it drops out of the averages instead of looking like a failure.
 
     - Answerable questions: citations, must_include, tool selection, groundedness + correctness (if judges).
     - Refusal questions: refusal accuracy, must_not_include, and "no tool was called".
@@ -238,7 +242,7 @@ def score_answer(
         metrics["must_include"] = must_include_score(output.answer, example.must_include)
         if judges is not None:
             context = output.context_text()
-            if context:
+            if context and with_groundedness:
                 # The answer may legitimately use the question and the user's profile ("as a Blue Card holder
                 # in Munich ..."). Without them the judge flagged such sentences as invented (first dev run).
                 user = (
@@ -286,6 +290,7 @@ def _run_langsmith(
     max_concurrency: int,
     judges: JudgeSet | None,
     price_per_mtok: tuple[float, float] | None,
+    with_groundedness: bool = True,
 ) -> tuple[list[ExampleScore], str | None]:
     """LangSmith experiment whose single evaluator reports all metrics; scores are also kept for the local JSON.
 
@@ -300,7 +305,9 @@ def _run_langsmith(
 
     def all_metrics_evaluator(outputs: dict[str, Any], reference_outputs: dict[str, Any]) -> dict[str, Any]:
         example = examples_by_id[reference_outputs["id"]]
-        score = score_answer(example, AnswerOutput.model_validate(outputs), judges, price_per_mtok)
+        score = score_answer(
+            example, AnswerOutput.model_validate(outputs), judges, price_per_mtok, with_groundedness=with_groundedness
+        )
         scored[example.id] = score
         return {"results": [{"key": k, "score": v} for k, v in score.metrics.items() if v is not None]}
 
@@ -336,11 +343,14 @@ def run_answer_eval(
     max_concurrency: int = 4,
     ids: list[str] | None = None,
     judge_model: str | None = None,
+    groundedness_variants: Collection[str] | None = None,
 ) -> list[ExperimentResult]:
     """Run the full pipeline per variant and write `evals/results/answers-<variant>-<split>-<ts>.json`.
 
     judges=None runs only the deterministic metrics (free; refusal falls back to the keyword heuristic).
     price_per_mtok=(input_usd, output_usd) per million tokens enables the cost_usd metric.
+    groundedness_variants: run the groundedness judge only for these variants (None = all). The CLI default is
+    R5 only: the naive-vs-system headline uses correctness, and groundedness is ~60% of the judge cost.
     """
     variants = variants if variants is not None else default_answer_variants()
     examples = load_golden(golden_path, split=split)
@@ -359,8 +369,12 @@ def run_answer_eval(
     for variant, config in variants.items():
         target = target_factory(config)
         ls_name: str | None = None
+        grounded = groundedness_variants is None or variant in groundedness_variants
         if mode == "local":
-            scores = [score_answer(e, _call_target(target, e), judges, price_per_mtok) for e in examples]
+            scores = [
+                score_answer(e, _call_target(target, e), judges, price_per_mtok, with_groundedness=grounded)
+                for e in examples
+            ]
         else:
             if split is None:
                 raise ValueError("langsmith mode needs an explicit split")
@@ -375,6 +389,7 @@ def run_answer_eval(
                 max_concurrency=max_concurrency,
                 judges=judges,
                 price_per_mtok=price_per_mtok,
+                with_groundedness=grounded,
             )
         now = datetime.now(UTC)
         metrics, per_slice = aggregate(scores, by_id(examples), ANSWER_METRICS)
@@ -383,7 +398,12 @@ def run_answer_eval(
             kind="answers",
             variant=variant,
             split=split_label,
-            config={**config.model_dump(), "judges": judges is not None, "judge_model": judge_model},
+            config={
+                **config.model_dump(),
+                "judges": judges is not None,
+                "judge_model": judge_model,
+                "groundedness_judged": judges is not None and grounded,
+            },
             metrics=metrics,
             per_slice=per_slice,
             n=len(scores),

@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
     model_analysis: str = "openai/gpt-4.1-mini"  # placeholder: pick on Day 1 (structured_outputs + tools)
     model_answer: str = "openai/gpt-4.1-mini"  # placeholder: pick on Day 1 (tools)
-    model_judge: str = "anthropic/claude-sonnet-4.5"  # placeholder: different family than answer model
+    model_judge: str = "google/gemini-2.5-flash-lite"  # cheap judge, different family than the answer model
     embedding_model: str = "qwen/qwen3-embedding-8b"  # ADR-0002 hypothesis; bake-off decides
 
     # --- Voice (expat/speech.py, ADR-0011): OpenRouter audio endpoints, same key ---
