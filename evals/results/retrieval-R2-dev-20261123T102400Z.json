@@ -1,0 +1,1209 @@
+{
+  "experiment": "retrieval-R2-dev-20261123T102400Z",
+  "kind": "retrieval",
+  "variant": "R2",
+  "split": "dev",
+  "config": {
+    "use_german_rewrite": true,
+    "use_multi_query": true,
+    "use_decomposition": false,
+    "use_bm25": false,
+    "use_filters": false,
+    "use_rerank": false,
+    "use_hyde": false,
+    "use_step_back": true,
+    "bm25_queries": "all",
+    "bm25_weight": 1.0,
+    "bm25_legal_refs": false,
+    "k_dense": 20,
+    "k_sparse": 20,
+    "k_final": 8,
+    "rrf_c": 60
+  },
+  "metrics": {
+    "hit@5": 0.9375,
+    "recall@10": 0.8993055555555555,
+    "mrr@10": 0.7224206349206349,
+    "leak@10": 0.5833333333333334,
+    "latency_p50_ms": 9791.62124999948,
+    "latency_p95_ms": 15341.284570001153
+  },
+  "per_slice": {
+    "bureaucracy": {
+      "hit@5": 0.8947368421052632,
+      "recall@10": 0.9210526315789473,
+      "mrr@10": 0.6013784461152882,
+      "leak@10": 0.7368421052631579,
+      "latency_p50_ms": 9210.822499999267,
+      "latency_p95_ms": 13255.526769999418,
+      "n": 19.0
+    },
+    "category:legal_lookup": {
+      "hit@5": 1.0,
+      "recall@10": 0.9090909090909091,
+      "mrr@10": 0.8484848484848485,
+      "leak@10": 0.5454545454545454,
+      "latency_p50_ms": 10574.819900000875,
+      "latency_p95_ms": 30193.58639999973,
+      "n": 11.0
+    },
+    "category:multi_domain": {
+      "hit@5": 0.6666666666666666,
+      "recall@10": 0.38888888888888884,
+      "mrr@10": 0.2222222222222222,
+      "leak@10": 0.6666666666666666,
+      "latency_p50_ms": 8797.658099998444,
+      "latency_p95_ms": 11238.165869999284,
+      "n": 3.0
+    },
+    "category:numeric": {
+      "hit@5": 0.875,
+      "recall@10": 0.9375,
+      "mrr@10": 0.5595238095238095,
+      "leak@10": 0.5,
+      "latency_p50_ms": 8357.864700000391,
+      "latency_p95_ms": 13804.312630001006,
+      "n": 8.0
+    },
+    "category:single_domain": {
+      "hit@5": 0.9444444444444444,
+      "recall@10": 0.9166666666666666,
+      "mrr@10": 0.7222222222222222,
+      "leak@10": 0.7222222222222222,
+      "latency_p50_ms": 9490.328199999567,
+      "latency_p95_ms": 12492.489580000802,
+      "n": 18.0
+    },
+    "category:tool": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.9,
+      "leak@10": 0.375,
+      "latency_p50_ms": 11267.872700001135,
+      "latency_p95_ms": 14845.70469500004,
+      "n": 8.0
+    },
+    "family": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.9444444444444444,
+      "leak@10": 0.5555555555555556,
+      "latency_p50_ms": 9769.833899999867,
+      "latency_p95_ms": 13862.049800000748,
+      "n": 9.0
+    },
+    "health": {
+      "hit@5": 1.0,
+      "recall@10": 0.75,
+      "mrr@10": 0.625,
+      "leak@10": 0.5,
+      "latency_p50_ms": 7493.19105000086,
+      "latency_p95_ms": 7587.142995001068,
+      "n": 2.0
+    },
+    "lang:de": {
+      "hit@5": 0.8571428571428571,
+      "recall@10": 0.8571428571428571,
+      "mrr@10": 0.7857142857142857,
+      "leak@10": 0.5714285714285714,
+      "latency_p50_ms": 10759.54080000156,
+      "latency_p95_ms": 33637.608700000244,
+      "n": 7.0
+    },
+    "lang:en": {
+      "hit@5": 0.9512195121951219,
+      "recall@10": 0.9065040650406504,
+      "mrr@10": 0.7116144018583044,
+      "leak@10": 0.5853658536585366,
+      "latency_p50_ms": 9769.833899999867,
+      "latency_p95_ms": 14288.805299998785,
+      "n": 41.0
+    },
+    "multi_domain": {
+      "hit@5": 0.75,
+      "recall@10": 0.5416666666666666,
+      "mrr@10": 0.41666666666666663,
+      "leak@10": 0.75,
+      "latency_p50_ms": 10153.49574999891,
+      "latency_p95_ms": 12267.079585000829,
+      "n": 4.0
+    },
+    "taxes": {
+      "hit@5": 1.0,
+      "recall@10": 0.75,
+      "mrr@10": 0.41666666666666663,
+      "leak@10": 0.5,
+      "latency_p50_ms": 7674.388850000469,
+      "latency_p95_ms": 10472.352275000412,
+      "n": 2.0
+    },
+    "tenancy": {
+      "hit@5": 1.0,
+      "recall@10": 0.9583333333333334,
+      "mrr@10": 0.9166666666666666,
+      "leak@10": 0.3333333333333333,
+      "latency_p50_ms": 10643.324900000152,
+      "latency_p95_ms": 29056.668379999683,
+      "n": 12.0
+    },
+    "tool": {
+      "hit@5": 1.0,
+      "recall@10": 0.9444444444444444,
+      "mrr@10": 0.837037037037037,
+      "leak@10": 0.4444444444444444,
+      "latency_p50_ms": 10759.54080000156,
+      "latency_p95_ms": 14802.866279999944,
+      "n": 9.0
+    }
+  },
+  "n": 48,
+  "errors": 0,
+  "created_at": "2026-11-23T10:24:00.028764Z",
+  "mode": "langsmith",
+  "dataset": "expat-golden-v3",
+  "langsmith_experiment": "R2-retrieval-10a28bcc",
+  "per_example": [
+    {
+      "id": "bur-030",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 7783.78580000026,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bmv-fuehrerschein-en#you-hold-a-foreign-driving-licence-that-was-not-issued-in-a",
+          "bmv-fuehrerschein#sie-besitzen-einen-auslaendischen-fuehrerschein-der-nicht-in",
+          "fev#29",
+          "bmv-fuehrerschein#ihr-fuehrerschein-ist-gueltig-bei-voruebergehendem-aufenthal",
+          "bmv-fuehrerschein#besitzen-sie-einen-fuehrerschein-aus-einem-mitgliedstaat-der",
+          "bmv-fuehrerschein-en#a-foreign-driving-licence-does-not-entitle-you-to-drive-or-r",
+          "bmv-fuehrerschein-en#your-driving-licence-is-valid-if-your-stay-in-the-federal-re"
+        ]
+      }
+    },
+    {
+      "id": "fam-010",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 7924.8893999993015,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-kita#overview",
+          "ber-kita#requirements",
+          "cgn-kita#other",
+          "ber-kita#overview",
+          "cgn-kita#wie-erfolgt-die-platzvergabe",
+          "str-kita#betreuungsplatz-anfrage-stellen",
+          "muc-kita#fees",
+          "fra-kita#wie-merkt-man-sein-kind-fuer-einen-betreuungsplatz-vor"
+        ]
+      }
+    },
+    {
+      "id": "fam-007",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 8178.8957999997365,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "beeg#4",
+          "fp-elterngeld#unterschiedliche-dauer-je-nach-elterngeld-variante",
+          "fp-elterngeld-neuregelungen#neuregelung-des-parallelen-bezugs-von-basiselterngeld"
+        ]
+      }
+    },
+    {
+      "id": "mul-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.6666666666666666,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 1.0
+      },
+      "latency_ms": 8558.065299999726,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung#requirements",
+          "bp-blaue-karte#overview",
+          "muc-kita#contact",
+          "muc-anmeldung-familie#overview",
+          "bp-kindergeld#requirements",
+          "cgn-anmeldung#documents",
+          "muc-anmeldung-familie#documents"
+        ]
+      }
+    },
+    {
+      "id": "bur-002",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.2,
+        "leak@10": 1.0
+      },
+      "latency_ms": 9512.614199999007,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung-familie#overview",
+          "muc-anmeldung#overview",
+          "bp-wohnsitz-anmeldung#deadlines",
+          "bp-wohnsitz-anmeldung#overview",
+          "bmg#17",
+          "muc-anmeldung#requirements",
+          "str-anmeldung#overview",
+          "str-anmeldung#deadlines"
+        ]
+      }
+    },
+    {
+      "id": "fam-008",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 9769.833899999867,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-kita#contact",
+          "muc-kita#overview",
+          "str-kita#betreuungsplatz-anfrage-stellen",
+          "fra-kita#wie-merkt-man-sein-kind-fuer-einen-betreuungsplatz-vor",
+          "str-kita#elternkonto-anlegen",
+          "str-kita#kita-portal"
+        ]
+      }
+    },
+    {
+      "id": "ten-016",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 9911.415699998543,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "hh-mietpreisbremse-info#mietpreisbremse",
+          "hh-mietpreisbremse#1",
+          "he-mietpreisbremse#1",
+          "bw-mietpreisbremse-info#mietpreisbremse-gemaess-landesverordnung"
+        ]
+      }
+    },
+    {
+      "id": "tax-002",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.5,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 0.0
+      },
+      "latency_ms": 10783.237100000406,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "fa-nrw-steuerklassen#lohnsteuerklassen",
+          "fa-nrw-steuerklassen#die-steuerklassen-im-einzelnen",
+          "estg#38b"
+        ]
+      }
+    },
+    {
+      "id": "bur-025",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 1.0
+      },
+      "latency_ms": 2375.086600000941,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bp-wohnsitz-anmeldung#deadlines",
+          "ber-anmeldung#requirements",
+          "bmg#17",
+          "muc-anmeldung-familie#overview",
+          "bp-wohnsitz-anmeldung#overview",
+          "str-anmeldung#overview",
+          "ber-anmeldung#overview",
+          "str-anmeldung#deadlines"
+        ]
+      }
+    },
+    {
+      "id": "tax-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 4565.540600000531,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung#was-ist-wenn-ich-keine-steueridentifikationsnummer-steuer-id",
+          "bzst-steuer-id#i-don-t-know-my-idno",
+          "ao#139b",
+          "ao#139a",
+          "estg#39",
+          "bzst-steuer-id#how-do-i-get-my-idno"
+        ]
+      }
+    },
+    {
+      "id": "ten-009",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 8799.046300000555,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#553",
+          "bgb#540",
+          "bgb#565",
+          "bgb#567a",
+          "bgb#549",
+          "bgb#573b",
+          "bgb#564"
+        ]
+      }
+    },
+    {
+      "id": "ten-010",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 10375.306800000544,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-mietspiegel#funktion-eines-qualifizierten-mietspiegels",
+          "muc-mietspiegel#ueberblick-ueber-die-durchschnittsmieten-der-letzten-mietspi",
+          "muc-mietspiegel#durchschnittsmiete-gegenueber-dem-mietspiegel-2023",
+          "muc-mietspiegel#veroeffentlichung",
+          "muc-mietspiegel#online-mietspiegel-fuer-muenchen-2025-berechnungsprogramm",
+          "muc-mietspiegel#mietspiegel-fuer-muenchen",
+          "muc-mietspiegel#neuberechnung-und-indexfortschreibung"
+        ]
+      }
+    },
+    {
+      "id": "ten-007",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 9303.406999999424,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#573c",
+          "bgb#573a",
+          "bgb#573d",
+          "bgb#580a",
+          "bgb#577a",
+          "bgb#580",
+          "bgb#576",
+          "bgb#575a"
+        ]
+      }
+    },
+    {
+      "id": "bur-009",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 7275.605199998608,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "aufenthg#18g",
+          "str-welcome-blaue-karte#blaue-karte-eu",
+          "ham-welcome-blaue-karte#wechsel-des-arbeitsplatzes-mit-der-blauen-karte-eu",
+          "muc-aufenthaltstitel-fachkraefte#overview",
+          "cgn-auslaenderbehoerde-blaue-karte#other",
+          "str-auslaenderbehoerde-blaue-karte#overview",
+          "ham-blaue-karte#overview",
+          "aufenthg#82"
+        ]
+      }
+    },
+    {
+      "id": "bur-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 7938.283299999966,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung#overview",
+          "muc-anmeldung-familie#overview",
+          "bmg#17",
+          "bp-wohnsitz-anmeldung#overview",
+          "str-anmeldung#overview",
+          "ber-anmeldung#requirements",
+          "muc-anmeldung#requirements",
+          "ber-anmeldung#overview"
+        ]
+      }
+    },
+    {
+      "id": "fam-014",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 8146.521200000279,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "str-kita#betreuungsplatz-anfrage-stellen",
+          "muc-kita#overview",
+          "str-kita#elternkonto-anlegen",
+          "cgn-kita#wie-erfolgt-die-platzvergabe",
+          "cgn-kita#other",
+          "str-kita#informationen-zur-platzvergabe",
+          "muc-kita#fees",
+          "muc-kita#other"
+        ]
+      }
+    },
+    {
+      "id": "fam-012",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 11838.46529999937,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "fra-kita#wie-merkt-man-sein-kind-fuer-einen-betreuungsplatz-vor",
+          "fra-kita#allgemeine-informationen",
+          "muc-kita#overview",
+          "fra-kita#betreuungsplatz-suchen-und-finden",
+          "str-kita#betreuungsplatz-anfrage-stellen",
+          "cgn-kita#other",
+          "cgn-kita#wie-erfolgt-die-platzvergabe",
+          "fra-kita#infoboerse-kindertagesbetreuung"
+        ]
+      }
+    },
+    {
+      "id": "hea-002",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 7597.582100001091,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "sgbv#10",
+          "bmg-krankenversicherung#familienversicherte"
+        ]
+      }
+    },
+    {
+      "id": "hea-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.5,
+        "mrr@10": 0.25,
+        "leak@10": 1.0
+      },
+      "latency_ms": 7388.800000000629,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ber-lea-blaue-karte#requirements",
+          "sgbv#5",
+          "aufenthg#18g",
+          "sgbv#6",
+          "ham-welcome-blaue-karte#allgemeine-hinweise",
+          "ham-welcome-blaue-karte#voraussetzungen"
+        ]
+      }
+    },
+    {
+      "id": "bur-020",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 9813.408599999093,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ham-anmeldung#overview",
+          "ham-anmeldung#other",
+          "ber-anmeldung#requirements",
+          "bmg#17",
+          "str-anmeldung#overview",
+          "ber-anmeldung#overview",
+          "muc-anmeldung#welche-ausnahmen-gibt-es-bei-der-meldepflicht"
+        ]
+      }
+    },
+    {
+      "id": "bur-016",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 8931.943600000523,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "cgn-auslaenderbehoerde-blaue-karte#fees",
+          "ham-blaue-karte#other",
+          "ber-lea-blaue-karte#fees",
+          "bp-blaue-karte#fees",
+          "ber-lea-niederlassung-blaue-karte#fees",
+          "muc-aufenthaltstitel-fachkraefte#fees",
+          "ham-welcome-blaue-karte#allgemeine-hinweise",
+          "str-auslaenderbehoerde-blaue-karte#fees"
+        ]
+      }
+    },
+    {
+      "id": "fam-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 3420.0751000007585,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "estg#66",
+          "fp-kindergeld#was-ist-kindergeld",
+          "bp-kindergeld#overview",
+          "estg#63",
+          "bp-kindergeld#requirements",
+          "estg#70",
+          "estg#65"
+        ]
+      }
+    },
+    {
+      "id": "ten-019",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 10574.819900000875,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#573c",
+          "bgb#573d",
+          "bgb#580a",
+          "bgb#575a",
+          "bgb#580",
+          "bgb#573a",
+          "bgb#568"
+        ]
+      }
+    },
+    {
+      "id": "mul-006",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 12400.799500001085,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "str-anmeldung#overview",
+          "str-welcome-anmeldung#wohnsitz-anmelden",
+          "bmg#17",
+          "ber-anmeldung#steps",
+          "str-welcome-anmeldung#bei-der-auslaenderbehoerde-melden",
+          "bp-wohnsitz-anmeldung#steps",
+          "muc-anmeldung#requirements",
+          "muc-anmeldung-familie#requirements"
+        ]
+      }
+    },
+    {
+      "id": "bur-014",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 9210.822499999267,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "cgn-anmeldung#other",
+          "cgn-anmeldung#fees",
+          "cgn-anmeldung#overview",
+          "bmg#54",
+          "muc-anmeldung#fees",
+          "ham-anmeldung#other",
+          "muc-anmeldung-familie#fees"
+        ]
+      }
+    },
+    {
+      "id": "ten-002",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 14288.805299998785,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#573c",
+          "bgb#573d",
+          "bgb#580a",
+          "bgb#575a",
+          "bgb#580",
+          "bgb#568",
+          "bgb#573a"
+        ]
+      }
+    },
+    {
+      "id": "bur-012",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 11413.36550000051,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ber-anmeldung#requirements",
+          "bp-wohnsitz-anmeldung#documents",
+          "cgn-anmeldung#documents",
+          "ber-anmeldung#overview",
+          "ber-anmeldung#documents",
+          "str-anmeldung#documents",
+          "bp-wohnsitz-anmeldung#steps"
+        ]
+      }
+    },
+    {
+      "id": "bur-031",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 0.0
+      },
+      "latency_ms": 10588.947899999766,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "fev#31",
+          "fev#anlage11",
+          "fev#30",
+          "fev#30a",
+          "fev#29"
+        ]
+      }
+    },
+    {
+      "id": "mul-002",
+      "metrics": {
+        "hit@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 11509.333399999377,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung-familie#overview",
+          "muc-anmeldung#requirements",
+          "bp-elterngeld#requirements",
+          "muc-anmeldung#overview",
+          "muc-anmeldung-familie#documents",
+          "muc-anmeldung-familie#requirements",
+          "bp-kindergeld#requirements",
+          "muc-anmeldung#documents"
+        ]
+      }
+    },
+    {
+      "id": "bur-005",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 1.0
+      },
+      "latency_ms": 3482.7715000010357,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ham-welcome-blaue-karte#allgemeine-hinweise",
+          "ber-lea-blaue-karte#requirements",
+          "aufenthg#18g",
+          "ham-welcome-blaue-karte#sonderfall-berufseinsteigerinnen-und-einsteiger",
+          "fra-auslaenderbehoerde-blaue-karte#overview",
+          "ham-welcome-blaue-karte#voraussetzungen"
+        ]
+      }
+    },
+    {
+      "id": "bur-006",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.5,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 1.0
+      },
+      "latency_ms": 10794.314700000541,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "str-welcome-niederlassung#niederlassungserlaubnis-fuer-inhaber-einer-blauen-karte",
+          "ham-welcome-niederlassung#zusaetzliche-hinweise-fuer",
+          "aufenthg#18c",
+          "ham-niederlassung-blaue-karte#other",
+          "ham-welcome-blaue-karte#perspektiven-der-blauen-karte-eu",
+          "ber-lea-niederlassung-blaue-karte#overview",
+          "ber-lea-niederlassung-blaue-karte#requirements",
+          "miig-blue-card#eu-blue-card"
+        ]
+      }
+    },
+    {
+      "id": "ten-003",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 7322.339700000157,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#551",
+          "bgb#562c",
+          "bgb#569",
+          "bgb#556g",
+          "bgb#562"
+        ]
+      }
+    },
+    {
+      "id": "ten-001",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 10711.82989999943,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#573c",
+          "bgb#573d",
+          "bgb#580a",
+          "bgb#573a",
+          "bgb#575",
+          "bgb#580",
+          "bgb#575a"
+        ]
+      }
+    },
+    {
+      "id": "ten-005",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.5,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 18824.40619999943,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "by-mieterschutzv#anlage",
+          "muc-mietspiegel#funktion-eines-qualifizierten-mietspiegels",
+          "by-mieterschutzv#1",
+          "by-mieterschutzv#2",
+          "muc-mietspiegel#durchschnittsmiete-gegenueber-dem-mietspiegel-2023"
+        ]
+      }
+    },
+    {
+      "id": "bur-026",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.25,
+        "leak@10": 0.0
+      },
+      "latency_ms": 8974.934199999552,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bamf-einbuergerung#voraussetzungen",
+          "bmi-einbuergerung#einbuergerungsvoraussetzungen",
+          "bmi-einbuergerung#reform-des-staatsangehoerigkeitsrechts",
+          "stag#10",
+          "stag#8",
+          "stag#9"
+        ]
+      }
+    },
+    {
+      "id": "bur-008",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 0.0
+      },
+      "latency_ms": 15446.667400001388,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "rb-payment#informationen-zur-zahlung",
+          "rb-fee#the-licence-fee",
+          "rb-payment#zahlungsfrist",
+          "rb-students#students-and-apprentices",
+          "rb-payment#zahlungsrueckstand",
+          "rb-payment#insolvenzverfahren",
+          "rb-fee#the-contribution-service-of-ard-zdf-and-deutschlandradio",
+          "rb-fee#exemption-and-reduction"
+        ]
+      }
+    },
+    {
+      "id": "ten-006",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 14287.45549999985,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#556",
+          "bgb#556b",
+          "bgb#560",
+          "bgb#556g",
+          "bgb#556a",
+          "bgb#559b",
+          "hh-mietpreisbremse-info#mietpreisbremse"
+        ]
+      }
+    },
+    {
+      "id": "bur-004",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 10759.54080000156,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung-familie#documents",
+          "muc-anmeldung#documents",
+          "muc-anmeldung-familie#overview",
+          "cgn-anmeldung#documents",
+          "muc-anmeldung#requirements",
+          "muc-anmeldung-familie#requirements",
+          "ber-anmeldung#documents"
+        ]
+      }
+    },
+    {
+      "id": "fam-002",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 11776.20460000071,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "estg#66",
+          "fp-kindergeld#was-ist-kindergeld",
+          "estg#63",
+          "bp-kindergeld#overview",
+          "estg#65",
+          "bp-kindergeld#requirements",
+          "estg#70",
+          "estg#64"
+        ]
+      }
+    },
+    {
+      "id": "fam-005",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 11936.7641000008,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "beeg#2",
+          "beeg#1",
+          "fp-elterngeld#gibt-es-elterngeld-auch-fuer-auslaendische-eltern",
+          "estg#62",
+          "fp-elterngeld#wie-viel-elterngeld-kann-ich-bekommen"
+        ]
+      }
+    },
+    {
+      "id": "ten-014",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 41562.76660000003,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "nw-mietpreisbremse#verordnung-zur-festlegung-des-anwendungsbereiches-bundesrech",
+          "nw-mietpreisbremse-anlage#anlage",
+          "nw-mietpreisbremse#1-anwendungsbereich-bundesrechtlicher-mieterschutzvorschrift",
+          "cgn-mietpreisueberhoehung#other",
+          "he-mietpreisbremse#1",
+          "nw-mietpreisbremse#3-inkrafttreten-ausserkrafttreten"
+        ]
+      }
+    },
+    {
+      "id": "ten-012",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 11866.433999999572,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "hh-mietpreisbremse-info#mietpreisbremse",
+          "be-mietpreisbremse#2",
+          "he-mietpreisbremse#1",
+          "be-mietpreisbremse#1",
+          "bw-mietpreisbremse-info#aktuelles",
+          "nw-mietpreisbremse#verordnung-zur-festlegung-des-anwendungsbereiches-bundesrech"
+        ]
+      }
+    },
+    {
+      "id": "mul-004",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.5,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 1.0
+      },
+      "latency_ms": 8797.658099998444,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ber-anmeldung#requirements",
+          "ber-anmeldung#overview",
+          "bmg#17",
+          "str-anmeldung#overview",
+          "muc-anmeldung-familie#overview",
+          "str-welcome-anmeldung#wohnsitz-anmelden",
+          "bp-wohnsitz-anmeldung#deadlines",
+          "bmg#27"
+        ]
+      }
+    },
+    {
+      "id": "fam-004",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 15145.573600000716,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "estg#70",
+          "fp-kindergeld#wie-wird-kindergeld-beantragt-und-ausgezahlt",
+          "bp-kindergeld#deadlines",
+          "estg#78",
+          "estg#66",
+          "ham-kita#wichtig-kostenerstattung-erst-ab-antragstellung"
+        ]
+      }
+    },
+    {
+      "id": "bur-018",
+      "metrics": {
+        "hit@5": 0.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.14285714285714285,
+        "leak@10": 1.0
+      },
+      "latency_ms": 10754.225200000292,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "cgn-auslaenderbehoerde-blaue-karte#fees",
+          "ber-lea-blaue-karte#fees",
+          "ham-blaue-karte#other",
+          "ber-lea-niederlassung-blaue-karte#fees",
+          "bp-blaue-karte#fees",
+          "muc-aufenthaltstitel-fachkraefte#fees",
+          "str-auslaenderbehoerde-blaue-karte#fees",
+          "fra-auslaenderbehoerde-blaue-karte#overview"
+        ]
+      }
+    },
+    {
+      "id": "bur-011",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 8294.93309999998,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-anmeldung#welche-ausnahmen-gibt-es-bei-der-meldepflicht",
+          "ber-anmeldung#overview",
+          "ber-anmeldung#requirements",
+          "bp-wohnsitz-anmeldung#overview",
+          "bmg#29",
+          "str-anmeldung#overview",
+          "bp-wohnsitz-anmeldung#steps",
+          "bmg#17"
+        ]
+      }
+    },
+    {
+      "id": "bur-027",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 0.0
+      },
+      "latency_ms": 9115.264399999432,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "stag#11",
+          "stag#10",
+          "bmi-einbuergerung#einbuergerungsvoraussetzungen",
+          "stag#4",
+          "stag#16",
+          "bmi-einbuergerung#reform-des-staatsangehoerigkeitsrechts",
+          "stag#12b"
+        ]
+      }
+    },
+    {
+      "id": "bur-022",
+      "metrics": {
+        "hit@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 13012.066699999195,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "aufenthg#18c",
+          "ham-niederlassung-blaue-karte#other",
+          "ham-welcome-blaue-karte#perspektiven-der-blauen-karte-eu",
+          "ber-lea-niederlassung-blaue-karte#overview",
+          "ham-welcome-niederlassung#zusaetzliche-hinweise-fuer",
+          "ham-blaue-karte#overview",
+          "muc-niederlassung-blaue-karte#requirements",
+          "muc-niederlassung-blaue-karte#overview"
+        ]
+      }
+    }
+  ]
+}

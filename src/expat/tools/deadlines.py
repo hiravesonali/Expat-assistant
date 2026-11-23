@@ -54,6 +54,9 @@ class DeadlineResult(ToolOutput):
     is_overdue: bool
     rule_text: str
     consequences: str | None
+    # Retroactive benefits only: what an application arriving on `as_of` still gets (late is not "nothing").
+    paid_from_if_applied_now: date | None = None
+    months_lost_if_applied_now: int | None = None
 
 
 WEEKEND_CAVEAT = (
@@ -83,6 +86,27 @@ def _due_date(rule: DeadlineRule, event: date) -> tuple[date | None, date | None
             return event, event - timedelta(days=rule.amount), "before"
         case "without_undue_delay":
             return None, None, "within"
+
+
+def _paid_if_applied_on(rule: DeadlineRule, event: date, applied: date) -> tuple[date, int] | None:
+    """(first day still paid, months lost) for an application arriving on `applied`; None for other kinds.
+
+    Kindergeld: paid for the N calendar months before the application month (§ 70 Abs. 1 Satz 2 EStG), never
+    before the month of the event. Elterngeld: paid for the N life months before the life month of the
+    application (§ 7 Abs. 1 Satz 2 BEEG).
+    """
+    match rule.kind:
+        case "calendar_months_retroactive":
+            event_index = event.year * 12 + event.month - 1
+            first_index = max(event_index, applied.year * 12 + applied.month - 1 - rule.amount)
+            return date(first_index // 12, first_index % 12 + 1, 1), first_index - event_index
+        case "life_months_retroactive":
+            life_month = 1  # the life month the application arrives in
+            while add_months(event, life_month) <= applied:
+                life_month += 1
+            first_paid = max(1, life_month - rule.amount)
+            return add_months(event, first_paid - 1), first_paid - 1
+    return None
 
 
 def calculate_deadline(
@@ -116,6 +140,14 @@ def calculate_deadline(
             ]
         case "kindergeld_retroactive" | "elterngeld_retroactive":
             caveats.append("Apply as early as possible; the date shown is the last day without losing money.")
+            paid = _paid_if_applied_on(rule, inp.event_date, as_of)
+            if paid is not None and due is not None and as_of > due:
+                unit = "month(s)" if inp.procedure == "kindergeld_retroactive" else "life month(s)"
+                caveats.append(
+                    f"The last day without losses has passed, but a late application still pays back: if it "
+                    f"arrives on {as_of.isoformat()}, payment starts from {paid[0].isoformat()} and {paid[1]} "
+                    f"{unit} are lost. Every further month of delay loses one more month, so apply now."
+                )
             if inp.procedure == "elterngeld_retroactive" and inp.event_date.day > 28:
                 caveats.append(
                     "For births on the 29th-31st the end of a life month can differ by a day; apply earlier."
@@ -133,7 +165,10 @@ def calculate_deadline(
             )
             caveats += [f"Pending change: {p.summary}" for p in rules.pending("rundfunkbeitrag")]
 
+    paid_now = _paid_if_applied_on(rule, inp.event_date, as_of)
     return DeadlineResult(
+        paid_from_if_applied_now=paid_now[0] if paid_now else None,
+        months_lost_if_applied_now=paid_now[1] if paid_now else None,
         procedure=inp.procedure,
         event_date=inp.event_date,
         due_date=due,
@@ -154,7 +189,8 @@ calculate_deadline_tool = make_tool(
     name="calculate_deadline",
     description=(
         "Compute statutory deadlines: Anmeldung/Abmeldung (registering/deregistering an address), the last day "
-        "to apply for Kindergeld or Elterngeld without losing retroactive months, when to apply for a residence "
+        "to apply for Kindergeld or Elterngeld without losing retroactive months (and, if that day has passed, "
+        "from which month a late application still pays and how many months are lost), when to apply for a residence "
         "permit extension, and Rundfunkbeitrag (TV licence) registration. Use whenever the user asks 'by when' "
         "or 'how long do I have' for one of these. Never compute these dates yourself."
     ),

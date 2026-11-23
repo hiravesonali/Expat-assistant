@@ -45,7 +45,7 @@ def test_every_rule_is_citable_and_verified() -> None:
     for meta in metas:
         assert meta.legal_basis
         assert meta.source_url.startswith("https://")
-        assert meta.last_verified == date(2026, 11, 17)
+        assert meta.last_verified >= date(2026, 11, 17)  # all checked in the 2026-11 review
 
 
 def test_pending_changes_are_listed_by_topic() -> None:

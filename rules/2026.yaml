@@ -118,11 +118,11 @@ deadlines:
     amount: 6
     rule_text: "Kindergeld is paid retroactively only for the last six months before the month the application is received."
     consequences: "Months further back than six months before the application month are lost."
-    legal_basis: "§ 66 Abs. 3 EStG"
-    source_url: https://www.gesetze-im-internet.de/estg/__66.html
+    legal_basis: "§ 70 Abs. 1 Satz 2 EStG"
+    source_url: https://www.gesetze-im-internet.de/estg/__70.html
     valid_from: 2018-01-01
     valid_until: null
-    last_verified: 2026-11-17
+    last_verified: 2026-11-23
   elterngeld_retroactive:
     kind: life_months_retroactive
     amount: 3
