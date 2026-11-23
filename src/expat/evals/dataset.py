@@ -26,6 +26,8 @@ SLICE_BY_PREFIX: dict[str, str] = {
     "bur": "bureaucracy",
     "ten": "tenancy",
     "fam": "family",
+    "hea": "health",
+    "tax": "taxes",
     "mul": "multi_domain",
     "oos": "out_of_scope",
 }
@@ -60,7 +62,7 @@ class GoldenExample(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    id: str = Field(pattern=r"^(bur|ten|fam|mul|oos)-\d{3}$")
+    id: str = Field(pattern=r"^(bur|ten|fam|hea|tax|mul|oos)-\d{3}$")
     split: Split
     question: str = Field(min_length=5)
     language: Literal["en", "de"]

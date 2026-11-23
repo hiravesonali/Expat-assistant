@@ -162,7 +162,11 @@ class PoliteFetcher:
         parser = urllib.robotparser.RobotFileParser(f"{host}/robots.txt")
         try:
             self._wait_for_host(parts.netloc, delay=self.min_delay)
-            response = self.client.get(f"{host}/robots.txt")
+            try:
+                response = self.client.get(f"{host}/robots.txt")
+            except httpx.TransportError:  # a one-off connection reset (seen on bmi.bund.de, bamf.de): retry once
+                self._wait_for_host(parts.netloc, delay=self.min_delay)
+                response = self.client.get(f"{host}/robots.txt")
             if response.status_code in (401, 403):
                 parser.disallow_all = True  # type: ignore[attr-defined]
             elif 400 <= response.status_code < 500:

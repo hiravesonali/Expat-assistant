@@ -239,6 +239,48 @@ PROFILES: dict[str, SiteProfile] = {
         faq_question=".accordion__header",
         faq_answer=".accordion__content",
     ),
+    # ---- Nationwide topics (phase 3, 2026-11-23; selectors checked on saved pages) ----------------------
+    # Federal health ministry: H2 sections; accordion bodies carry aria-hidden="true" until opened.
+    "www.bundesgesundheitsministerium.de": SiteProfile(
+        content=("article#article",),
+        title="h1",
+        drop=("#js-jump-marker-box", ".c-collapse-content__actions"),  # "Seiteninhalte" jump list, "alle öffnen"
+        unhide=(".c-collapse-content__panel",),
+        drop_headings=re.compile(r"^(weitere informationen|further information)$", re.I),
+    ),
+    # Federal interior ministry (citizenship). robots.txt: Crawl-delay 10 (the fetcher honours it).
+    "www.bmi.bund.de": SiteProfile(
+        content=("#content .c-content-article",),
+        title="h1.c-content-stage__headline",
+        drop=(
+            ".c-teaser-carousel--embedded",
+            ".l-content-article--1280",
+            ".c-navigation-tableau--hierarchically",
+            ".c-content-linklist",
+        ),
+        drop_text=re.compile(r"^(typ|type): |^externer link|^external link|^zur webseite$|^to website$", re.I),
+    ),
+    # Federal transport ministry (foreign driving licences); bmdv.bund.de redirects here.
+    "www.bmv.de": SiteProfile(
+        content=("main .main-content .rich-text",),
+        title="h1.headline-title",
+        drop=("aside",),
+        drop_text=re.compile(r"^(source|quelle): ", re.I),  # image credits
+    ),
+    # Federal Central Tax Office (tax ID). FAQ groups are H2, questions H3.
+    "www.bzst.de": SiteProfile(
+        content=(".l-basepage .s-cms-richtext",),
+        title="h1.c-intro__headline",
+        drop=(".c-hint-box", ".c-doc-list__item", ".l-grid-teaser"),
+        drop_headings=re.compile(r"^(downloads?|downloadbereich|sonstige anfragen|kontaktformular)$", re.I),
+    ),
+    # NRW tax administration: tax classes (federal law, valid everywhere). Accordion titles sit in <button>s,
+    # which the global drop removes; each body names its class itself ("Die Steuerklasse 1 wird …").
+    "www.finanzamt.nrw.de": SiteProfile(
+        content=("article.tax-information .normal-page__content-paragraphs",),
+        title="h1.msb__header",
+        drop=(".faq-list",),
+    ),
 }
 # Same layout on sister hosts.
 PROFILES["welcome.hamburg.com"] = PROFILES["welcome.hamburg.de"]
@@ -372,7 +414,9 @@ def parse_html(html: str, url: str, profile: SiteProfile | None = None) -> WebDo
     profile = profile or profile_for(url)
     soup = BeautifulSoup(html, "lxml")
 
-    title_el = soup.select_one(profile.title)
+    # "a, b" is a priority list (select_one would return whichever comes first in the document, so an
+    # <h1> would win over its own inner <span>, e.g. BAMF's title span next to the "Datum: …" meta span)
+    title_el = next((el for sel in profile.title.split(",") if (el := soup.select_one(sel.strip()))), None)
     title = normalize_whitespace(title_el.get_text(" ")) if title_el else ""
     if not title and soup.title:
         title = normalize_whitespace(soup.title.get_text(" ")).split(" - ")[0]

@@ -104,7 +104,7 @@
   terms: "§ 5 UrhG, public domain"
 
 - id: estg
-  name: "Einkommensteuergesetz (EStG), Kindergeld §§ 62–78"
+  name: "Einkommensteuergesetz (EStG): Steuerklassen §§ 26, 38b–39f, Kindergeld §§ 62–78"
   publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
   url: https://www.gesetze-im-internet.de/estg/xml.zip
   source_type: law
@@ -113,7 +113,13 @@
   domain: family
   subtopic: kindergeld
   keywords: [Kindergeld, child benefit]
-  include_ranges: ["62-78"]
+  domain_map:
+    # Phase 3 (2026-11-23): joint assessment, classes I-VI, ELStAM (IV/IV on marriage), factor method.
+    - range: "26-39f"
+      domain: taxes
+      subtopic: tax_classes
+      keywords: [tax class, Steuerklasse, married couple, Faktorverfahren, factor method]
+  include_ranges: ["26", "38b", "39", "39e", "39f", "62-78"]
   language: de
   jurisdiction: federal
   fetch_method: http
@@ -1332,3 +1338,250 @@
   valid_from: 2025-01-01
   valid_until: 2026-12-31
   terms: "© LH Stuttgart; Content-Signal use=reference; chunks + link only"
+
+# ============================================================================================
+# Phase 3 (2026-11-23): nationwide topics. Health insurance, citizenship, foreign driving licence, tax ID and
+# tax classes. Verified by a research pass (plain HTTP with the bot UA, robots.txt checked, parsed with the
+# site profiles in ingestion/parsers/html.py). Federal rules: valid in every state.
+# Not used: BAMF's English naturalisation page (dated 30/06/2025, still offers the 3-year route that was
+# abolished on 30.10.2025), verwaltung.bund.de (region-dependent FIM content), elster.de (no robots.txt,
+# JS portal), PDFs (no guide-PDF parser).
+# ============================================================================================
+# --------------------------------------------------------------------------------------------
+# Health insurance (Krankenversicherung)
+# --------------------------------------------------------------------------------------------
+- id: sgbv
+  name: "Sozialgesetzbuch V (SGB V): Versicherungspflicht, Familienversicherung, Kassenwahl"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/sgb_5/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: SGB V
+  domain: health
+  subtopic: health_insurance
+  keywords: [health insurance, Krankenversicherung, statutory health insurance, GKV, Versicherungspflichtgrenze]
+  domain_map:
+    - {range: "6", domain: health, subtopic: health_insurance, keywords: [income threshold, Jahresarbeitsentgeltgrenze, private health insurance]}
+    - {range: "9", domain: health, subtopic: health_insurance, keywords: [voluntary insurance, freiwillig versichert, first job in Germany]}
+    - {range: "10", domain: health, subtopic: family_insurance, keywords: [family insurance, Familienversicherung, spouse, children]}
+    - {range: "173-175", domain: health, subtopic: choose_fund, keywords: [choose a health insurance fund, Krankenkasse wechseln, switch]}
+  # § 5 compulsory insurance, § 6 exemption above the income threshold, § 7 minijob, § 8 exemption on
+  # application, § 9 voluntary insurance, § 10 family insurance, §§ 173-175 choosing / switching the fund.
+  include_ranges: ["5-10", "173-175"]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+- id: bmg-krankenversicherung
+  name: "Bundesgesundheitsministerium: Gesetzliche Krankenversicherung (Versicherte, Kassenwahl, GKV/PKV)"
+  publisher: "Bundesministerium für Gesundheit (BMG)"
+  pages:
+    - url: https://www.bundesgesundheitsministerium.de/gesetzlich-versicherte
+    - url: https://www.bundesgesundheitsministerium.de/themen/krankenversicherung/online-ratgeber-krankenversicherung/krankenversicherung/wahl-und-wechsel-der-krankenkasse
+    - url: https://www.bundesgesundheitsministerium.de/themen/krankenversicherung/online-ratgeber-krankenversicherung/krankenversicherung/wechsel-zwischen-gkv-und-pkv
+    - url: https://www.bundesgesundheitsministerium.de/beitraege
+  source_type: guide
+  parser: guide_html
+  domain: health
+  subtopic: health_insurance
+  keywords: [health insurance, Krankenkasse, private health insurance, PKV, contribution, Beitrag]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMG; quoting unchanged with source allowed -> chunks + link"
+
+- id: bmg-shi-en
+  name: "Federal Ministry of Health: Statutory health insurance"
+  publisher: "Bundesministerium für Gesundheit (BMG)"
+  url: https://www.bundesgesundheitsministerium.de/en/themen/krankenversicherung/online-ratgeber-krankenversicherung/krankenversicherung/statutory-health-insurance-shi
+  source_type: guide
+  parser: guide_html
+  domain: health
+  subtopic: health_insurance
+  language: en
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMG; quoting unchanged with source allowed -> chunks + link"
+
+# --------------------------------------------------------------------------------------------
+# Citizenship (Einbürgerung): 5 years since 27.06.2024, dual citizenship accepted, 3-year route abolished
+# 30.10.2025 (§ 10 Abs. 3 StAG "weggefallen"; spouses of Germans: § 9).
+# --------------------------------------------------------------------------------------------
+- id: stag
+  name: "Staatsangehörigkeitsgesetz (StAG)"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/stag/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: StAG
+  domain: bureaucracy
+  subtopic: citizenship
+  keywords: [citizenship, naturalisation, naturalization, Einbürgerung, German passport, dual citizenship]
+  domain_map:
+    - {range: "9", domain: bureaucracy, subtopic: citizenship, keywords: [spouse of a German, married to a German]}
+    - {range: "38", domain: bureaucracy, subtopic: citizenship, keywords: [fee, cost, Gebühr]}
+  # § 4 birth in Germany, §§ 8-12b naturalisation, § 16 certificate, § 38 fees.
+  include_ranges: ["4", "8-12b", "16", "38"]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+- id: bmi-einbuergerung-en
+  name: "Federal Ministry of the Interior: Naturalisation"
+  publisher: "Bundesministerium des Innern (BMI)"
+  url: https://www.bmi.bund.de/EN/topics/constitution/nationality/naturalization/naturalisation.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: citizenship
+  language: en
+  jurisdiction: federal
+  applies_to: [non_eu, eu]
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMI; copying needs consent -> chunks + link"
+
+- id: bmi-einbuergerung
+  name: "Bundesministerium des Innern: Einbürgerung und Staatsangehörigkeitsrecht"
+  publisher: "Bundesministerium des Innern (BMI)"
+  pages:
+    - url: https://www.bmi.bund.de/DE/themen/verfassung/staatsangehoerigkeit/einbuergerung/einbuergerung-node.html
+    - url: https://www.bmi.bund.de/DE/themen/verfassung/staatsangehoerigkeit/staatsangehoerigkeitsrecht/staatsangehoerigkeitsrecht-node.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: citizenship
+  keywords: [dual citizenship, Mehrstaatigkeit, doppelte Staatsangehörigkeit]
+  language: de
+  jurisdiction: federal
+  applies_to: [non_eu, eu]
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMI; copying needs consent -> chunks + link"
+
+- id: bamf-einbuergerung
+  name: "BAMF: Einbürgerung in Deutschland"
+  publisher: "Bundesamt für Migration und Flüchtlinge (BAMF)"
+  url: https://www.bamf.de/DE/Themen/Integration/ZugewanderteTeilnehmende/Einbuergerung/einbuergerung.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: citizenship
+  keywords: [citizenship test, Einbürgerungstest, naturalisation]
+  language: de
+  jurisdiction: federal
+  applies_to: [non_eu, eu]
+  fetch_method: http
+  refresh: monthly
+  terms: "© BAMF; text terms not verifiable -> chunks + link"
+
+# --------------------------------------------------------------------------------------------
+# Foreign driving licence (Führerschein umschreiben)
+# --------------------------------------------------------------------------------------------
+- id: fev
+  name: "Fahrerlaubnis-Verordnung (FeV): ausländische Fahrerlaubnisse, Anlage 11 Staatenliste"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/fev_2010/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: FeV
+  domain: bureaucracy
+  subtopic: driving_licence
+  keywords: [driving licence, driver's license, foreign licence, convert, exchange, Führerschein umschreiben]
+  # § 7 ordinary residence (185 days), § 28 EU/EEA licences, § 29 non-EU licences (6 months), §§ 30-31
+  # conversion. Anlage 11 = the countries whose licences convert without (some) tests.
+  include_ranges: ["7", "28-31"]
+  include_annexes: ["11"]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+- id: bmv-fuehrerschein-en
+  name: "Federal Ministry of Transport: Validity of foreign driving licences in Germany"
+  publisher: "Bundesministerium für Verkehr (BMV)"
+  url: https://www.bmv.de/SharedDocs/EN/Articles/StV/Roadtraffic/validity-foreign-driving-licences-in-germany.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: driving_licence
+  language: en
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMV; no explicit reuse terms found -> chunks + link"
+
+- id: bmv-fuehrerschein
+  name: "Bundesministerium für Verkehr: Gültigkeit ausländischer Fahrerlaubnisse in Deutschland"
+  publisher: "Bundesministerium für Verkehr (BMV)"
+  url: https://www.bmv.de/SharedDocs/DE/Artikel/StV/Strassenverkehr/gueltigkeit-auslaendischer-fahrerlaubnisse-in-deutschland.html
+  source_type: guide
+  parser: guide_html
+  domain: bureaucracy
+  subtopic: driving_licence
+  keywords: [Führerschein umschreiben, foreign driving licence]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© BMV; no explicit reuse terms found -> chunks + link"
+
+# --------------------------------------------------------------------------------------------
+# Tax ID (Steuer-ID) and tax classes (Steuerklassen); EStG §§ 26-39f are in the `estg` entry above.
+# --------------------------------------------------------------------------------------------
+- id: ao
+  name: "Abgabenordnung (AO): Identifikationsmerkmal §§ 139a–139b"
+  publisher: "Bundesministerium der Justiz / gesetze-im-internet.de"
+  url: https://www.gesetze-im-internet.de/ao_1977/xml.zip
+  source_type: law
+  parser: law_xml
+  law_abbrev: AO
+  domain: taxes
+  subtopic: tax_id
+  keywords: [tax ID, tax identification number, Steuer-ID, Steueridentifikationsnummer, IdNr, TIN]
+  include_ranges: ["139a-139b"]
+  language: de
+  jurisdiction: federal
+  fetch_method: http
+  refresh: weekly
+  terms: "§ 5 UrhG, public domain"
+
+- id: bzst-steuer-id
+  name: "Federal Central Tax Office: Tax identification number (info and FAQ)"
+  publisher: "Bundeszentralamt für Steuern (BZSt)"
+  pages:
+    - url: https://www.bzst.de/EN/Private_individuals/Tax_identification_number/tax_identification_number_node.html
+    - url: https://www.bzst.de/EN/Private_individuals/Tax_identification_number/FAQ/faq_tin_node.html
+  source_type: faq
+  parser: guide_html
+  domain: taxes
+  subtopic: tax_id
+  keywords: [Steuer-ID, Steueridentifikationsnummer]
+  language: en
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© BZSt; reproduction needs permission -> chunks + link"
+
+- id: fa-nrw-steuerklassen
+  name: "Finanzverwaltung NRW: Lohnsteuerklassen"
+  publisher: "Finanzverwaltung Nordrhein-Westfalen (OFD NRW)"
+  url: https://www.finanzamt.nrw.de/steuerinfos/privatpersonen/arbeitnehmende/lohnsteuerklassen
+  source_type: guide
+  parser: guide_html
+  domain: taxes
+  subtopic: tax_classes
+  keywords: [tax class, tax classes, Steuerklasse, married couple, Faktorverfahren]
+  language: de
+  # Published by a state tax office, but it explains federal law (EStG § 38b) that applies everywhere.
+  jurisdiction: federal
+  fetch_method: http
+  refresh: monthly
+  terms: "© OFD NRW; copying needs permission -> chunks + link"

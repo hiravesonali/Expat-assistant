@@ -19,7 +19,8 @@ class Domain(StrEnum):
     BUREAUCRACY = "bureaucracy"
     TENANCY = "tenancy"
     FAMILY = "family"
-    TAXES = "taxes"  # stretch
+    HEALTH = "health"  # health insurance (Krankenversicherung)
+    TAXES = "taxes"  # tax ID, tax classes
     FINANCE = "finance"  # stretch
     TRAVEL = "travel"  # stretch
     LAW = "law"  # stretch / general
