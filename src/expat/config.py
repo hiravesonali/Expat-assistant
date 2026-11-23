@@ -37,7 +37,7 @@ class Settings(BaseSettings):
 
     # --- Voice (expat/speech.py, ADR-0011): OpenRouter audio endpoints, same key ---
     voice_enabled: bool = True  # kill switch for the microphone and the "Listen" button (Live mode only)
-    model_stt: str = "openai/gpt-4o-mini-transcribe"  # fallback: openai/whisper-large-v3
+    model_stt: str = "openai/whisper-large-v3-turbo"  # alternative: openai/gpt-4o-mini-transcribe
     model_tts: str = "google/gemini-3.8-flash-lite-tts"  # fallback: mistralai/voxtral-mini-tts-3-0
     tts_voice: str = "Kore"  # must be one of the model's supported_voices
     tts_pcm_sample_rate: int = 24000  # for models that return raw PCM (Gemini TTS: 24 kHz, 16-bit, mono)

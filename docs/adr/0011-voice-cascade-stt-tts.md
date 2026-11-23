@@ -1,8 +1,8 @@
 # ADR-0011: Voice as a cascade (speech-to-text → text pipeline → text-to-speech) via OpenRouter
 
-- **Status:** Proposed (2026-11-23). Code and offline tests are in place; **no live call has been made yet**
-  (the OpenRouter key was at its credit limit and the workspace guardrail blocked the audio models), so the model
-  choice below is a hypothesis.
+- **Status:** Proposed (2026-11-23). Code and offline tests are in place. Both API calls were smoke-tested live
+  on two synthetic sentences (see "Result"), and the microphone and Listen button were tried by hand in the
+  browser on 2026-11-23 and worked. There is no measured comparison on real recordings yet.
 - **Context:** Newcomers often find it easier to ask a question aloud than to type it, and to listen to an answer
   than to read it. The app is a text RAG pipeline (ADR-0008) in Streamlit (ADR-0009), paid from one OpenRouter key
   with a small budget (ADR-0006).
@@ -17,7 +17,7 @@
 
 ## Decision
 - **Voice in:** `st.chat_input(accept_audio=True)` records a 16 kHz WAV. `expat/speech.py` sends it to
-  `POST /audio/transcriptions` with `MODEL_STT` (default `openai/gpt-4o-mini-transcribe`) and a short vocabulary
+  `POST /audio/transcriptions` with `MODEL_STT` (default `openai/whisper-large-v3-turbo`) and a short vocabulary
   prompt (Anmeldung, Ausländerbehörde, …). No language is forced, so German speech on the English interface works.
   The transcript is validated and sent like a typed question, and shown as the user's message with a microphone
   marker, so a mishearing is visible.
@@ -26,18 +26,33 @@
 - **Live mode only.** Demo mode has no microphone and no Listen button: both are paid calls.
 - `Pipeline.run(question: str)` is unchanged. Voice lives in the app layer and in `expat/speech.py`.
 
-## Why these models (to be confirmed)
+## Why these models
 - STT: needs English, German and mixed sentences ("do I need an Anmeldung?") and should accept a vocabulary prompt.
-  Fallback: `openai/whisper-large-v3`.
+  The first choice was `openai/gpt-4o-mini-transcribe`, but the OpenRouter workspace guardrail for this key
+  (Basic model list) blocks it. `openai/whisper-large-v3-turbo` is the transcription model on that list, is
+  multilingual and is the cheapest option (~$0.012 per hour of audio).
 - TTS: English answers contain German terms, so one multilingual voice is preferred over per-language voices.
   Gemini TTS returns raw PCM only; `speech.py` wraps it in a WAV header. Fallback: `mistralai/voxtral-mini-tts-3-0`
   (returns mp3, voices are per language).
+
+## Result (live smoke test, 2026-11-23)
+Two sentences were synthesised with Gemini TTS and transcribed back with Whisper turbo, through `speech.py`:
+
+| Check | Outcome |
+|---|---|
+| TTS, English with German terms (74 characters) | 5.6 s of audio in 2.5 s; 13 characters/s at 24 kHz, a normal speaking rate |
+| TTS, German (52 characters) | 3.2 s of audio in 2.2 s |
+| STT, English with German terms | "Do I need an anmeldung at the Bürgeramt before I can apply for Kindergeld?" (only the capital A differs), 1.8 s, $0.00002 |
+| STT, German | "Wie lange ist die Kündigungsfrist für meine Wohnung?" (exact), 1.4 s, $0.00001 |
+| STT, 3 s of silence | empty text, which the app answers with "couldn't hear a question" |
+
+Limits of this test: clean synthetic speech, not a person with an accent or background noise.
 
 ## Cost and limits (OpenRouter list prices, 2026-11-23)
 | Step | Approx. cost |
 |---|---|
 | One Live answer (text) | $0.005 |
-| Transcribing a 15 s question | $0.0001–0.001 |
+| Transcribing a 15 s question | about $0.00005 (measured: $0.0000033 per second) |
 | Reading one answer aloud (≤ 1,200 characters) | $0.01–0.02 (the Gemini figure is an estimate from token prices) |
 
 Reading aloud costs several times the answer itself, so it has its own limits (`LISTENS_PER_HOUR`,
