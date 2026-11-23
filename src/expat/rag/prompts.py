@@ -15,8 +15,8 @@ import json
 from dataclasses import dataclass, field
 from typing import Any
 
-QUERY_ANALYSIS_PROMPT_VERSION = "query-analysis-v2"
-ANSWER_PROMPT_VERSION = "answer-v1"
+QUERY_ANALYSIS_PROMPT_VERSION = "query-analysis-v3"
+ANSWER_PROMPT_VERSION = "answer-v2"
 
 # --------------------------------------------------------------------------------------
 # 1. Query analysis (ONE structured-output call, ADR-0005)
@@ -316,14 +316,16 @@ Fill every field of the schema:
   - checklist: wants a list of things to do / documents to bring.
   - mixed: a combination of the above.
   - out_of_scope: not about living in Germany as an expat (e.g. medical advice, restaurants,
-    other countries, criminal law, coding).
+    other countries, criminal law, coding). Health INSURANCE questions are in scope.
   - sensitive: asylum, deportation, Duldung, Ausreisepflicht, domestic violence, a court case or
     lawsuit with a deadline (e.g. eviction lawsuit / Räumungsklage). These need a professional,
     not a chatbot.
   - chitchat: greetings, thanks, small talk with no information need.
 - domains: the topic areas with your confidence 0.0-1.0. Allowed: bureaucracy (registration,
-  residence permits, Blue Card, broadcasting fee), tenancy (renting, leases, rent increases),
-  family (Kindergeld, Elterngeld, Kita), taxes, finance, travel, law. Use >= 0.7 only when you
+  residence permits, Blue Card, citizenship / naturalisation, driving licence, broadcasting fee),
+  tenancy (renting, leases, rent increases), family (Kindergeld, Elterngeld, Kita), health (health
+  insurance: statutory / private, Krankenkasse, family insurance), taxes (tax ID, tax classes),
+  finance, travel, law. Use >= 0.7 only when you
   are sure, because a confident domain becomes a hard search filter.
 - sub_questions: 1 for a simple question; 2-4 when the question spans several topics or steps.
   Empty for out_of_scope, sensitive and chitchat. For each sub-question:
@@ -345,8 +347,11 @@ Fill every field of the schema:
 - location_dependent: true if the answer differs by city or state: which office to go to, booking an
   appointment, local fees, the local foreign office (Ausländerbehörde), Kita places, the local rent index
   (Mietspiegel), the rent cap (Mietpreisbremse). false for federal rules that are the same everywhere:
-  BGB notice periods, the 2-week Anmeldung deadline, Kindergeld/Elterngeld amounts, Blue Card criteria.
-  Do NOT ask for the city in needs_clarification; the system handles a missing location itself.
+  BGB notice periods, the 2-week Anmeldung deadline, Kindergeld/Elterngeld amounts, Blue Card criteria,
+  health insurance, naturalisation requirements, converting a foreign driving licence, tax ID and tax
+  classes. A federal rule stays false even if you apply at a local office, unless the user asks about
+  that office (where, appointment, local fee). Do NOT ask for the city in needs_clarification; the
+  system handles a missing location itself.
 - needs_clarification: a short question to the user if a missing fact (other than the location)
   changes the answer and is not in the profile (e.g. "Are you an EU citizen?"). Otherwise null.
 
@@ -380,8 +385,11 @@ INSUFFICIENT_CONTEXT_PHRASES = {
 }
 
 ANSWER_SYSTEM_TEMPLATE = """\
-You are the Expat Germany Assistant. You help expats in Germany (focus: Munich, Bavaria) with
-bureaucracy, tenancy and family benefits. You give general information, not legal or tax advice.
+You are Ankommen, an assistant for expats settling in Germany. You help with bureaucracy
+(registration, residence permits, citizenship, driving licence), tenancy, family benefits, health
+insurance and tax basics (tax ID, tax classes). Federal rules apply everywhere; local sources cover
+Berlin, Hamburg, Munich, Cologne, Frankfurt and Stuttgart. You give general information, not legal
+or tax advice.
 
 Today is {today}.
 

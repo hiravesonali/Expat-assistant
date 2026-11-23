@@ -85,9 +85,11 @@ Output DeadlineResult
   days_remaining: int | None, is_overdue: bool
   rule_text: str                      # "within two weeks after moving in"
   legal_basis, source_url, consequences: str | None   # e.g. fine (Bußgeld) for late Anmeldung
+  paid_from_if_applied_now: date | None   # Kindergeld / Elterngeld only: a late application still pays back
+  months_lost_if_applied_now: int | None
   caveats: list[str]
 ```
-**Edge cases:** Kindergeld/Elterngeld are paid retroactively for only **6 / 3 months** before the application month. Residence permit extensions should be applied for before expiry (Munich processing time can be up to 7 months, so the tool suggests applying early, as a caveat). If Bürgeramt appointments are unavailable within 14 days, the caveat says to book the earliest slot and keep proof.
+**Edge cases:** Kindergeld/Elterngeld are paid retroactively for only **6 / 3 months** before the application month (§ 70 Abs. 1 Satz 2 EStG, § 7 Abs. 1 Satz 2 BEEG). Past the last loss-free day the tool says from which month an application today is still paid, so a late family is told "apply now, you still get 6 months", not "too late" (golden `fam-004`). Residence permit extensions should be applied for before expiry (Munich processing time can be up to 7 months, so the tool suggests applying early, as a caveat). If Bürgeramt appointments are unavailable within 14 days, the caveat says to book the earliest slot and keep proof.
 
 ### 3. `estimate_family_benefits` ⭐ MVP
 **Purpose:** Kindergeld (exact) and Basiselterngeld (simplified estimate).

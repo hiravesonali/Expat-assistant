@@ -62,6 +62,56 @@ def test_table_of_contents_and_footnotes_are_skipped():
     assert doc.builddate == date(2026, 11, 16)
 
 
+FEV_XML = """<?xml version="1.0" encoding="UTF-8"?>
+<dokumente builddate="20261026220007">
+  <norm><metadaten><jurabk>FeV</jurabk><langue>Fahrerlaubnis-Verordnung</langue></metadaten></norm>
+  <norm><metadaten><jurabk>FeV</jurabk><enbez>§ 29</enbez><titel>Ausländische Fahrerlaubnisse</titel></metadaten>
+    <textdaten><text><Content><P>(1) <SUP class="Rec">1</SUP>Die Berechtigung besteht noch sechs Monate. <SUP
+      class="Rec">2</SUP>Die Frist kann verlängert werden.</P></Content></text></textdaten></norm>
+  <norm><metadaten><jurabk>FeV</jurabk><enbez>Anlage 11</enbez>
+    <titel>(zu § 31)<BR/>Staatenliste zu den Sonderbestimmungen</titel></metadaten>
+    <textdaten><text><Content><P><table><tgroup cols="4">
+      <thead><row><entry>Ausstellungsstaat</entry><entry>Klasse(n)</entry><entry>theoretische<BR/> Prüfung</entry>
+        <entry>praktische Prüfung</entry></row></thead>
+      <tbody>
+        <row><entry>Albanien<FnR ID="x"/></entry><entry>A, B</entry><entry>nein</entry><entry>nein</entry></row>
+        <row><entry/><entry>AM</entry><entry>nein</entry><entry>ja</entry></row>
+        <row><entry>(weggefallen)</entry><entry/><entry/><entry/></row>
+        <row><entry>Fahrerlaubnisse der Kanadischen Provinzen:</entry><entry/><entry/><entry/></row>
+        <row><entry>– Ontario</entry><entry>G</entry><entry>nein</entry><entry>nein</entry></row>
+      </tbody></tgroup></table></P></Content></text></textdaten></norm>
+  <norm><metadaten><jurabk>FeV</jurabk><enbez>Anlage 12</enbez><titel>(zu § 34)</titel></metadaten>
+    <textdaten><text><Content><P><table><tgroup cols="1"><tbody><row><entry>x</entry></row></tbody></tgroup></table>
+    </P></Content></text></textdaten></norm>
+</dokumente>""".encode()
+
+
+def test_sentence_numbers_are_dropped_without_gluing_sentences():
+    doc = parse_law_xml(FEV_XML, "https://www.gesetze-im-internet.de/fev_2010/xml.zip")
+    assert doc.norms[0].absaetze == [
+        "(1) Die Berechtigung besteht noch sechs Monate. Die Frist kann verlängert werden."
+    ]
+
+
+def test_annexes_only_when_asked_and_rows_stay_self_contained():
+    url = "https://www.gesetze-im-internet.de/fev_2010/xml.zip"
+    assert [n.paragraph for n in parse_law_xml(FEV_XML, url).norms] == ["29"]
+
+    annex = parse_law_xml(FEV_XML, url, annexes=("11",)).norms[-1]
+    assert annex.is_table
+    assert (annex.enbez, annex.paragraph, annex.title) == (
+        "Anlage 11 (zu § 31)",
+        "anlage11",
+        "Staatenliste zu den Sonderbestimmungen",
+    )
+    assert annex.url == "https://www.gesetze-im-internet.de/fev_2010/anlage_11.html"
+    table = annex.absaetze[0]
+    assert "| Ausstellungsstaat | Klasse(n) | theoretische Prüfung | praktische Prüfung |" in table
+    assert "| Albanien | AM | nein | ja |" in table  # empty first cell filled from the row above
+    assert "| Fahrerlaubnisse der Kanadischen Provinzen: Ontario | G | nein | nein |" in table  # group prefix
+    assert "weggefallen" not in table
+
+
 BAYERN_HTML = """<html><body><div id="content">
 <div id="doc-metadata"><div>MiSchuV</div><div>Text gilt ab: 01.01.2026</div>
   <div>Gesamtvorschrift gilt bis: 31.12.2029</div></div>

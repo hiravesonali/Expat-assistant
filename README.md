@@ -5,7 +5,7 @@
 <h1 align="center">Ankommen</h1>
 <p align="center"><b>Your guide to settling in Germany</b> · <i>ankommen</i> = German for "to arrive, to settle in"</p>
 
-An assistant that helps expats in **Germany** deal with registration, residence permits, renting and family benefits: federal rules everywhere, plus local details for **Berlin, Hamburg, Munich, Cologne, Frankfurt and Stuttgart**. When the answer depends on the city and it is unknown, it asks. It answers **only from official German sources**, with clickable citations and "last verified" dates, and does date and benefit calculations with tested tools instead of guessing. You can type or **speak** your question, in **English or German**, and have the answer read aloud.
+An assistant that helps expats in **Germany** deal with registration, residence permits, renting, family benefits, health insurance, taxes (tax ID, tax classes), citizenship and driving licences: federal rules everywhere, plus local details for **Berlin, Hamburg, Munich, Cologne, Frankfurt and Stuttgart**. When the answer depends on the city and it is unknown, it asks. It answers **only from official German sources**, with clickable citations and "last verified" dates, and does date and benefit calculations with tested tools instead of guessing. You can type or **speak** your question, in **English or German**, and have the answer read aloud.
 
 > **Live demo:** https://expat-assistant.streamlit.app/
 >
@@ -38,7 +38,7 @@ flowchart LR
     U -. Listen: text-to-speech .-> L([Spoken answer])
 ```
 
-The index (Chroma + BM25 + parent store) is built locally from 65 official sources and shipped to the deployed app
+The index (Chroma + BM25 + parent store) is built locally from 78 official sources and shipped to the deployed app
 as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Every turn is traced in LangSmith.
 
 ## Highlights
@@ -47,7 +47,7 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
 - **Hybrid search:** Chroma dense vectors + German BM25, fused with Reciprocal Rank Fusion
 - **Location-aware:** rules for the city and state named in the question or the profile, never another city's; a
   one-click "Which city do you live in?" follow-up when it matters
-- **Tool calling:** tenancy notice periods (§ 573c BGB), statutory deadlines, Kindergeld/Elterngeld estimates, document checklists, Schengen 90/180
+- **Tool calling:** tenancy notice periods (§ 573c BGB), statutory deadlines (incl. what a late Kindergeld/Elterngeld application still gets), Kindergeld/Elterngeld estimates, document checklists, Schengen 90/180
 - **Voice:** ask by microphone and press **Listen** to hear an answer. Speech becomes text and takes the same
   pipeline as a typed question, so citations and checks are identical; recordings are not stored
   ([ADR-0011](docs/adr/0011-voice-cascade-stt-tts.md))
@@ -62,16 +62,17 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
 
 ## Results
 
-**Answer quality** (holdout, 12 questions never used for tuning; judge: Claude Haiku 4.5)
+**Answer quality** (holdout: 32 questions never used for tuning, 6 cities + nationwide topics; judge: Claude Haiku 4.5; 2026-11-23)
 
-| | Faithful | Correct | Valid citations | Refusal accuracy | Cost / answer |
-|---|---|---|---|---|---|
-| Naive RAG (R0) | 0.90 | 0.70 | 1.00 | 1.00 | $0.005 |
-| **This system (R5)** | **1.00** | **0.90** | **1.00** | 0.92 | $0.005 |
+| | Faithful | Correct | Valid citations | Tool selection | Refusal accuracy | Cost / answer |
+|---|---|---|---|---|---|---|
+| Naive RAG (R0) | 0.90 | 0.86 | 1.00 | 0.90 | 1.00 | ~$0.005 |
+| **This system (R5)** | **0.92** | **0.96** | **1.00** | **1.00** | **1.00** | ~$0.005 |
 
-**Germany-wide (71 questions, 6 cities):** without location filters, 62–68% of questions pulled another city's
-or state's rules into the top 10 results; with the per-question location it is **0%** on dev and holdout, while
-holdout hit@5 rose to 1.00. The assistant asked "Which city do you live in?" exactly when needed (100%).
+**Germany-wide (85 questions, 6 cities + health insurance, taxes, citizenship, driving licence):** without location
+filters, 54–56% of questions pulled another city's or state's rules into the top 10 results; with the per-question
+location it is **0%** on dev and holdout (hit@5 0.94 dev / 0.96 holdout). The assistant asked "Which city do you
+live in?" exactly when needed (100%).
 
 **Judge calibration:** on 15 answers the correctness judge agreed with reference labels 12 times (80%, Cohen's
 kappa 0.44). The reference labels came from a second model, with 3 of them confirmed by a human, so judge scores
@@ -99,11 +100,13 @@ falls back to **Demo mode** with scripted answers, so the link always works. Det
 
 ## Limitations
 - Six cities have local sources; elsewhere the assistant uses federal and state rules and says so.
-- Topics are registration, residence permits, renting and family benefits. Taxes, health insurance and
-  citizenship are not covered in depth yet.
+- Topics are registration, residence permits, renting, family benefits, health insurance, tax ID and tax
+  classes, citizenship and foreign driving licences. Tax returns and individual tax or legal advice are out of
+  scope (the assistant refers to a Steuerberater, Lohnsteuerhilfeverein or lawyer).
 - Sources are snapshots with a "last verified" date; rules change, and the official German text is binding.
 - Voice was smoke-tested live and tried by hand, but not measured on recordings with accents or background noise.
-- The evaluation sets are small (12 holdout questions for answer quality), so the numbers show direction, not precision.
+- The evaluation sets are small (85 questions, 32 of them holdout; 6–8 per new topic), so the numbers show
+  direction, not precision.
 
 ## Quick start
 ```bash

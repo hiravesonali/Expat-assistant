@@ -37,10 +37,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "eyebrow": "📍 All of Germany · 6 cities in detail · English & Deutsch",
         "title_a": "Settle into Germany",
         "title_b": "with confidence",
-        "lead": "Registration, residence permits, renting and family benefits, answered from official German "
-        "sources with every claim cited. Local details for Berlin, Hamburg, Munich, Cologne, Frankfurt and "
-        "Stuttgart.",
-        "placeholder": "Ask about Anmeldung, renting, Blue Card, Kindergeld… in any German city",
+        "lead": "Registration, residence permits, renting, family benefits, health insurance, taxes and "
+        "citizenship, answered from official German sources with every claim cited. Local details for Berlin, "
+        "Hamburg, Munich, Cologne, Frankfurt and Stuttgart.",
+        "placeholder": "Ask about Anmeldung, renting, Blue Card, health insurance, tax ID… in any German city",
         "disclaimer": "General information, not legal or tax advice. Official German texts are binding.",
         "footer": "Answers cite official German sources. {disclaimer}",
         "language": "Language",
@@ -131,9 +131,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "eyebrow": "📍 Ganz Deutschland · 6 Städte im Detail · English & Deutsch",
         "title_a": "In Deutschland ankommen",
         "title_b": "mit Sicherheit",
-        "lead": "Anmeldung, Aufenthaltstitel, Mieten und Familienleistungen, beantwortet aus amtlichen deutschen "
-        "Quellen, jede Aussage belegt. Lokale Details für Berlin, Hamburg, München, Köln, Frankfurt und Stuttgart.",
-        "placeholder": "Fragen Sie zu Anmeldung, Miete, Blauer Karte, Kindergeld… in jeder deutschen Stadt",
+        "lead": "Anmeldung, Aufenthaltstitel, Mieten, Familienleistungen, Krankenversicherung, Steuern und "
+        "Einbürgerung, beantwortet aus amtlichen deutschen Quellen, jede Aussage belegt. Lokale Details für "
+        "Berlin, Hamburg, München, Köln, Frankfurt und Stuttgart.",
+        "placeholder": "Fragen Sie zu Anmeldung, Miete, Blauer Karte, Krankenkasse, Steuer-ID… in ganz Deutschland",
         "disclaimer": "Allgemeine Information, keine Rechts- oder Steuerberatung. "
         "Verbindlich sind die amtlichen Texte.",
         "footer": "Antworten zitieren amtliche deutsche Quellen. {disclaimer}",

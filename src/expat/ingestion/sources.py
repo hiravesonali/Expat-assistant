@@ -95,6 +95,7 @@ class SourceConfig(BaseModel):
     subtopic: str = ""
     domain_map: list[DomainRange] = Field(default_factory=list)
     include_ranges: list[str] = Field(default_factory=list)
+    include_annexes: list[str] = Field(default_factory=list)  # law_xml: Anlagen to keep, by number ("11")
     law_abbrev: str = ""  # display abbreviation, e.g. "AufenthG" (falls back to the XML's jurabk)
     language: Literal["de", "en"] = "de"
     jurisdiction: Jurisdiction

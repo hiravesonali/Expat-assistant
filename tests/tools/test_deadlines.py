@@ -51,7 +51,35 @@ def test_abmeldung() -> None:
 def test_kindergeld_retroactive_six_months(birth: date, due: date) -> None:
     result = _ok("kindergeld_retroactive", birth)
     assert result.due_date == due
-    assert result.legal_basis == ["§ 66 Abs. 3 EStG"]
+    assert result.legal_basis == ["§ 70 Abs. 1 Satz 2 EStG"]
+
+
+def test_late_kindergeld_application_still_pays_six_months_back() -> None:
+    # fam-004: baby born January 2026, application in November 2026 -> paid from May 2026, Jan-Apr lost.
+    result = _ok("kindergeld_retroactive", date(2026, 1, 15), as_of=date(2026, 11, 23))
+    assert result.is_overdue
+    assert result.paid_from_if_applied_now == date(2026, 5, 1)
+    assert result.months_lost_if_applied_now == 4
+    assert any("still pays back" in c and "2026-05-01" in c for c in result.caveats)
+
+
+def test_timely_kindergeld_application_loses_nothing() -> None:
+    result = _ok("kindergeld_retroactive", date(2026, 8, 31), as_of=date(2026, 11, 23))
+    assert not result.is_overdue
+    assert (result.paid_from_if_applied_now, result.months_lost_if_applied_now) == (date(2026, 8, 1), 0)
+    assert not any("still pays back" in c for c in result.caveats)
+
+
+def test_late_elterngeld_application_pays_three_life_months_back() -> None:
+    # Born 10 March; 23 November is in life month 9 (10 Nov - 9 Dec) -> life months 6-8 paid, 1-5 lost.
+    result = _ok("elterngeld_retroactive", date(2026, 3, 10), as_of=date(2026, 11, 23))
+    assert result.paid_from_if_applied_now == date(2026, 8, 10)
+    assert result.months_lost_if_applied_now == 5
+
+
+def test_other_procedures_have_no_back_pay_fields() -> None:
+    result = _ok("anmeldung", date(2026, 11, 1))
+    assert result.paid_from_if_applied_now is None and result.months_lost_if_applied_now is None
 
 
 def test_elterngeld_retroactive_three_life_months() -> None:

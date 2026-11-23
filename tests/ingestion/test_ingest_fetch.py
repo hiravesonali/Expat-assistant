@@ -57,6 +57,22 @@ def test_robots_disallow_raises(setup):
         fetcher.fetch("demo", "https://example.org/private/x")
 
 
+def test_robots_survives_one_connection_reset(setup):
+    fetcher, server, _ = setup
+    original = server.__call__
+    failures = iter([True])
+
+    def flaky(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/robots.txt" and next(failures, False):
+            raise httpx.ConnectError("connection reset", request=request)
+        return original(request)
+
+    fetcher.client = httpx.Client(transport=httpx.MockTransport(flaky), headers={"User-Agent": USER_AGENT})
+    assert fetcher.fetch("demo", "https://example.org/page").changed  # not "robots.txt disallows"
+    with pytest.raises(FetchError, match="robots"):  # the real rules were read on the retry
+        fetcher.fetch("demo", "https://example.org/private/x")
+
+
 def test_crawl_delay_is_honoured(setup):
     fetcher, _, sleeps = setup
     fetcher.fetch("demo", "https://example.org/a")

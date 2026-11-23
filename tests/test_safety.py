@@ -55,7 +55,7 @@ def test_residence_template_refers_to_mbe_and_lawyer_in_german():
 
 
 def test_tenancy_dispute_refers_to_mieterverein():
-    assert "mieterverein-muenchen.de" in safety_response(SafetyCategory.LEGAL_DISPUTE)
+    assert "mieterbund.de" in safety_response(SafetyCategory.LEGAL_DISPUTE)
 
 
 def test_unknown_language_falls_back_to_english():

@@ -11,7 +11,7 @@ from pathlib import Path
 from expat.evals.results import DEFAULT_RESULTS_DIR, ExperimentResult, MetricValue, load_results
 from expat.evals.retrieval_eval import VARIANT_DESCRIPTIONS
 
-PRIMARY_SLICES = ("bureaucracy", "tenancy", "family", "multi_domain", "out_of_scope")
+PRIMARY_SLICES = ("bureaucracy", "tenancy", "family", "health", "taxes", "multi_domain", "out_of_scope")
 REPORT_NAME = "REPORT.md"
 
 

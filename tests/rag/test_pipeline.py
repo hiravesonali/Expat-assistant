@@ -172,7 +172,7 @@ def test_keyword_precheck_short_circuits_before_any_llm_call():
 
     assert _shape(events) == ["step:safety:completed", "token", "citations", "answer_meta", "done"]
     assert events[0].detail == {"category": "legal_dispute", "trigger": "keyword"}
-    assert "mieterverein-muenchen.de" in _text(events)
+    assert "mieterbund.de" in _text(events)
     assert analysis_llm.calls == 0 and retriever.calls == [] and answer_llm.received == []
 
 

@@ -136,8 +136,10 @@ _LAWYER = {
     "(geringes Einkommen? Beratungshilfeschein beim Amtsgericht)",
 }
 _MIETERVEREIN = {
-    "en": "- **Mieterverein München** (tenants' association, legal advice for members) – https://www.mieterverein-muenchen.de",
-    "de": "- **Mieterverein München** (Rechtsberatung für Mitglieder) – https://www.mieterverein-muenchen.de",
+    "en": "- **A local tenants' association (Mieterverein)**, legal advice for members; find yours via the "
+    "Deutscher Mieterbund – https://www.mieterbund.de",
+    "de": "- **Ein Mieterverein vor Ort** (Rechtsberatung für Mitglieder); Suche über den Deutschen Mieterbund – "
+    "https://www.mieterbund.de",
 }
 _CRIMINAL_LAWYER = {
     "en": "- **A lawyer for criminal law (Strafrecht) and migration law** – before you reply to the police; "
@@ -222,23 +224,25 @@ _REFERRALS = {
 }
 
 _OUT_OF_SCOPE = {
-    "en": "Sorry, that's outside what I can help with. I answer questions about living in Germany as an expat, "
-    "focused on Munich:\n\n"
+    "en": "Sorry, that's outside what I can help with. I answer questions about settling in Germany as an expat:\n\n"
     "- **Bureaucracy:** address registration (Anmeldung), residence permits and the EU Blue Card, "
-    "broadcasting fee (Rundfunkbeitrag)\n"
-    "- **Tenancy:** leases, notice periods (Kündigungsfrist), rent increases\n"
-    "- **Family:** child benefit (Kindergeld), parental allowance (Elterngeld), daycare (Kita)",
-    "de": "Dabei kann ich leider nicht helfen. Ich beantworte Fragen zum Leben in Deutschland als Expat, "
-    "mit Fokus auf München:\n\n"
-    "- **Behörden:** Wohnsitzanmeldung, Aufenthaltstitel und Blaue Karte EU, Rundfunkbeitrag\n"
-    "- **Mieten:** Mietvertrag, Kündigungsfristen, Mieterhöhungen\n"
-    "- **Familie:** Kindergeld, Elterngeld, Kita",
+    "citizenship (Einbürgerung), driving licence, broadcasting fee (Rundfunkbeitrag)\n"
+    "- **Tenancy:** leases, notice periods (Kündigungsfrist), rent increases, rent cap\n"
+    "- **Family:** child benefit (Kindergeld), parental allowance (Elterngeld), daycare (Kita)\n"
+    "- **Health insurance and taxes:** Krankenkasse, tax ID (Steuer-ID), tax classes (Steuerklassen)",
+    "de": "Dabei kann ich leider nicht helfen. Ich beantworte Fragen zum Ankommen in Deutschland als Expat:\n\n"
+    "- **Behörden:** Wohnsitzanmeldung, Aufenthaltstitel und Blaue Karte EU, Einbürgerung, Führerschein, "
+    "Rundfunkbeitrag\n"
+    "- **Mieten:** Mietvertrag, Kündigungsfristen, Mieterhöhungen, Mietpreisbremse\n"
+    "- **Familie:** Kindergeld, Elterngeld, Kita\n"
+    "- **Krankenversicherung und Steuern:** Krankenkasse, Steuer-ID, Steuerklassen",
 }
 
 _CHITCHAT = {
-    "en": "You're welcome! Ask me anything about registration, residence permits, renting or family benefits "
-    "in Germany.",
-    "de": "Gern geschehen! Fragen Sie mich gern zu Anmeldung, Aufenthaltstitel, Mieten oder Familienleistungen.",
+    "en": "You're welcome! Ask me anything about registration, residence permits, renting, family benefits, "
+    "health insurance or taxes in Germany.",
+    "de": "Gern geschehen! Fragen Sie mich gern zu Anmeldung, Aufenthaltstitel, Mieten, Familienleistungen, "
+    "Krankenversicherung oder Steuern.",
 }
 
 

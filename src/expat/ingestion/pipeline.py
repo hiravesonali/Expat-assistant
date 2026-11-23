@@ -53,7 +53,9 @@ def chunk_page(source: SourceConfig, page: PageConfig, fetched: FetchResult) -> 
     """Parse + chunk one fetched page with the parser named in sources.yaml."""
     abbrev = source.law_abbrev
     if source.parser == "law_xml":
-        return chunk_law(parse_law_xml(read_law_xml(fetched.path), page.url, abbrev), source)
+        return chunk_law(
+            parse_law_xml(read_law_xml(fetched.path), page.url, abbrev, tuple(source.include_annexes)), source
+        )
     if source.parser == "law_pdf":
         law = parse_law_pdf(
             fetched.path.read_bytes(),
