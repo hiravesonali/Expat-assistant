@@ -1,0 +1,764 @@
+{
+  "experiment": "retrieval-R2-holdout-20261123T103504Z",
+  "kind": "retrieval",
+  "variant": "R2",
+  "split": "holdout",
+  "config": {
+    "use_german_rewrite": true,
+    "use_multi_query": true,
+    "use_decomposition": false,
+    "use_bm25": false,
+    "use_filters": false,
+    "use_rerank": false,
+    "use_hyde": false,
+    "use_step_back": true,
+    "bm25_queries": "all",
+    "bm25_weight": 1.0,
+    "bm25_legal_refs": false,
+    "k_dense": 20,
+    "k_sparse": 20,
+    "k_final": 8,
+    "rrf_c": 60
+  },
+  "metrics": {
+    "hit@5": 0.9642857142857143,
+    "recall@10": 0.9464285714285714,
+    "mrr@10": 0.8095238095238095,
+    "leak@10": 0.5357142857142857,
+    "latency_p50_ms": 5164.241350000339,
+    "latency_p95_ms": 10582.101210001108
+  },
+  "per_slice": {
+    "bureaucracy": {
+      "hit@5": 0.9090909090909091,
+      "recall@10": 0.9090909090909091,
+      "mrr@10": 0.7727272727272727,
+      "leak@10": 0.8181818181818182,
+      "latency_p50_ms": 4935.188200000994,
+      "latency_p95_ms": 12018.050200000289,
+      "n": 11.0
+    },
+    "category:legal_lookup": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.8571428571428571,
+      "leak@10": 0.42857142857142855,
+      "latency_p50_ms": 4160.712900000362,
+      "latency_p95_ms": 7584.519770000043,
+      "n": 7.0
+    },
+    "category:multi_domain": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 1.0,
+      "leak@10": 0.0,
+      "latency_p50_ms": 4480.174399999669,
+      "latency_p95_ms": 4480.174399999669,
+      "n": 1.0
+    },
+    "category:numeric": {
+      "hit@5": 1.0,
+      "recall@10": 0.9375,
+      "mrr@10": 0.7083333333333334,
+      "leak@10": 0.625,
+      "latency_p50_ms": 7173.681550000765,
+      "latency_p95_ms": 10582.10121000111,
+      "n": 8.0
+    },
+    "category:single_domain": {
+      "hit@5": 0.9,
+      "recall@10": 0.9,
+      "mrr@10": 0.85,
+      "leak@10": 0.6,
+      "latency_p50_ms": 6061.203600000226,
+      "latency_p95_ms": 11169.865029999895,
+      "n": 10.0
+    },
+    "category:tool": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.75,
+      "leak@10": 0.5,
+      "latency_p50_ms": 4498.975950000386,
+      "latency_p95_ms": 5303.862644999754,
+      "n": 2.0
+    },
+    "family": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.8055555555555555,
+      "leak@10": 0.6666666666666666,
+      "latency_p50_ms": 6926.016849999542,
+      "latency_p95_ms": 8300.569949999954,
+      "n": 6.0
+    },
+    "health": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 1.0,
+      "leak@10": 0.0,
+      "latency_p50_ms": 8717.694450000636,
+      "latency_p95_ms": 9753.982575000919,
+      "n": 2.0
+    },
+    "lang:de": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.9,
+      "leak@10": 0.4,
+      "latency_p50_ms": 7566.263200000321,
+      "latency_p95_ms": 8748.194220000369,
+      "n": 5.0
+    },
+    "lang:en": {
+      "hit@5": 0.9565217391304348,
+      "recall@10": 0.9347826086956522,
+      "mrr@10": 0.7898550724637682,
+      "leak@10": 0.5652173913043478,
+      "latency_p50_ms": 4682.519100000718,
+      "latency_p95_ms": 10856.32256000117,
+      "n": 23.0
+    },
+    "multi_domain": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.75,
+      "leak@10": 0.5,
+      "latency_p50_ms": 4052.908149999894,
+      "latency_p95_ms": 4437.447774999691,
+      "n": 2.0
+    },
+    "taxes": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 1.0,
+      "leak@10": 0.0,
+      "latency_p50_ms": 8847.368700000516,
+      "latency_p95_ms": 8847.368700000516,
+      "n": 1.0
+    },
+    "tenancy": {
+      "hit@5": 1.0,
+      "recall@10": 0.9166666666666666,
+      "mrr@10": 0.8055555555555555,
+      "leak@10": 0.16666666666666666,
+      "latency_p50_ms": 3970.8692499998506,
+      "latency_p95_ms": 7809.382825000739,
+      "n": 6.0
+    },
+    "tool": {
+      "hit@5": 1.0,
+      "recall@10": 1.0,
+      "mrr@10": 0.75,
+      "leak@10": 0.5,
+      "latency_p50_ms": 4498.975950000386,
+      "latency_p95_ms": 5303.862644999754,
+      "n": 2.0
+    }
+  },
+  "n": 28,
+  "errors": 0,
+  "created_at": "2026-11-23T10:35:04.044932Z",
+  "mode": "langsmith",
+  "dataset": "expat-golden-v3",
+  "langsmith_experiment": "R2-retrieval-479a5b47",
+  "per_example": [
+    {
+      "id": "bur-028",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 1764.6184999994148,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "stag#9",
+          "stag#10",
+          "aufenthg#28",
+          "aufenthg#30",
+          "bmi-einbuergerung#reform-des-staatsangehoerigkeitsrechts",
+          "aufenthg#29"
+        ]
+      }
+    },
+    {
+      "id": "bur-003",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 1923.0270000007295,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bmg#19",
+          "ber-anmeldung#documents",
+          "cgn-anmeldung#other",
+          "bmg#23a",
+          "bp-wohnsitz-anmeldung#steps"
+        ]
+      }
+    },
+    {
+      "id": "fam-011",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 1975.1260000011825,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ham-kita#wann-und-wie-erfolgt-die-antragstellung",
+          "ber-kita#requirements",
+          "ham-kita#warum-gibt-es-in-hamburg-ein-kita-gutschein-system",
+          "ber-kita#deadlines",
+          "ber-kita#overview",
+          "ham-kita#wie-funktioniert-das-kita-gutschein-system",
+          "ber-kita#documents"
+        ]
+      }
+    },
+    {
+      "id": "ten-017",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 3330.81889999994,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "fra-mietspiegel#allgemeine-informationen-zum-mietspiegel",
+          "fra-mietspiegel#frankfurter-mietspiegel"
+        ]
+      }
+    },
+    {
+      "id": "mul-003",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 4480.174399999669,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "aufenthg#29",
+          "aufenthg#31",
+          "aufenthg#30",
+          "bp-familiennachzug#requirements",
+          "aufenthg#81",
+          "bamf-family-reunification#spouses"
+        ]
+      }
+    },
+    {
+      "id": "ten-015",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 8190.704000000551,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bw-mietpreisbremse-info#aktuelles",
+          "bw-mietpreisbremse-info#mietpreisbremse-gemaess-landesverordnung",
+          "bw-mietpreisbremse-info#mietbremse-2026",
+          "bw-mietpreisbremse-info#mietpreisbremse-ab-2027",
+          "bw-mietpreisbremse-info#ist-in-gemeinden-die-in-die-gebietskulisse-aufgenommen-werde",
+          "bw-mietpreisbremse-info#gebietskulisse",
+          "bw-mietpreisbremse-info#warum-gilt-die-mietpreisbremse-nicht-einfach-fuers-ganze-lan",
+          "bw-mietpreisbremse-info#gibt-es-beschraenkungen-der-neuvertragsmiete-in-den-staedten"
+        ]
+      }
+    },
+    {
+      "id": "fam-016",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 8147.790900000473,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "estg#66",
+          "fp-kindergeld#was-ist-kindergeld",
+          "bp-kindergeld#overview",
+          "estg#63",
+          "estg#70",
+          "bp-kindergeld#requirements",
+          "estg#64",
+          "estg#65"
+        ]
+      }
+    },
+    {
+      "id": "fam-013",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 8351.49629999978,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "cgn-kita#other",
+          "cgn-kita#wie-erfolgt-die-platzvergabe",
+          "cgn-kita#ich-moechte-nach-koeln-ziehen-wie-kann-ich-einen-betreuungsp",
+          "muc-kita#overview",
+          "str-kita#kita-portal",
+          "str-kita#informationen-zur-platzvergabe",
+          "fra-kita#wie-merkt-man-sein-kind-fuer-einen-betreuungsplatz-vor",
+          "str-kita#betreuungsplatz-anfrage-stellen"
+        ]
+      }
+    },
+    {
+      "id": "fam-009",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 0.0
+      },
+      "latency_ms": 3604.657400001088,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "fp-elterngeld#wie-kann-ich-elterngeld-beantragen",
+          "beeg#7",
+          "bp-elterngeld#deadlines",
+          "bp-elterngeld#overview",
+          "bp-elterngeld#requirements",
+          "beeg#4",
+          "bp-elterngeld#steps"
+        ]
+      }
+    },
+    {
+      "id": "bur-015",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 5682.5244999999995,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "cgn-anmeldung#overview",
+          "cgn-anmeldung#documents",
+          "ber-lea-blaue-karte#documents",
+          "muc-niederlassung-blaue-karte#documents",
+          "ber-lea-niederlassung-blaue-karte#documents",
+          "bp-wohnsitz-anmeldung#documents",
+          "ber-anmeldung#documents",
+          "cgn-anmeldung#other"
+        ]
+      }
+    },
+    {
+      "id": "fam-003",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 6170.089899998857,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "estg#62",
+          "bp-kindergeld#requirements",
+          "fp-kindergeld#koennen-auch-auslaendische-eltern-kindergeld-bekommen",
+          "aufenthg#18g",
+          "ham-welcome-blaue-karte#allgemeine-hinweise"
+        ]
+      }
+    },
+    {
+      "id": "bur-013",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 10966.011100001197,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "cgn-auslaenderbehoerde-blaue-karte#fees",
+          "ber-lea-blaue-karte#fees",
+          "ham-blaue-karte#other",
+          "ber-lea-niederlassung-blaue-karte#fees",
+          "bp-blaue-karte#fees",
+          "muc-aufenthaltstitel-fachkraefte#fees",
+          "ham-welcome-blaue-karte#allgemeine-hinweise",
+          "str-auslaenderbehoerde-blaue-karte#fees"
+        ]
+      }
+    },
+    {
+      "id": "bur-032",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 6439.882700000453,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "fev#29",
+          "fev#29a",
+          "fev#30",
+          "fev#28",
+          "bmv-fuehrerschein#sie-besitzen-einen-auslaendischen-fuehrerschein-der-nicht-in",
+          "fev#7"
+        ]
+      }
+    },
+    {
+      "id": "ten-013",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 0.0
+      },
+      "latency_ms": 4160.712900000362,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "fra-mietspiegel#allgemeine-informationen-zum-mietspiegel",
+          "he-mietpreisbremse#1",
+          "he-mietpreisbremse#3",
+          "he-mietpreisbremse#anlage",
+          "he-mietpreisbremse#5",
+          "he-mietpreisbremse#2"
+        ]
+      }
+    },
+    {
+      "id": "hea-003",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 9869.12570000095,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "sgbv#175",
+          "bmg-krankenversicherung#so-funktioniert-der-wechsel-der-krankenkasse"
+        ]
+      }
+    },
+    {
+      "id": "tax-003",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 8847.368700000516,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "estg#39f",
+          "fa-nrw-steuerklassen#die-steuerklassen-im-einzelnen",
+          "fa-nrw-steuerklassen#lohnsteuerklassen"
+        ]
+      }
+    },
+    {
+      "id": "bur-019",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 3663.2112999996025,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ber-lea-blaue-karte#requirements",
+          "fra-auslaenderbehoerde-blaue-karte#overview",
+          "aufenthg#18g",
+          "ham-welcome-blaue-karte#allgemeine-hinweise",
+          "miig-blue-card#eu-blue-card",
+          "ham-welcome-blaue-karte#voraussetzungen"
+        ]
+      }
+    },
+    {
+      "id": "bur-007",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 5393.2944999996835,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-aufenthaltstitel-fachkraefte#overview",
+          "aufenthg#81",
+          "ham-blaue-karte#overview",
+          "str-welcome-blaue-karte#blaue-karte-eu",
+          "ham-blaue-karte#other",
+          "ham-welcome-blaue-karte#perspektiven-der-blauen-karte-eu",
+          "str-auslaenderbehoerde-blaue-karte#overview",
+          "aufenthg#18i"
+        ]
+      }
+    },
+    {
+      "id": "bur-010",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 4935.188200000994,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bmg#23",
+          "bmg#17",
+          "muc-anmeldung#welche-ausnahmen-gibt-es-bei-der-meldepflicht",
+          "bmg#27",
+          "bp-wohnsitz-anmeldung#legal_basis",
+          "str-anmeldung#overview",
+          "bmg#23a",
+          "str-anmeldung#steps"
+        ]
+      }
+    },
+    {
+      "id": "ten-008",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 3781.0255999993387,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#536",
+          "bgb#536a",
+          "bgb#536c",
+          "bgb#536d",
+          "bgb#559e",
+          "bgb#560",
+          "bgb#536b"
+        ]
+      }
+    },
+    {
+      "id": "fam-006",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 0.0
+      },
+      "latency_ms": 7681.9438000002265,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bp-elterngeld#requirements",
+          "fp-elterngeld#kann-ich-elterngeld-bekommen",
+          "beeg#1",
+          "fp-elterngeld#gibt-es-elterngeld-auch-fuer-auslaendische-eltern",
+          "fp-elterngeld-neuregelungen#wer-bekommt-elterngeld",
+          "beeg#2",
+          "estg#62"
+        ]
+      }
+    },
+    {
+      "id": "mul-005",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 0.5,
+        "leak@10": 1.0
+      },
+      "latency_ms": 3625.6419000001188,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ber-anmeldung#requirements",
+          "bmg#17",
+          "ber-anmeldung#overview",
+          "ham-anmeldung#overview",
+          "ber-anmeldung#steps",
+          "str-anmeldung#overview",
+          "ber-anmeldung#documents",
+          "ham-anmeldung#other"
+        ]
+      }
+    },
+    {
+      "id": "bur-029",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 4682.519100000718,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "stag#38",
+          "bamf-einbuergerung#kosten",
+          "bmi-einbuergerung#einbuergerungsvoraussetzungen",
+          "bamf-einbuergerung#wo-kann-ich-den-einbuergerungstest-ablegen",
+          "str-auslaenderbehoerde-blaue-karte#fees"
+        ]
+      }
+    },
+    {
+      "id": "bur-021",
+      "metrics": {
+        "hit@5": 0.0,
+        "recall@10": 0.0,
+        "mrr@10": 0.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 1873.9048000006733,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "ham-blaue-karte#other",
+          "ham-niederlassung-blaue-karte#other",
+          "fra-auslaenderbehoerde-blaue-karte#overview",
+          "bp-blaue-karte#overview",
+          "aufenthg#81",
+          "muc-aufenthaltstitel-fachkraefte#overview",
+          "bp-blaue-karte#requirements"
+        ]
+      }
+    },
+    {
+      "id": "ten-004",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 0.5,
+        "mrr@10": 0.3333333333333333,
+        "leak@10": 1.0
+      },
+      "latency_ms": 6665.419300001304,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "muc-mietspiegel#durchschnittsmiete-gegenueber-dem-mietspiegel-2023",
+          "muc-mietspiegel#funktion-eines-qualifizierten-mietspiegels",
+          "by-mieterschutzv#anlage",
+          "by-mieterschutzv#1",
+          "muc-mietspiegel#online-mietspiegel-fuer-muenchen-2025-berechnungsprogramm",
+          "he-mietpreisbremse#1"
+        ]
+      }
+    },
+    {
+      "id": "hea-004",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 7566.263200000321,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bmg-krankenversicherung#von-pkv-zu-gkv",
+          "bmg-krankenversicherung#freiwillig-versicherte",
+          "bmg-krankenversicherung#von-gkv-zu-pkv",
+          "sgbv#5",
+          "sgbv#173",
+          "sgbv#175"
+        ]
+      }
+    },
+    {
+      "id": "ten-011",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 0.0
+      },
+      "latency_ms": 3580.28639999975,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "bgb#557a",
+          "bgb#557",
+          "bgb#557b",
+          "bgb#559",
+          "bgb#558",
+          "bgb#559c"
+        ]
+      }
+    },
+    {
+      "id": "bur-017",
+      "metrics": {
+        "hit@5": 1.0,
+        "recall@10": 1.0,
+        "mrr@10": 1.0,
+        "leak@10": 1.0
+      },
+      "latency_ms": 13070.089299999381,
+      "error": null,
+      "details": {
+        "doc_keys": [
+          "str-anmeldung#overview",
+          "str-welcome-anmeldung#wohnsitz-anmelden",
+          "bp-wohnsitz-anmeldung#steps",
+          "ber-anmeldung#overview",
+          "ber-anmeldung#steps",
+          "bmg#17",
+          "ber-anmeldung#requirements",
+          "bmg#23"
+        ]
+      }
+    }
+  ]
+}

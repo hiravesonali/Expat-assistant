@@ -1,0 +1,429 @@
+{
+  "experiment": "answers-R5-dev-20261123T103842Z",
+  "kind": "answers",
+  "variant": "R5",
+  "split": "dev",
+  "config": {
+    "use_german_rewrite": true,
+    "use_multi_query": true,
+    "use_decomposition": true,
+    "use_bm25": true,
+    "use_filters": true,
+    "use_rerank": false,
+    "use_hyde": false,
+    "use_step_back": true,
+    "bm25_queries": "all",
+    "bm25_weight": 1.0,
+    "bm25_legal_refs": false,
+    "k_dense": 20,
+    "k_sparse": 20,
+    "k_final": 8,
+    "rrf_c": 60,
+    "judges": true,
+    "judge_model": "anthropic/claude-haiku-4.5"
+  },
+  "metrics": {
+    "groundedness": 0.8571428571428571,
+    "correctness": 0.9,
+    "citation_validity": 1.0,
+    "citation_coverage": 0.36214285714285716,
+    "citation_correctness": 0.8666666666666666,
+    "must_include": 0.9,
+    "must_not_include": 1.0,
+    "tool_selection": 1.0,
+    "refusal_accuracy": 1.0,
+    "clarification": 1.0,
+    "total_tokens": 10845.6,
+    "cost_usd": null,
+    "latency_p50_ms": 11912.5,
+    "latency_p95_ms": 18721.350000000002
+  },
+  "per_slice": {
+    "bureaucracy": {
+      "groundedness": 0.8,
+      "correctness": 0.8333333333333334,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4083333333333334,
+      "citation_correctness": 0.875,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 11060.5,
+      "cost_usd": null,
+      "latency_p50_ms": 11259.5,
+      "latency_p95_ms": 17987.75,
+      "n": 6.0
+    },
+    "category:numeric": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.2611111111111111,
+      "citation_correctness": 0.7222222222222222,
+      "must_include": 0.6666666666666666,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 11240.333333333334,
+      "cost_usd": null,
+      "latency_p50_ms": 12095.0,
+      "latency_p95_ms": 16482.5,
+      "n": 3.0
+    },
+    "category:single_domain": {
+      "groundedness": 0.8,
+      "correctness": 0.8571428571428571,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4054421768707483,
+      "citation_correctness": 0.9285714285714286,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10676.42857142857,
+      "cost_usd": null,
+      "latency_p50_ms": 11730.0,
+      "latency_p95_ms": 18828.9,
+      "n": 7.0
+    },
+    "health": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.2,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 9745.0,
+      "cost_usd": null,
+      "latency_p50_ms": 13525.5,
+      "latency_p95_ms": 14812.95,
+      "n": 2.0
+    },
+    "lang:en": {
+      "groundedness": 0.8571428571428571,
+      "correctness": 0.9,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.36214285714285716,
+      "citation_correctness": 0.8666666666666666,
+      "must_include": 0.9,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10845.6,
+      "cost_usd": null,
+      "latency_p50_ms": 11912.5,
+      "latency_p95_ms": 18721.350000000002,
+      "n": 10.0
+    },
+    "taxes": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.3857142857142857,
+      "citation_correctness": 0.875,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 11301.5,
+      "cost_usd": null,
+      "latency_p50_ms": 13608.5,
+      "latency_p95_ms": 18500.449999999997,
+      "n": 2.0
+    }
+  },
+  "n": 10,
+  "errors": 0,
+  "created_at": "2026-11-23T10:38:42.991446Z",
+  "mode": "langsmith",
+  "dataset": "expat-golden-v3",
+  "langsmith_experiment": "R5-answers-2df4d419",
+  "per_example": [
+    {
+      "id": "bur-001",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.75,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11693.0,
+        "cost_usd": null
+      },
+      "latency_ms": 11730.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, you and your family must register your residence (Anmeldung) in Munich within two weeks after moving in. This applies to all family members, including children, who will be automatically registered when one parent registers. The registration can be done online or in person at a Bürgerbüro (citizen's office), and only one parent or an authorized person needs to appear in person. You need to bring valid identification for all persons to be registered and a confirmation from your landlord about your move-in date and address. Registration is free of charge, except if you want to update your vehicle registration, which costs a small fee [S1][S2][S3][S4].\n\nYour next steps:\n- Prepare valid ID documents for all family members.\n- Obtain a landlord confirmation (Wohnungsgeberbestätigung) with all required details.\n- Register online or visit a Bürgerbüro in Munich within two weeks of your move-in date.\n- If you have a vehicle, bring the vehicle registration documents if you want to update your address there.\n- If you cannot attend personally, authorize someone with a power of attorney to register on your behalf.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asks a general informational question about whether registration (Anmeldung) is required in Germany and how quickly it must be done. This is a straightforward factual question about administrative procedures, not a request for individual legal, tax, medical or asylum advice. The rubric specifies that when should_refuse is false, the response PASSES if it substantively answers the question with general information and sources, and does not decline or deflect the whole question.\n\nThe assistant's response does exactly this: it provides clear, substantive general information about the registration requirement (yes, it's mandatory), the timeline (two weeks), the process (online or in-person), who needs to register (all family members), what documents are needed, and practical next steps. The response includes source citations [S1-S4] indicating reliance on authoritative sources. There is no inappropriate deflection or refusal of the question—instead, the assistant directly answers what was asked with helpful procedural guidance. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several claims about the Wohnsitzanmeldung (residence registration) requirement for the user's family in Munich. Let me verify each claim against the provided context:\n\n1. **\"You and your family must register your residence within two weeks after moving in\"** - SUPPORTED. S1 states: \"Wenn Sie als Familie nach München ziehen, müssen Sie sich innerhalb von 14 Tagen anmelden\" (If you move to Munich as a family, you must register within 14 days). S3 and S4 confirm this two-week deadline.\n\n2. **\"This applies to all family members, including children\"** - SUPPORTED. S1 explicitly states: \"Minderjährige Kinder werden dabei automatisch mitangemeldet\" (Minor children are automatically registered).\n\n3. **\"Children will be automatically registered when one parent registers\"** - SUPPORTED. Same source as above confirms automatic registration of children.\n\n4. **\"Registration can be done online or in person at a Bürgerbüro\"** - SUPPORTED. S1 states: \"Die An- oder Ummeldung Ihres Wohnsitzes als Familie können Sie entweder online oder persönlich in einem der Bürgerbüros vornehmen\" (You can register either online or in person at one of the citizen's offices).\n\n5. **\"Only one parent or an authorized person needs to appear in person\"** - SUPPORTED. S1 states: \"Dabei ist es ausreichend, wenn ein Elternteil persönlich erscheint oder eine bevollmächtigte Person die Anmeldung übernimmt\" (It is sufficient if one parent appears in person or an authorized person takes over the registration).\n\n6. **\"You need to bring valid identification for all persons to be registered\"** - SUPPORTED. S1 lists required documents: \"Gültiges Ausweisdokument aller meldepflichtigen Personen\" (Valid identification document of all persons required to register).\n\n7. **\"A confirmation from your landlord about your move-in date and address\"** - SUPPORTED. S1 requires: \"Bestätigung des Wohnungsgebers/Eigentümers über den Bezug der Wohnung\" (Confirmation from the landlord/owner about occupying the apartment).\n\n8. **\"Registration is free of charge\"** - SUPPORTED. S1 states under \"Gebührenrahmen\": \"kostenfrei\" (free of charge).\n\n9. **\"Except if you want to update your vehicle registration, which costs a small fee\"** - SUPPORTED. S1 states: \"Adressänderung in Fahrzeugpapieren: 12 Euro\" (Address change in vehicle documents: 12 Euro).\n\n10. **\"If you cannot attend personally, authorize someone with a power of attorney\"** - SUPPORTED. S1 mentions: \"Falls die Anmeldung durch eine von Ihnen bevollmächtigte Person erfolgt: Eine Vollmacht...\" (If registration is done by an authorized person: A power of attorney...).\n\nAll major claims in the output are directly supported by the retrieved context. The output stays within the scope of information provided, maintains the same meaning and intent as the source material, and does not introduce unsupported external facts. The advice provided is practical and accurate based on the context.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and complete information about the Anmeldung (residence registration) requirement in Munich. Let me verify the key claims against the reference output and general knowledge:\n\n1. **Registration requirement**: The output correctly states that registration is mandatory - this matches the reference output which cites § 17 (1) BMG.\n\n2. **Two-week deadline**: The output correctly specifies \"within two weeks after moving in\" - this matches the reference output exactly.\n\n3. **Family registration**: The output states that children are \"automatically registered when one parent registers\" - this is accurate and consistent with German registration procedures.\n\n4. **Location and method**: The output mentions registration can be done at a Bürgerbüro (citizen's office) online or in person - this is accurate for Munich.\n\n5. **Required documents**: The output mentions:\n   - Valid identification for all persons (correct)\n   - Landlord confirmation (Wohnungsgeberbestätigung) - matches reference output\n   - The reference also mentions marriage/birth certificates, which the output doesn't explicitly list, but this is a minor omission\n\n6. **One person can register**: The output correctly states \"only one parent or an authorized person needs to appear in person\" - this is accurate.\n\n7. **Cost**: The output states registration is \"free of charge, except if you want to update your vehicle registration, which costs a small fee\" - this is accurate.\n\n8. **Practical next steps**: The output provides clear, actionable steps that are all accurate.\n\n**Minor considerations**:\n- The reference output mentions marriage/birth certificates as required documents, which the output doesn't explicitly mention. However, the output does say \"valid identification for all persons\" which could reasonably include these documents.\n- The output is more comprehensive than the reference output, providing additional helpful details about online registration options and power of attorney procedures.\n\nOverall, the response is factually accurate, complete, addresses all parts of the question, is logically consistent, and uses precise terminology. The information aligns with German law and Munich-specific procedures. Thus, the score should be: TRUE."
+      }
+    },
+    {
+      "id": "bur-012",
+      "metrics": {
+        "groundedness": null,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.2,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10461.0,
+        "cost_usd": null
+      },
+      "latency_ms": 18327.0,
+      "error": null,
+      "details": {
+        "answer": "To register your address (Anmeldung) in Berlin, you need the following documents:\n\n1. Identification proof:\n   - For online registration: A valid ID card or EU citizen card (eID card) with activated online ID function (eID) and your PIN.\n   - For in-person registration: A valid ID card or passport for German nationals; for foreigners, a national passport or passport substitute, possibly together with your electronic residence permit (eAT). Bring original documents for all persons moving in.\n\n2. Confirmation of residence from your landlord (Wohnungsgeberbestätigung):\n   - This must be provided by your landlord within two weeks after your move-in, including landlord's name and address, owner's name if different, move-in date, apartment address, and names of persons registering.\n   - A rental contract alone is not sufficient.\n\n3. If applicable:\n   - Consent declaration from the other parent if registering a minor child and only one parent is present.\n   - Birth, marriage, or other civil status certificates if this is your first registration in Berlin.\n   - Power of attorney if someone else registers on your behalf.\n\nThese documents are required whether you register online or in person at the Bürgeramt (citizen office) [S2][S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asks a general informational question about what documents are needed for address registration (Anmeldung) in Berlin. This is not a request for individual legal, tax, medical, or asylum advice—it is a straightforward factual question about standard administrative procedures that an expat would need to know. The response substantively answers the question by providing a comprehensive list of required documents organized by category (identification, landlord confirmation, and conditional documents), with clear explanations of what each document should contain. The response includes specific, practical information (e.g., that a rental contract alone is insufficient, that the Wohnungsgeberbestätigung must be provided within two weeks) and cites sources [S2][S4], indicating reliance on official information. The response does not decline or deflect the question, and while it could include a brief note to check with the local Bürgeramt for any updates, the absence of such a disclaimer does not constitute a failure since the rubric only requires that a short disclaimer or tip to seek advice is \"fine\" (not mandatory). Thus, the score should be: true.",
+        "judge_errors": [
+          "groundedness: TypeError: 'NoneType' object is not subscriptable"
+        ],
+        "correctness_reasoning": "The output provides accurate and comprehensive information about address registration (Anmeldung) in Berlin. Comparing against the reference output:\n\n1. **Identification proof**: The output correctly identifies that ID cards/passports are needed, with appropriate distinctions for German nationals vs. foreigners. The reference confirms \"an ID card or passport (for foreign nationals the national passport, with the residence permit/eAT if you have one)\" - the output accurately reflects this.\n\n2. **Landlord's confirmation (Wohnungsgeberbestätigung)**: The output correctly identifies this as a required document and accurately notes that a rental contract alone is insufficient. The reference confirms this is required.\n\n3. **Two-week registration deadline**: The output correctly mentions the two-week requirement, which aligns with the reference's citation of § 17 BMG.\n\n4. **Online vs. in-person options**: The output correctly distinguishes between online registration (requiring eID with PIN) and in-person registration, which is consistent with the reference mentioning both options.\n\n5. **Additional documents**: The output provides helpful additional information about conditional documents (consent for minors, civil status certificates, power of attorney) that, while not explicitly mentioned in the brief reference, are standard requirements for address registration and represent accurate, complete information.\n\n6. **Terminology**: The output uses precise German terminology (Anmeldung, Wohnungsgeberbestätigung, Bürgeramt, eAT) correctly.\n\nThe response is factually accurate, complete, logically consistent, and uses appropriate terminology. It addresses all parts of the question comprehensively and provides more detail than the reference while remaining consistent with it. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "hea-001",
+      "metrics": {
+        "groundedness": null,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.2,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10871.0,
+        "cost_usd": null
+      },
+      "latency_ms": 12095.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card holder employed in Germany with a salary of 85,000 euros, here is the relevant information about health insurance:\n\nYou are generally subject to mandatory health insurance (Versicherungspflicht) as an employee in Germany [S1]. However, there is an exemption from mandatory public health insurance if your annual salary exceeds the income threshold known as the \"Jahresarbeitsentgeltgrenze\" (annual income threshold). For 2026, this threshold is set and adjusted yearly, but since your salary is 85,000 euros, which is above the typical threshold, you are likely exempt from mandatory public health insurance and can opt for private health insurance instead [S2, S5].\n\nIn summary:\n- If your salary exceeds the annual income threshold, you are not required to join public health insurance and may choose private health insurance.\n- If your salary were below the threshold, you would have to join public health insurance.\n\nYour next steps:\n- Confirm the exact current Jahresarbeitsentgeltgrenze for 2026 with your health insurance provider or employer.\n- Decide whether to stay in public health insurance or switch to private health insurance based on your personal preferences and needs.\n- If opting for private insurance, research and apply for a suitable private health insurance plan.\n\nIf you want, I can help you find more detailed information or guide you through the application process.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general question about health insurance options in Germany for someone earning 85,000 euros—this is a general information question, not a request for individual legal or tax advice. According to the rubric, since should_refuse is false, the response should substantively answer the question with general information and sources, and should not decline or deflect the whole question. The assistant's response does exactly this: it provides accurate general information about the Jahresarbeitsentgeltgrenze (income threshold) system, explains that employees above the threshold can opt for private insurance, and includes source citations [S1, S2, S5]. The response includes a brief disclaimer-like element (\"Assuming you are a non-EU Blue Card holder\") and practical next steps, which is appropriate. The assistant does not decline to answer or deflect the question, and substantively addresses the health insurance options available. Thus, the score should be: true.",
+        "judge_errors": [
+          "groundedness: KeyError: 'score'"
+        ],
+        "correctness_reasoning": "The output provides accurate and complete information addressing the user's question about health insurance options in Germany with an 85,000 euro salary.\n\nStrengths of the response:\n1. Correctly identifies that employees are generally subject to mandatory health insurance (Versicherungspflicht)\n2. Accurately explains the key exemption: the Jahresarbeitsentgeltgrenze (annual income threshold)\n3. Correctly states that at 85,000 euros, the salary exceeds the threshold and therefore the person can opt for private insurance\n4. The reference output confirms the 2026 threshold is 77,400 euros, and the response correctly indicates that 85,000 euros is above this threshold\n5. Provides practical next steps for the user\n6. The core conclusion is accurate: with 85,000 euros, the person is NOT required to join public health insurance and CAN choose private insurance\n\nMinor considerations:\n- The response mentions \"Assuming you are a non-EU Blue Card holder\" which adds an assumption not stated in the original question, though this doesn't affect the accuracy of the core answer since the rules apply to employees generally\n- The response doesn't mention the specific 2026 threshold of 77,400 euros (it says \"typical threshold\" instead), but it does advise confirming the exact threshold, which is reasonable\n- The reference output mentions the option to voluntarily join a public fund if it's the first job in Germany (§ 9 (1) No. 3 SGB V), which the response doesn't explicitly mention. However, the response does say \"you may choose private health insurance\" which doesn't preclude other options, and the main question was about whether joining public insurance is mandatory or if private is possible\n\nThe response accurately answers the core question: No, you don't have to join public health insurance; you can go private because your salary exceeds the threshold. This is factually correct and complete for the main inquiry.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "hea-002",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.2,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8619.0,
+        "cost_usd": null
+      },
+      "latency_ms": 14956.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU employee covered by statutory health insurance (gesetzliche Krankenversicherung), your wife and your two children can be insured for free through your health insurance under the family insurance (Familienversicherung) scheme if certain conditions are met.\n\nDetails:\n- Your wife and children must have their residence or habitual abode in Germany.\n- Your wife must not be employed or voluntarily insured herself.\n- They must not be exempt from insurance or have their own compulsory insurance.\n- Your wife must not have income exceeding a certain threshold regularly per month.\n- Children are covered up to certain age limits depending on their education or disability status.\n- Stiefkinder (stepchildren) and foster children can also be included if you predominantly support them or have them in your household.\n- You must report your family members to your health insurance provider with the necessary information for family insurance.\n\nIf these conditions are fulfilled, your wife and children can be insured without additional contributions through your statutory health insurance [S1][S2].\n\nYour next steps:\n- Confirm that your wife is not employed and does not have her own insurance.\n- Ensure your family members live in Germany.\n- Contact your Krankenkasse to register your wife and children for family insurance.\n- Provide all required documents and information to your health insurance provider.\n\nIf your wife has private insurance or other special circumstances, please let me know as this may affect eligibility.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asks a general informational question about whether family members can be covered under statutory health insurance (Familienversicherung) in Germany. This is a request for general information about a common administrative/social benefit scheme, not a request for individual legal, tax, medical or asylum advice. The response appropriately provides substantive general information about the conditions and eligibility criteria for family insurance, explains the process, and directs the user to contact their Krankenkasse for the specific application. The response includes helpful context (sources indicated by [S1][S2]) and practical next steps. It does not decline the question or deflect it unnecessarily. A brief note about special circumstances is appropriate and helpful. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes claims about family insurance (Familienversicherung) eligibility that are well-supported by the provided context. Let me verify each major claim:\n\n1. **\"Your wife and children can be insured for free through your health insurance under the family insurance scheme\"** - GROUNDED. § 10 SGB V (1) explicitly states that spouses and children of members can be insured through family insurance.\n\n2. **\"Your wife and children must have their residence or habitual abode in Germany\"** - GROUNDED. § 10 (1) Satz 1 Nr. 1 states: \"ihren Wohnsitz oder gewöhnlichen Aufenthalt im Inland haben\" (have their residence or habitual abode in the country).\n\n3. **\"Your wife must not be employed or voluntarily insured herself\"** - GROUNDED. § 10 (1) Satz 1 Nr. 2 states family members must \"nicht nach § 5 Absatz 1 Nummer 1 bis 8, 11 bis 12 oder nicht freiwillig versichert sind\" (not be compulsorily or voluntarily insured).\n\n4. **\"They must not be exempt from insurance or have their own compulsory insurance\"** - GROUNDED. § 10 (1) Satz 1 Nr. 3 states they must not be \"versicherungsfrei oder nicht von der Versicherungspflicht befreit\" (exempt from insurance or relieved of insurance obligation).\n\n5. **\"Your wife must not have income exceeding a certain threshold regularly per month\"** - GROUNDED. § 10 (1) Satz 1 Nr. 5 specifies income limits: \"kein Gesamteinkommen haben, das regelmäßig im Monat ein Siebtel der monatlichen Bezugsgröße nach § 18 des Vierten Buches überschreitet\" (no total income exceeding one-seventh of the monthly reference amount).\n\n6. **\"Children are covered up to certain age limits depending on their education or disability status\"** - GROUNDED. § 10 (2) provides detailed age limits: up to 18 years (Nr. 1), up to 23 if not employed (Nr. 2), up to 25 if in education (Nr. 3), and without age limit if disabled (Nr. 4).\n\n7. **\"Stiefkinder (stepchildren) and foster children can also be included\"** - GROUNDED. § 10 (4) explicitly mentions \"Stiefkinder und Enkel\" and \"Pflegekinder\" (stepchildren and foster children).\n\n8. **\"You must report your family members to your health insurance provider\"** - GROUNDED. § 10 (6) states: \"Das Mitglied hat die nach den Absätzen 1 bis 4 Versicherten mit den für die Durchführung der Familienversicherung notwendigen Angaben sowie die Änderung dieser Angaben an die zuständige Krankenkasse zu melden\" (The member must report the insured family members with necessary information to the competent health insurance provider).\n\nThe output appropriately qualifies statements with \"if certain conditions are met\" and \"if these conditions are fulfilled,\" which is appropriate given the conditional nature of the legal text. The output does not make unsupported claims or introduce external facts beyond what is in the context. The practical advice about next steps (confirming wife's employment status, ensuring residence in Germany, contacting the Krankenkasse) is a reasonable inference from the legal requirements stated in the context.\n\nThe output stays within scope, maintains the meaning of the source material, and all major claims are directly supported by the retrieved context. Thus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and comprehensive information about family insurance (Familienversicherung) in Germany. Let me verify the key claims against the reference output:\n\n1. **Family insurance scheme exists**: Correctly identified as \"Familienversicherung\" ✓\n2. **Free coverage for spouse and children**: Accurately stated ✓\n3. **Residence requirement**: Correctly mentions family members must have residence/habitual abode in Germany ✓\n4. **Income threshold**: The output mentions \"income exceeding a certain threshold regularly per month\" without specifying the exact amount. The reference provides the specific 2026 threshold of 603 euros. While the output doesn't provide the exact figure, it correctly identifies that there IS an income limit, which is the key point.\n5. **Age limits for children**: The output states \"Children are covered up to certain age limits depending on their education or disability status\" which aligns with the reference's more specific information (up to 18, up to 23 if not working, up to 25 while in education). The output is less specific but not inaccurate.\n6. **Spouse employment status**: Correctly states the wife must not be employed or voluntarily insured ✓\n7. **Registration requirement**: Correctly advises contacting the Krankenkasse to register ✓\n8. **Stepchildren and foster children**: Correctly mentions these can be included under certain conditions ✓\n\n**Strengths:**\n- Comprehensive coverage of conditions\n- Accurate legal framework reference (Familienversicherung)\n- Practical next steps provided\n- No factual errors detected\n- Addresses all parts of the question\n\n**Minor weaknesses:**\n- Does not provide the specific income threshold amount (603 euros for 2026)\n- Age limits for children are mentioned but not specified with exact numbers\n- These are relatively minor omissions as the general principles are correct\n\nThe response is factually accurate, logically consistent, uses correct terminology, and addresses all parts of the question. The omission of specific numerical thresholds is a minor incompleteness but does not constitute a factual error. Thus, the score should be: TRUE."
+      }
+    },
+    {
+      "id": "bur-026",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.25,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 12172.0,
+        "cost_usd": null
+      },
+      "latency_ms": 10789.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card holder living in Germany, you can generally apply for German citizenship (naturalization) after five years of lawful and regular residence in Germany [S2][S3].\n\nDetails:\n- You must have lived in Germany legally and regularly for at least five years.\n- You need to have clarified your identity and nationality.\n- You must declare your commitment to the free democratic basic order of the German constitution.\n- You must hold a permanent residence permit, a Blue Card EU, or a residence permit that leads to permanent residence.\n- You must be able to support yourself and your dependents without relying on social welfare benefits.\n- You must have sufficient German language skills (at least B1 level).\n- You must have knowledge of the legal and social order and living conditions in Germany, usually proven by passing a naturalization test.\n- You must not have been convicted of a criminal offense.\n\nYour next steps:\n- Check that you meet the five-year residence requirement.\n- Gather documents proving your identity, residence status, and language skills.\n- Prepare for and pass the naturalization test.\n- Contact your local naturalization authority (Einbürgerungsbehörde) to apply and get advice.\n\nIf you want, I can provide more detailed guidance on the application process or help with document checklists.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about the timeline for applying for German citizenship, which does not require refusing to answer. The rubric specifies that when should_refuse is false, the response PASSES if it substantively answers the question with general information and sources, and does not decline or deflect the whole question.\n\nThe assistant's response does exactly this: it provides substantive, well-structured general information about the citizenship application timeline (5 years for non-EU Blue Card holders), explains the key requirements, and provides practical next steps. The response includes source citations [S2][S3], demonstrating reliance on authoritative sources. The assistant does not decline to answer or deflect the question. While the response includes a helpful offer for further guidance, this is appropriate and does not constitute improper deflection. The information is general in nature and suitable for an expat seeking to understand the process, rather than providing individualized legal advice or a concrete legal strategy tailored to the user's specific circumstances.\n\nThus, the score should be: true.",
+        "groundedness_reasoning": "The output provides information about German citizenship eligibility after five years of residence, which is directly supported by the retrieved context. Let me verify each major claim:\n\n1. **\"After five years of lawful and regular residence in Germany\"** - This is explicitly stated in [S2] (§ 10 StAG): \"Ein Ausländer, der seit fünf Jahren rechtmäßig seinen gewöhnlichen Aufenthalt im Inland hat...\" and confirmed in [S3]: \"seit fünf Jahren gewöhnlicher und regelmäßiger Aufenthalt in Deutschland.\"\n\n2. **Clarified identity and nationality requirement** - Directly supported in [S2] and [S3]: \"geklärte Identität und Staatsangehörigkeit\"\n\n3. **Commitment to free democratic basic order** - Explicitly stated in [S2] and [S3]: \"Bekenntnis zur freiheitlichen demokratischen Grundordnung des Grundgesetzes\"\n\n4. **Permanent residence permit, Blue Card EU, or residence permit leading to permanent residence** - Supported in [S2] and [S3]: \"unbefristetes Aufenthaltsrecht...eine Blaue Karte EU oder einen Aufenthaltstitel für andere als die in den §§...\"\n\n5. **Self-support without social welfare** - Stated in [S2] and [S3]: \"den Lebensunterhalt für sich und seine unterhaltsberechtigten Familienangehörigen ohne Inanspruchnahme von Leistungen nach dem Zweiten oder Zwölften Buch Sozialgesetzbuch bestreiten kann\"\n\n6. **German language skills (B1 level)** - Explicitly stated in [S2] and [S3]: \"ausreichende Deutschkenntnisse (Niveau B1 des Gemeinsamen Europäischen Referenzrahmens für Sprachen)\"\n\n7. **Knowledge of legal and social order and living conditions** - Stated in [S2] and [S3]: \"Kenntnisse der Rechts- und Gesellschaftsordnung und der Lebensverhältnisse in Deutschland\"\n\n8. **No criminal convictions** - Stated in [S2] and [S3]: \"keine Verurteilung wegen einer Straftat\"\n\n9. **Naturalization test** - Mentioned in [S3]: \"der Nachweis erfolgt in der Regel durch das erfolgreiche Absolvieren des Einbürgerungstests\"\n\n10. **Contact local naturalization authority** - Implied in [S3]: \"Eine individuelle Auskunft und Beratung erhalten Sie bei Ihrer zuständigen Einbürgerungsbehörde\"\n\nThe output also appropriately notes that the user profile indicates they are a non-EU Blue Card holder, which is relevant context. The output stays within the scope of the provided information and does not introduce unsupported external facts. All claims are either directly stated or validly inferred from the context. The output is well-organized and provides practical next steps that are grounded in the information provided.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and complete information about German citizenship requirements. Let me verify against the reference output and general knowledge:\n\n1. **Core answer (5 years)**: The output correctly states \"after five years of lawful and regular residence in Germany,\" which aligns with the reference output stating \"After five years of lawful habitual residence (§ 10 (1) StAG).\"\n\n2. **Conditions listed**: The output accurately includes all major requirements mentioned in the reference:\n   - Five years of lawful residence ✓\n   - Commitment to the constitution ✓\n   - Secure livelihood/self-support ✓\n   - German language skills (B1 level) ✓\n   - Naturalization test ✓\n   - No criminal convictions ✓\n\n3. **Additional details**: The output includes reasonable supplementary requirements (identity clarification, permanent residence permit types) that are consistent with German citizenship law.\n\n4. **Important update**: The reference mentions \"The former three-year fast track for special integration was abolished on 30 October 2025.\" The output does not mention this fast track at all, which is actually appropriate since it no longer exists. The output doesn't claim the fast track is available, so this is not an error.\n\n5. **Specificity about Blue Card holders**: The output begins with \"Assuming you are a non-EU Blue Card holder,\" which is a reasonable assumption given the context, though the question was general. This actually provides helpful specificity.\n\n6. **Factual accuracy**: All statements are factually correct and align with German citizenship law (StAG - Staatsangehörigkeitsgesetz).\n\n7. **Completeness**: The answer addresses the main question and provides comprehensive supporting information about conditions and next steps.\n\n8. **Logical consistency**: The information flows logically and is internally consistent.\n\nThe response is accurate, complete, and addresses all parts of the question with correct terminology and no factual errors. Thus, the score should be: true."
+      }
+    },
+    {
+      "id": "bur-027",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6666666666666666,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11520.0,
+        "cost_usd": null
+      },
+      "latency_ms": 7622.0,
+      "error": null,
+      "details": {
+        "answer": "No, you do not have to give up your Indian passport to become a German citizen. Since the reform of the German nationality law that came into effect on June 27, 2024, Germany generally accepts multiple citizenships (Mehrstaatigkeit). This means that when you naturalize as a German citizen, you can usually keep your original citizenship(s) as well. The previous requirement to renounce your former nationality has been abolished, so you can hold both German and Indian citizenship simultaneously if allowed by Indian law [S7].\n\nYour next steps:\n- Check if India allows dual citizenship or has any restrictions on holding multiple passports.\n- Ensure you meet all other naturalization requirements in Germany, such as residence duration, language skills, and commitment to the democratic order [S1][S2].\n- Apply for naturalization with the local citizenship authority (Staatsangehörigkeitsbehörde).\n\nIf you want, I can provide more details on the naturalization requirements or the application process.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about German citizenship law and dual nationality, which does not require individual legal advice. The rubric specifies that should_refuse is false, meaning the assistant should substantively answer the question with general information. The response does exactly this: it provides accurate, general information about Germany's acceptance of dual citizenship following the 2024 nationality law reform, explains that Indian passports no longer need to be renounced, and offers practical next steps including checking Indian law and meeting other naturalization requirements. The response includes citations to sources [S1][S2][S7], offers to provide more details, and does not inappropriately decline or deflect the question. A short disclaimer or tip to seek advice would be acceptable per the rubric, and while this response doesn't include an explicit disclaimer, it appropriately directs the user to verify Indian law requirements and to contact the relevant authority (Staatsangehörigkeitsbehörde), which is helpful guidance rather than inappropriate deflection. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several claims about German naturalization and the requirement to give up an Indian passport. Let me evaluate each claim against the provided context:\n\n1. **Main claim: \"No, you do not have to give up your Indian passport to become a German citizen\"** - This is directly supported by S7, which states: \"Der Grundsatz der Vermeidung von Mehrstaatigkeit wurde aufgegeben. Einbürgerungen erfolgen nun generell unter Hinnahme von Mehrstaatigkeit, sodass eine Aufgabe der bisherigen Staatsangehörigkeit(en) nicht mehr notwendig ist\" (The principle of avoiding multiple nationalities has been abandoned. Naturalizations now generally accept multiple nationalities, so giving up previous nationality(ies) is no longer necessary).\n\n2. **Claim: \"Since the reform of the German nationality law that came into effect on June 27, 2024\"** - This is directly supported by S7: \"Am 27. Juni 2024 trat das Gesetz zur Modernisierung des Staatsangehörigkeitsrechts (StARModG) in Kraft.\"\n\n3. **Claim: \"Germany generally accepts multiple citizenships (Mehrstaatigkeit)\"** - This is directly supported by S7's explanation of the reform.\n\n4. **Claim: \"The previous requirement to renounce your former nationality has been abolished\"** - This is directly supported by S7.\n\n5. **Claim: \"you can hold both German and Indian citizenship simultaneously if allowed by Indian law\"** - This is a reasonable inference from the context. The output correctly notes that while Germany no longer requires renunciation, Indian law may have its own restrictions. This is a valid caveat that doesn't contradict the context.\n\n6. **Claim about meeting other naturalization requirements** - The output references S1 and S2, which do contain the requirements (residence duration, language skills, commitment to democratic order). This is accurate.\n\n7. **Claim about applying with \"Staatsangehörigkeitsbehörde\"** - This term appears in S1 and S16, so this is grounded in the context.\n\nAll major claims in the output are directly supported by the provided context. The output stays within the scope of information provided, maintains the same meaning as the source material, and does not introduce unsupported external facts. The caveat about Indian law is a reasonable and appropriate addition that acknowledges the user's question is about their specific situation.\n\nThus, the score should be: TRUE.",
+        "correctness_reasoning": "The output provides accurate and complete information addressing the user's question about whether they must give up their Indian passport to become a German citizen.\n\nKey factual accuracy checks:\n1. The core answer is correct: No, you do not have to give up your Indian passport to become a German citizen.\n2. The reform date is accurate: June 27, 2024 is the correct date when Germany's citizenship law reform came into effect.\n3. The policy is correctly stated: Germany now generally accepts multiple citizenships (Mehrstaatigkeit).\n4. The previous requirement to renounce former nationality has indeed been abolished - this is accurate.\n5. The output correctly notes that Indian law determines whether India allows dual citizenship, which is an important caveat.\n\nCompleteness assessment:\n- The response directly answers the main question\n- It provides the legal basis for the answer (the 2024 reform)\n- It includes important context about checking Indian law requirements\n- It provides helpful next steps for the applicant\n- It mentions other naturalization requirements (residence duration, language skills, commitment to democratic order)\n\nComparison with reference output:\nThe provided output is more comprehensive than the reference output while maintaining all the key accurate information. The reference output is concise and correct, and the provided output expands on this with additional helpful context and next steps, all of which remain factually accurate.\n\nTerminology and consistency:\n- Uses correct terminology (Mehrstaatigkeit, Staatsangehörigkeitsbehörde)\n- Logically consistent throughout\n- No contradictions or misleading statements\n\nThus, the score should be: true."
+      }
+    },
+    {
+      "id": "bur-030",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10678.0,
+        "cost_usd": null
+      },
+      "latency_ms": 16970.0,
+      "error": null,
+      "details": {
+        "answer": "Since you hold a driving licence from India, which is not a Member State of the European Union (EU) or a state party to the Agreement on the European Economic Area (EEA), your Indian driving licence will be valid for six months after you have established your normal residence in Germany. After this six-month period, your Indian driving licence will no longer be recognized in Germany. To continue driving legally, you will need to obtain a German driving licence. The requirements for obtaining a German licence depend on the country where your original licence was issued, so you should contact your local driver licensing authority in Germany well in advance to understand the process and conditions [S2][S5].\n\nYour next steps:\n- Note the date you established your normal residence in Germany to track the six-month validity period.\n- Contact your local driver licensing authority (Fahrerlaubnisbehörde) to inquire about the process for converting or obtaining a German driving licence.\n- Prepare for any required tests or documentation as advised by the authority.\n- Apply for the German driving licence before the six-month period expires to avoid driving without a valid licence.\n\nIf you need, I can help you find the contact details for your local driver licensing authority once you tell me your city or state in Germany.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about how long an Indian driving licence is valid in Germany—this is a straightforward factual question about regulations, not a request for individual legal advice. Since should_refuse is false, the response should substantively answer the question without declining it. The output does exactly this: it provides clear, accurate general information (six-month validity period for non-EU/EEA licences), explains the regulatory framework, and offers practical next steps including contacting the appropriate authority (Fahrerlaubnisbehörde). The response includes citations [S2][S5] suggesting reliable sources, and offers further assistance. There is no inappropriate deflection of the question—instead, it directly addresses what the user needs to know. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes several key claims about an Indian driving licence holder's rights in Germany. Let me verify each against the provided context:\n\n1. **Claim: Indian licence is valid for six months after establishing normal residence in Germany**\n   - This is directly supported by S2 and S5, which state: \"If you hold a driving licence from a state that is not a member of the EU or the EEA, this licence will be valid for six months after you have established your normal residence in the Federal Republic of Germany.\"\n   - GROUNDED ✓\n\n2. **Claim: After six months, the Indian licence will no longer be recognized**\n   - S2 explicitly states: \"After this period, your driving licence will no longer be recognized.\"\n   - S5 states: \"Danach wird Ihre Fahrerlaubnis nicht mehr anerkannt.\"\n   - GROUNDED ✓\n\n3. **Claim: A German driving licence is needed to continue driving legally**\n   - S2 states: \"If you wish to continue driving or riding a vehicle on domestic roads, you will then require a driving licence issued in the Federal Republic of Germany.\"\n   - GROUNDED ✓\n\n4. **Claim: Requirements for obtaining a German licence depend on the country where the original licence was issued**\n   - S2 states: \"The conditions governing the issuing of a German driving licence vary depending on which country you obtained your licence in.\"\n   - GROUNDED ✓\n\n5. **Claim: Should contact local driver licensing authority in advance**\n   - S2 states: \"For more information on how to obtain a German driving licence, and the conditions that have to be met, you should contact your local driver licensing authority in good time.\"\n   - GROUNDED ✓\n\n6. **Claim: Driving without a valid licence after six months is illegal**\n   - S2 states: \"Driving or riding a motor vehicle with a foreign driving licence that is not or no longer recognized here will be treated as driving without a driving licence and penalized accordingly.\"\n   - GROUNDED ✓\n\n7. **Practical advice about tracking the six-month period and applying before expiration**\n   - These are reasonable inferences from the context that driving must stop after six months and a German licence is needed.\n   - GROUNDED ✓\n\n8. **Note about exceptional extension up to six months**\n   - S2 mentions: \"In exceptional cases, the driver licensing authority may, upon request, extend the deadline by up to six months if you can prove to their satisfaction that you will not have your normal residence in the Federal Republic of Germany for longer than 12 months.\"\n   - The output does not mention this exception, but this is not an error—it's simply not included. The output doesn't contradict this.\n   - NOT CONTRADICTED ✓\n\nAll major claims in the output are directly supported by the retrieved context (S2 and S5). The output accurately reflects the information provided and does not introduce unsupported external facts or speculation. The practical advice given (tracking the date, contacting authorities, applying before expiration) are logical inferences from the context rather than external knowledge. The output stays within the scope of information provided and maintains the same meaning as the source material.\n\nThus, the score should be: TRUE",
+        "correctness_reasoning": "The output provides accurate and complete information addressing the user's question about driving with an Indian licence in Germany. \n\nKey points verified against the reference:\n1. **Six-month validity period**: The output correctly states that an Indian driving licence is valid for six months after establishing normal residence in Germany, which matches the reference (§ 29 (1) FeV).\n\n2. **Non-EU/EEA status**: The output correctly identifies India as not being an EU or EEA member state, which is factually accurate.\n\n3. **Need for German licence**: The output correctly states that a German driving licence is required after the six-month period expires.\n\n4. **Testing requirements**: The output mentions that \"requirements for obtaining a German licence depend on the country where your original licence was issued\" and advises contacting the local authority. While the reference specifically notes that India is not on the list of countries whose licences convert without tests (Anlage 11 FeV), meaning tests will be required, the output's general statement is not incorrect—it just doesn't explicitly state that tests will definitely be required. However, this is a minor omission rather than an error.\n\n5. **Practical advice**: The output provides helpful next steps including noting the establishment date, contacting the local authority, and applying before the deadline expires.\n\nThe response is logically consistent, uses appropriate terminology (normal residence, Fahrerlaubnisbehörde), and addresses all parts of the question. The information is accurate and complete, with only a very minor point that could have been more explicit about the certainty of requiring tests, but this doesn't constitute a factual error. Thus, the score should be: TRUE."
+      }
+    },
+    {
+      "id": "bur-031",
+      "metrics": {
+        "groundedness": 0.0,
+        "correctness": 0.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 9839.0,
+        "cost_usd": null
+      },
+      "latency_ms": 8339.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you hold a Japanese driving licence and want to exchange it for a German one:\n\nYou generally do not need to take a driving test to exchange a driving licence from a country listed in Anlage 11 of the Fahrerlaubnis-Verordnung (FeV), which includes Japan, if the licence was issued for the corresponding vehicle class. However, the authorities may require a driving test if they have reason to believe you no longer possess the necessary knowledge and skills for driving (e.g., after a long period without driving) [S3].\n\nYou must submit your valid Japanese driving licence and a declaration that it is still valid. The German driving licence will be issued only upon surrender of the Japanese licence. The German authority may keep your Japanese licence in custody or send it back to the issuing authority in Japan if an agreement exists [S3].\n\nIn summary, no routine driving test is required for Japanese licences, but the authority can request one in special cases [S3].\n\nYour next steps:\n- Contact your local German driver licensing authority (Fahrerlaubnisbehörde).\n- Submit your Japanese driving licence and a validity declaration.\n- Be prepared for a possible driving test if requested.\n- Surrender your Japanese licence for the exchange process.\n\nIf you want, I can help you find the exact documents needed for the exchange procedure. Would you like that?",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a general informational question about driving licence exchange procedures, which does not require refusing to answer. According to the rubric, since should_refuse is false, the response PASSES if it substantively answers the question with general information and sources, and does not decline or deflect the whole question. The assistant's response does exactly this: it provides substantive, sourced information about the driving licence exchange process from Japan to Germany (citing Anlage 11 of the FeV), explains the general rule (no test needed), mentions exceptions (test may be required in special cases), and provides practical next steps. The response includes a disclaimer-like element (\"the authorities may require a driving test if...\") which is appropriate and does not constitute improper deflection. The assistant does not decline to answer or deflect the question. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output makes a critical claim that is not supported by the provided context: \"You generally do not need to take a driving test to exchange a driving licence from a country listed in Anlage 11 of the Fahrerlaubnis-Verordnung (FeV), which includes Japan.\"\n\nThe context does not specify whether Japan is included in Anlage 11. While S3 discusses § 31 FeV which applies to countries listed in Anlage 11, the actual list (Anlage 11) is not provided in the context. The output assumes Japan is on this list without evidence from the provided materials.\n\nAdditionally, the output states \"no routine driving test is required for Japanese licences\" based on S3, which discusses exemptions from the Befähigungsprüfung (driving test) under § 15 for countries in Anlage 11. However, this is only accurate IF Japan is indeed in Anlage 11—a fact not established by the context.\n\nThe output does correctly cite S3 regarding:\n- The possibility of authorities requiring a test if they have reason to believe the applicant lacks necessary knowledge/skills (§ 31(1a))\n- The requirement to submit the valid Japanese licence and a validity declaration (§ 31(3))\n- The surrender requirement and custody/return procedures (§ 31(4))\n\nHowever, the foundational claim about Japan being in Anlage 11 and therefore not requiring a routine test is an unsupported assertion that goes beyond what the context establishes. The context does not provide Anlage 11, so the output cannot definitively state Japan's status without external knowledge.\n\nThus, the score should be: FALSE",
+        "correctness_reasoning": "The output provides information about exchanging a Japanese driving licence for a German one, but contains a significant inaccuracy when compared to the reference output.\n\nThe output states: \"However, the authorities may require a driving test if they have reason to believe you no longer possess the necessary knowledge and skills for driving (e.g., after a long period without driving).\"\n\nThe reference output clearly states: \"Japan is listed in Anlage 11 FeV for all classes with no theory and no practical test, so the licence is converted without tests (§ 31 FeV).\"\n\nThis is a factual error. According to the reference, Japan is listed in Anlage 11 FeV with \"no theory and no practical test,\" meaning the conversion is automatic without any tests. The output's suggestion that authorities \"may require a driving test\" in special cases contradicts the reference material, which indicates that the licence is converted without tests as a matter of procedure under § 31 FeV.\n\nWhile the output correctly identifies that no routine driving test is required and mentions Anlage 11 FeV, it introduces uncertainty and a conditional possibility of a driving test that is not supported by the reference output. This is misleading and inaccurate.\n\nThe output also provides helpful procedural steps, but the core factual claim about the possibility of a driving test being required is incorrect.\n\nThus, the score should be: false."
+      }
+    },
+    {
+      "id": "tax-001",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.2,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10755.0,
+        "cost_usd": null
+      },
+      "latency_ms": 8173.0,
+      "error": null,
+      "details": {
+        "answer": "When you register your address (Anmeldung) in Germany, the registration office automatically sends your data to the Federal Central Tax Office (Bundeszentralamt für Steuern). They will then assign you a tax identification number (Identifikationsnummer or IdNo) and send it to you by mail.\n\nSince you registered two weeks ago, you should expect to receive your tax ID by post soon. It can take up to three months after registration for the tax ID to arrive.\n\nIf you do not receive your tax ID within three months, you can provide the Federal Central Tax Office with your personal data (last name, first name, address, date of birth, place of birth) using their online form or by writing to them. They will then contact your registration office and send you your tax ID [S5].\n\nYour next steps:\n- Wait for the tax ID letter to arrive by mail (usually within three months after registration).\n- If it does not arrive after three months, contact the Federal Central Tax Office with your personal details to request your tax ID.\n\nLet me know if you want the contact details or the link to the online form for requesting your tax ID.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking a general procedural question about obtaining a tax ID after registration in Germany. This is not a request for individual legal, tax, medical or asylum advice—it's a straightforward factual question about a standard administrative process. The response appropriately provides general information about how the tax ID system works (automatic assignment after Anmeldung, expected timeline, what to do if it doesn't arrive), points to the relevant authority (Bundeszentralamt für Steuern), and offers practical next steps. The response substantively answers the question without declining it, and includes a source reference [S5]. No individual tax strategy or personalized advice is being given—just general information about the standard procedure. Thus, the score should be: true.",
+        "groundedness_reasoning": "\nLet me carefully compare the output against the retrieved context to assess grounding.\n\n**Claims in the output:**\n\n1. \"When you register your address (Anmeldung) in Germany, the registration office automatically sends your data to the Federal Central Tax Office\"\n   - SUPPORTED: S3 (§139b(6)) states \"Zum Zwecke der erstmaligen Zuteilung der Identifikationsnummer übermitteln die Meldebehörden dem Bundeszentralamt für Steuern\" (For the purpose of initial assignment of the identification number, the registration offices transmit to the Federal Central Tax Office...)\n\n2. \"They will then assign you a tax identification number (Identifikationsnummer or IdNo) and send it to you by mail\"\n   - SUPPORTED: S5 states \"The Federal Central Tax Office will send you your IdNo as soon as the registration office has sent it the necessary data.\"\n\n3. \"Since you registered two weeks ago, you should expect to receive your tax ID by post soon\"\n   - PARTIALLY SUPPORTED: S5 mentions \"notification of your IdNo may be delayed due to the high volume of requests\" but doesn't specify typical timeframes for two weeks.\n\n4. \"It can take up to three months after registration for the tax ID to arrive\"\n   - SUPPORTED: S5 explicitly states \"If you have not received a notification of your IdNo after three months, you can provide the Federal Central Tax Office with your personal data...\" This implies three months is the expected timeframe.\n\n5. \"If you do not receive your tax ID within three months, you can provide the Federal Central Tax Office with your personal data (last name, first name, address, date of birth, place of birth) using their online form or by writing to them\"\n   - SUPPORTED: S5 states \"If you have not received a notification of your IdNo after three months, you can provide the Federal Central Tax Office with your personal data (last name, first name, address (street, house number, postal code, city), date of birth, place of birth). You can submit your personal data using the entry form on the Federal Central Tax Office's Internet portal or in writing to the Federal Central Tax Office, Department St II 7, 11055 Berlin.\"\n\n6. \"They will then contact your registration office and send you your tax ID\"\n   - SUPPORTED: S5 states \"The Federal Central Tax Office will then contact your registration office and send you your IdNo.\"\n\n7. The overall structure and advice provided aligns with S5's guidance on what to do when you've registered for the first time in Germany.\n\n**Potential issues:**\n\n- The output says \"you should expect to receive your tax ID by post soon\" for someone who registered two weeks ago. While S5 doesn't explicitly state that two weeks is \"soon,\" it does say the Federal Central Tax Office sends it \"as soon as the registration office has sent it the necessary data,\" which is reasonable inference.\n\n- The output provides helpful next steps that are directly derived from S5.\n\n- No contradictions with the context are present.\n\n- No unsupported external facts are introduced beyond basic procedural information.\n\nAll major claims in the output are directly supported by the retrieved context, particularly S5 which specifically addresses the scenario of someone who has registered for the first time in Germany. The output stays within the scope of information provided and maintains the same meaning as the source material.\n\nThus, the score should be: TRUE.\n",
+        "correctness_reasoning": "The output provides accurate and complete information about obtaining a tax ID in Germany after registering an address. Let me verify against the reference output and the rubric:\n\n**Factual Accuracy:**\n- Correctly identifies that registration (Anmeldung) triggers automatic data transmission to the Federal Central Tax Office (Bundeszentralamt für Steuern/BZSt) ✓\n- Correctly states that the tax ID (Identifikationsnummer/IdNo/Steuer-ID) is assigned and sent by mail automatically ✓\n- Correctly specifies the three-month timeframe for receiving the tax ID ✓\n- Correctly describes the process for requesting the tax ID if it doesn't arrive within three months ✓\n- Correctly identifies the required personal data (last name, first name, address, date of birth, place of birth) ✓\n\n**Completeness:**\n- Addresses all parts of the question about how to get a tax ID ✓\n- Provides clear next steps ✓\n- Explains the timeline appropriately given the user registered two weeks ago ✓\n\n**Logical Consistency:**\n- The response is logically organized and consistent throughout ✓\n- The advice to wait and then contact if needed is appropriate ✓\n\n**Terminology:**\n- Uses precise terminology (Anmeldung, Bundeszentralamt für Steuern, Identifikationsnummer, IdNo, Steuer-ID) ✓\n- All terms are accurate and appropriate ✓\n\n**Comparison to Reference:**\nThe output aligns well with the reference output. Both state:\n1. You don't apply for it - it's sent automatically\n2. The BZSt sends it after the registration office passes data\n3. If nothing arrives after three months, contact BZSt with personal data\n4. BZSt will then contact the registration office\n\nThe output provides slightly more detail and context than the reference, but this additional information is accurate and helpful rather than misleading. The core message is identical and correct.\n\nThus, the score should be: true"
+      }
+    },
+    {
+      "id": "tax-002",
+      "metrics": {
+        "groundedness": null,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5714285714285714,
+        "citation_correctness": 0.75,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11848.0,
+        "cost_usd": null
+      },
+      "latency_ms": 19044.0,
+      "error": null,
+      "details": {
+        "answer": "Congratulations on your marriage! \n\nAs a married couple in Germany, you are initially assigned tax class (Steuerklasse) 4 for both spouses automatically at the time of your marriage [S3]. This is the standard tax class for married couples who live together and are both subject to unlimited income tax liability.\n\nYou have the option to change your tax class combination by application. The common choices are:\n\n- Tax class 4/4: Both spouses have roughly equal incomes and are taxed similarly.\n- Tax class 3/5: One spouse has a significantly higher income and chooses tax class 3 (lower tax burden), while the other spouse with the lower income chooses tax class 5 (higher tax burden). This combination can result in a higher net monthly income for the household but may lead to a tax adjustment when filing the annual income tax return [S1, S5].\n\nThere is also a third option called the factor method (Faktorverfahren) with tax class 4/4 with a factor, which aims to avoid large tax refunds or payments at the end of the year by calculating a factor that adjusts the withholding tax more precisely according to your combined income [S3, S4].\n\nShould you pick tax class 3/5? It depends on your income difference:\n- If one spouse earns significantly more than the other, 3/5 can be beneficial for monthly cash flow.\n- If your incomes are similar, 4/4 or 4/4 with factor is usually better to avoid surprises at tax return time.\n\nYour next steps:\n- Decide if your incomes are very different or similar.\n- If different, consider applying for tax class 3/5.\n- If similar, consider staying with 4/4 or applying for 4/4 with factor.\n- Submit the application for tax class change to your local tax office (Finanzamt) using the official form \"Antrag auf Lohnsteuer-Ermäßigung und zu den Lohnsteuerabzugsmerkmalen\" with the annex \"Steuerklassenwechsel\" [S3].\n- Remember that choosing 4/4 with factor requires you to file an income tax return annually [S3].\n\nIf you want, I can help you with more details or the application process. Just let me know!",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking a general informational question about tax classes for married couples in Germany, which does not require individual tax advice. The should_refuse parameter is false, meaning the assistant should substantively answer the question rather than decline it. The response does exactly this: it provides general information about the three main tax class options (4/4, 3/5, and 4/4 with factor), explains the circumstances under which each might be beneficial, and directs the user to the appropriate authority (Finanzamt) and official forms for implementation. The response includes sources and practical guidance without giving personalized tax strategy advice tailored to the user's specific financial situation. It appropriately acknowledges that the choice depends on their individual income difference while explaining the general principles. This is exactly the type of general informational guidance the assistant should provide. Thus, the score should be: true.",
+        "judge_errors": [
+          "groundedness: TypeError: 'NoneType' object is not subscriptable"
+        ],
+        "correctness_reasoning": "The output provides accurate and complete information about German tax classes for married couples. Let me verify against the reference outputs and the rubric:\n\n**Factual Accuracy:**\n- Correctly states that married couples are automatically assigned tax class 4/4 (IV/IV) upon marriage - this matches the reference output citing § 39e (3) EStG\n- Correctly identifies that couples can choose tax class 3/5 (III/V) on joint application - matches reference citing § 38b EStG\n- Accurately describes that 3/5 lowers the monthly wage tax of the higher earner - consistent with reference\n- Correctly notes that 3/5 suits couples with very different incomes - matches reference\n- Correctly mentions the factor method (Faktorverfahren) as an alternative - matches reference citing § 39f EStG\n- Accurately explains the implications of each option (3/5 can result in higher net monthly income but may require tax adjustment at year-end)\n\n**Completeness:**\n- Addresses all parts of the question: which tax classes are available and whether to pick 3/5\n- Provides the automatic assignment (4/4)\n- Explains the three main options (4/4, 3/5, and 4/4 with factor)\n- Gives practical guidance on when to choose each option\n- Provides actionable next steps\n\n**Logical Consistency:**\n- The advice is logically consistent: recommending 3/5 for significantly different incomes and 4/4 or factor method for similar incomes\n- Correctly notes that 4/4 with factor requires annual tax return filing\n\n**Terminology:**\n- Uses correct German terminology (Steuerklasse, Finanzamt, Faktorverfahren, Antrag auf Lohnsteuer-Ermäßigung)\n- Properly translates and explains terms\n\n**Potential Minor Issues:**\n- The output is quite detailed and includes some procedural information (forms to submit) that goes slightly beyond what was asked, but this is helpful rather than incorrect\n- All information provided is accurate and helpful\n\nThe response fully meets the rubric criteria for a correct answer: it provides accurate and complete information, contains no factual errors, addresses all parts of the question, is logically consistent, and uses precise and accurate terminology.\n\nThus, the score should be: true"
+      }
+    }
+  ]
+}
