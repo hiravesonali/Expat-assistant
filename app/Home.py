@@ -31,8 +31,9 @@ import i18n
 import streamlit as st
 import ui
 from i18n import t
-from pipeline_adapter import DEMO, LIVE, live_status, run_pipeline, sync_secrets_to_env
+from pipeline_adapter import DEMO, LIVE, is_budget_error, live_status, run_pipeline, sync_secrets_to_env
 
+from expat import speech
 from expat.config import get_settings
 from expat.guards import DailyCap, QuestionCheck, SlidingWindowLimiter, check_question
 from expat.places import STATES, SUPPORTED_CITIES, city_label
@@ -265,7 +266,7 @@ def render_settings() -> str:
     for path, label, icon in ADMIN_PAGES:
         st.page_link(path, label=label, icon=icon)
     st.divider()
-    st.caption(f":material/gavel: {t('disclaimer')} {t('privacy')}")
+    st.caption(f":material/gavel: {t('disclaimer')} {t('privacy')} {t('voice_privacy')}")
     return LIVE if (live and available) else DEMO
 
 
@@ -340,12 +341,31 @@ def render_export(conv: dict[str, Any]) -> None:
 # ------------------------------------------------------------------------------------------------
 
 
-def render_empty_state() -> str | None:
-    """Brand hero + composer + topic cards + trust row. Returns a submitted prompt."""
+def voice_on(mode: str) -> bool:
+    """Microphone and "Listen" exist only for Live answers: both are paid API calls (ADR-0011)."""
+    return mode == LIVE and get_settings().voice_enabled
+
+
+def composer(mode: str) -> tuple[str | None, bytes | None]:
+    """The chat box, with a microphone when voice is on. Returns (typed text, recorded WAV bytes).
+
+    With `accept_audio=True` the widget returns a dict-like ChatInputValue instead of a string, so both
+    call sites go through this function and the rest of the page keeps working with plain values.
+    """
+    s = get_settings()
+    value = st.chat_input(t("placeholder"), key="composer", max_chars=s.max_question_chars, accept_audio=voice_on(mode))
+    if value is None or isinstance(value, str):
+        return value, None
+    audio = value.audio.getvalue() if value.audio is not None else None
+    return (value.text or None), audio
+
+
+def render_empty_state(mode: str) -> tuple[str | None, bytes | None]:
+    """Brand hero + composer + topic cards + trust row. Returns a submitted prompt or voice recording."""
     ui.hero()
     # Inside a container, st.chat_input renders inline (here: centred) instead of pinned to the bottom.
     with st.container():
-        prompt = st.chat_input(t("placeholder"), key="composer", max_chars=get_settings().max_question_chars)
+        prompt, audio = composer(mode)
     with st.container(key="suggestions"):
         for i, (icon, title, blurb, full_prompt) in enumerate(examples()):
             st.button(
@@ -358,21 +378,25 @@ def render_empty_state() -> str | None:
             )
     ui.trust_row()
     ui.disclaimer_footer()
-    return prompt
+    return prompt, audio
 
 
-def render_history(conv: dict[str, Any]) -> None:
+def render_history(conv: dict[str, Any], mode: str) -> None:
     messages = conv["messages"]
     for i, msg in enumerate(messages):
         with st.chat_message(msg["role"], avatar=ASSISTANT_AVATAR if msg["role"] == "assistant" else None):
             if msg["role"] == "user":
                 st.markdown(msg["content"])
+                if msg.get("voice"):
+                    st.caption(f":material/mic: {t('voice_question')}")
                 continue
             ui.render_assistant_message(
                 msg["events"], msg["content"], key_prefix=f"{st.session_state.current}-{i}", mode=msg["mode"]
             )
             is_last = i == len(messages) - 1
             error = next((e for e in msg["events"] if isinstance(e, ErrorEvent)), None)
+            if not error:
+                render_listen(msg["content"], f"{st.session_state.current}-{i}", mode)
             if is_last and error and error.retryable:
                 st.button(t("try_again"), icon=":material/refresh:", key=f"retry-{i}", on_click=_on_retry)
             if is_last and error and error.code == "budget_exhausted":
@@ -447,33 +471,138 @@ def admit_question(raw: str, mode: str) -> str | None:
     if check.error:
         st.warning(question_error(check), icon=":material/edit_note:")
         return None
+    return check.text if take_quota(mode) else None
+
+
+def take_quota(mode: str) -> bool:
+    """Count one Live question against the session and daily limits. Shows the reason when refused."""
     if mode != LIVE:
-        return check.text  # demo answers are scripted and free
+        return True  # demo answers are scripted and free
+    s = get_settings()
     limiter = st.session_state.setdefault("limiter", SlidingWindowLimiter(s.questions_per_hour, 3600))
     if (wait := limiter.try_acquire(time.monotonic())) is not None:
         st.warning(
             t("rate_limited", n=s.questions_per_hour, minutes=math.ceil(wait / 60)),
             icon=":material/hourglass_top:",
         )
-        return None
+        return False
     if not _daily_cap().try_acquire(date.today()):
         st.warning(
             t("daily_cap"),
             icon=":material/hourglass_top:",
         )
+        return False
+    return True
+
+
+# ------------------------------------------------------------------------------------------------
+# Voice (ADR-0011): a spoken question becomes text and then takes the same path as a typed one;
+# "Listen" reads a finished answer aloud on demand. The recording itself is never kept.
+# ------------------------------------------------------------------------------------------------
+
+
+def transcribe_voice(audio: bytes, mode: str) -> speech.Transcript | None:
+    """Recording -> validated question text, or None with a message for the user.
+
+    Order matters because transcription is paid: check the clip length locally, then take a slot from the
+    question limits, and only then call the speech model. The transcript is validated like typed text.
+    """
+    s = get_settings()
+    if not voice_on(mode):
         return None
-    return check.text
+    clip = speech.check_clip(audio, s.voice_max_seconds)
+    if clip.reason == "too_long":
+        st.warning(t("voice_too_long", n=round(clip.seconds), max=s.voice_max_seconds), icon=":material/mic_off:")
+        return None
+    if clip.reason:
+        st.warning(t("voice_empty"), icon=":material/mic_off:")
+        return None
+    if not take_quota(mode):
+        return None
+    try:
+        with st.spinner(t("transcribing")):
+            heard = speech.transcribe(audio)
+    except Exception as exc:  # the UI must survive any provider failure
+        st.warning(t("budget") if is_budget_error(str(exc)) else t("voice_failed"), icon=":material/mic_off:")
+        return None
+    check = check_question(heard.text, s.max_question_chars)
+    if check.error:
+        message = question_error(check) if check.reason == "too_long" else t("voice_empty")
+        st.warning(message, icon=":material/mic_off:")
+        return None
+    return speech.Transcript(check.text, heard.seconds or clip.seconds, heard.cost_usd, heard.model)
 
 
-def handle_prompt(prompt: str, mode: str) -> None:
+@st.cache_resource
+def _daily_listen_cap() -> DailyCap:
+    """Spoken answers have their own daily counter: one costs several times a text answer."""
+    return DailyCap(get_settings().daily_listen_cap)
+
+
+def _on_listen(key: str) -> None:
+    st.session_state.listen_request = key
+
+
+def _make_clip(content: str, key: str) -> dict[str, Any] | None:
+    """Synthesise one answer (within the listen limits) and keep it as the session's only audio clip."""
+    s = get_settings()
+    limiter = st.session_state.setdefault("listen_limiter", SlidingWindowLimiter(s.listens_per_hour, 3600))
+    if limiter.try_acquire(time.monotonic()) is not None or not _daily_listen_cap().try_acquire(date.today()):
+        st.warning(t("listen_limited"), icon=":material/hourglass_top:")
+        return None
+    text = speech.speakable_text(content, s.tts_max_chars)
+    try:
+        with st.spinner(t("preparing_audio")):
+            spoken = speech.synthesize(text)
+    except Exception as exc:  # the UI must survive any provider failure
+        st.warning(t("budget") if is_budget_error(str(exc)) else t("listen_failed"), icon=":material/volume_off:")
+        return None
+    shortened = len(text) < len(speech.speakable_text(content, len(content) + 1))
+    clip = {"key": key, "audio": spoken.audio, "mime": spoken.mime, "shortened": shortened}
+    st.session_state.tts_clip = clip  # replaces the previous clip: at most one per session stays in memory
+    return clip
+
+
+def render_listen(content: str, key: str, mode: str) -> None:
+    """A "Listen" button under an answer; after a click, the audio player takes its place."""
+    if not voice_on(mode) or not content.strip():
+        return
+    clip = st.session_state.get("tts_clip")
+    fresh = False
+    if st.session_state.get("listen_request") == key:
+        del st.session_state["listen_request"]
+        if not (clip and clip["key"] == key):
+            clip = _make_clip(content, key)
+            fresh = clip is not None
+    if clip and clip["key"] == key:
+        st.audio(clip["audio"], format=clip["mime"], autoplay=fresh)
+        if clip["shortened"]:
+            st.caption(t("listen_shortened"))
+    else:
+        st.button(
+            t("listen"),
+            icon=":material/volume_up:",
+            type="tertiary",
+            key=f"listen-{key}",
+            on_click=_on_listen,
+            args=(key,),
+        )
+
+
+def handle_prompt(prompt: str, mode: str, voice: speech.Transcript | None = None) -> None:
     conv = current_conversation()
     history = _history_for_pipeline(conv["messages"])
-    conv["messages"].append({"role": "user", "content": prompt})
+    user_message: dict[str, Any] = {"role": "user", "content": prompt}
+    if voice:  # metadata only (for the mic marker and the export); the recording is not kept
+        user_message["voice"] = {"seconds": voice.seconds, "model": voice.model, "cost_usd": voice.cost_usd}
+    conv["messages"].append(user_message)
     if conv["title"] == "New chat":
         conv["title"] = prompt if len(prompt) <= 42 else prompt[:40].rstrip() + "…"
 
     with st.chat_message("user"):
         st.markdown(prompt)
+        if voice:
+            st.caption(f":material/mic: {t('voice_question')}")
 
     with st.chat_message("assistant", avatar=ASSISTANT_AVATAR):
         # Containers are created up-front, then filled while the generator runs (like refs to DOM nodes).
@@ -544,21 +673,27 @@ def main() -> None:
 
     conv = current_conversation()
     pending = st.session_state.pop("pending_prompt", None)  # from a suggestion, retry or the hero composer
-    if not conv["messages"] and not pending:
-        prompt = render_empty_state()
+    pending_audio = st.session_state.pop("pending_audio", None)  # a recording from the hero composer
+    if not conv["messages"] and not pending and not pending_audio:
+        prompt, audio = render_empty_state(mode)
         if prompt and (check := check_question(prompt, get_settings().max_question_chars)).error:
             st.warning(question_error(check), icon=":material/edit_note:")  # stay on the start screen
-        elif prompt:
+        elif prompt or audio:
             # Switch to the chat layout first, so the greeting doesn't stay above the streaming answer.
-            st.session_state.pending_prompt = prompt
+            # (The recording waits in session state for this one rerun only; it is popped above.)
+            st.session_state["pending_prompt" if prompt else "pending_audio"] = prompt or audio
             st.rerun()
         return
 
-    render_history(conv)
+    render_history(conv, mode)
     # Called at the top level, st.chat_input is pinned to the bottom of the page.
-    prompt = st.chat_input(t("placeholder"), key="composer", max_chars=get_settings().max_question_chars) or pending
-    if prompt and (question := admit_question(prompt, mode)):
-        handle_prompt(question, mode)
+    typed, audio = composer(mode)
+    prompt = typed or pending
+    if prompt:
+        if question := admit_question(prompt, mode):
+            handle_prompt(question, mode)
+    elif (audio := audio or pending_audio) and (heard := transcribe_voice(audio, mode)):
+        handle_prompt(heard.text, mode, voice=heard)
 
 
 main()

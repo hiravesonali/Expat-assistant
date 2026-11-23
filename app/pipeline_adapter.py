@@ -45,7 +45,9 @@ def sync_secrets_to_env() -> None:
     for name in ("OPENROUTER_API_KEY", "LANGSMITH_API_KEY", "LANGSMITH_TRACING", "LANGSMITH_PROJECT",
                  "LANGSMITH_ENDPOINT", "MODEL_ANALYSIS", "MODEL_ANSWER", "EMBEDDING_MODEL",
                  "INDEX_REPO", "INDEX_REVISION", "HF_TOKEN",
-                 "MAX_QUESTION_CHARS", "QUESTIONS_PER_HOUR", "DAILY_QUESTION_CAP"):  # fmt: skip
+                 "MAX_QUESTION_CHARS", "QUESTIONS_PER_HOUR", "DAILY_QUESTION_CAP",
+                 "VOICE_ENABLED", "MODEL_STT", "MODEL_TTS", "TTS_VOICE", "TTS_PCM_SAMPLE_RATE",
+                 "VOICE_MAX_SECONDS", "TTS_MAX_CHARS", "LISTENS_PER_HOUR", "DAILY_LISTEN_CAP"):  # fmt: skip
         if not os.environ.get(name) and (value := _secret(name)):
             os.environ[name] = value
 
@@ -120,8 +122,12 @@ _BUDGET_ERRORS = ("key limit exceeded", "requires more credits", "insufficient c
 BUDGET_MESSAGE = i18n.STRINGS["en"]["budget"]
 
 
+def is_budget_error(message: str) -> bool:
+    return any(marker in message.lower() for marker in _BUDGET_ERRORS)
+
+
 def friendly_error(event: ErrorEvent) -> ErrorEvent:
-    if any(marker in event.message.lower() for marker in _BUDGET_ERRORS):
+    if is_budget_error(event.message):
         return ErrorEvent(code="budget_exhausted", message=i18n.t("budget"), retryable=False)
     return event
 

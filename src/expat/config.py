@@ -35,6 +35,17 @@ class Settings(BaseSettings):
     model_judge: str = "anthropic/claude-sonnet-4.5"  # placeholder: different family than answer model
     embedding_model: str = "qwen/qwen3-embedding-8b"  # ADR-0002 hypothesis; bake-off decides
 
+    # --- Voice (expat/speech.py, ADR-0011): OpenRouter audio endpoints, same key ---
+    voice_enabled: bool = True  # kill switch for the microphone and the "Listen" button (Live mode only)
+    model_stt: str = "openai/gpt-4o-mini-transcribe"  # fallback: openai/whisper-large-v3
+    model_tts: str = "google/gemini-3.8-flash-lite-tts"  # fallback: mistralai/voxtral-mini-tts-3-0
+    tts_voice: str = "Kore"  # must be one of the model's supported_voices
+    tts_pcm_sample_rate: int = 24000  # for models that return raw PCM (Gemini TTS: 24 kHz, 16-bit, mono)
+    voice_max_seconds: int = Field(default=45, ge=5, le=300)  # longest spoken question
+    tts_max_chars: int = Field(default=1200, ge=100)  # text-to-speech is priced per character
+    listens_per_hour: int = Field(default=10, ge=1)  # "Listen" clicks per browser session
+    daily_listen_cap: int = Field(default=100, ge=1)  # "Listen" clicks per day for the whole app
+
     # --- Storage ---
     data_dir: Path = REPO_ROOT / "data"
     schema_version: int = 1
