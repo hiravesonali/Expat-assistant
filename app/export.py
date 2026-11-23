@@ -61,7 +61,7 @@ def to_records(conv: dict[str, Any], price_in: float, price_out: float) -> list[
     return [
         _assistant_record(m, price_in, price_out)
         if m["role"] == "assistant"
-        else {"role": "user", "content": m["content"]}
+        else {"role": "user", "content": m["content"], **({"voice": m["voice"]} if m.get("voice") else {})}
         for m in conv["messages"]
     ]
 
@@ -81,7 +81,7 @@ def to_markdown(conv: dict[str, Any], price_in: float, price_out: float, now: da
     lines = [f"# {conv['title']}", "", f"_Exported from Ankommen on {stamp}. {DISCLAIMER}_", ""]
     for rec in to_records(conv, price_in, price_out):
         if rec["role"] == "user":
-            lines += ["## You", "", rec["content"], ""]
+            lines += ["## You (voice question)" if rec.get("voice") else "## You", "", rec["content"], ""]
             continue
         lines += ["## Assistant", "", rec["content"] or f"_({rec.get('error', 'no answer')})_", ""]
         if rec["tools"]:

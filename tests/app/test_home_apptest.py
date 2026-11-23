@@ -166,3 +166,114 @@ def test_budget_exhausted_offers_demo_answers_and_switches_live_off(monkeypatch)
     assert at.session_state.live_toggle is False
     conv = at.session_state.conversations[at.session_state.current]
     assert conv["messages"][-1]["content"] == "Demo answer to: what should i do for the anmeldung"
+
+
+# ------------------------------------------------------------------------------------------- voice
+
+
+def _live_with_fake_pipeline(monkeypatch) -> None:
+    """Live mode without network: the pipeline answers with one token, speech calls are replaced per test."""
+    from expat.schemas import DoneEvent, TokenEvent
+
+    def fake_run(mode, question, history, profile):
+        yield TokenEvent(text=f"Answer to: {question} [S1]")
+        yield DoneEvent()
+
+    monkeypatch.setattr(pipeline_adapter, "has_api_key", lambda: True)
+    monkeypatch.setattr(pipeline_adapter, "live_status", lambda: (True, ""))
+    monkeypatch.setattr(pipeline_adapter, "run_pipeline", fake_run)
+
+
+def _clip(seconds: float) -> bytes:
+    from expat import speech
+
+    return speech.pcm_to_wav(b"\x00\x00" * int(16000 * seconds), 16000)
+
+
+def test_voice_question_is_transcribed_and_answered_like_a_typed_one(monkeypatch):
+    from expat import speech
+
+    _live_with_fake_pipeline(monkeypatch)
+    monkeypatch.setattr(
+        speech, "transcribe", lambda audio: speech.Transcript("Do I need an Anmeldung?", 3.0, 0.0002, "stt-model")
+    )
+    at = _home()
+    at.session_state.pending_audio = _clip(3)  # what the hero composer stores for a recording
+    at.run()
+    assert not at.exception, at.exception
+
+    conv = at.session_state.conversations[at.session_state.current]
+    assert conv["messages"][0]["content"] == "Do I need an Anmeldung?"
+    assert conv["messages"][0]["voice"] == {"seconds": 3.0, "model": "stt-model", "cost_usd": 0.0002}
+    assert conv["messages"][1]["content"] == "Answer to: Do I need an Anmeldung? [S1]"
+    assert "pending_audio" not in at.session_state  # the recording is not kept
+    assert any("Voice question" in c.value for c in at.caption)
+
+
+def test_too_long_recording_is_refused_before_any_paid_call(monkeypatch):
+    from expat import speech
+
+    def must_not_run(audio):
+        raise AssertionError("transcribe must not be called")
+
+    _live_with_fake_pipeline(monkeypatch)
+    monkeypatch.setattr(speech, "transcribe", must_not_run)
+    at = _home()
+    at.session_state.pending_audio = _clip(60)
+    at.run()
+    assert not at.exception, at.exception
+    assert any("60 seconds long" in w.value for w in at.warning)
+    assert not at.session_state.conversations[at.session_state.current]["messages"]
+
+
+def test_failed_or_empty_transcription_asks_to_try_again(monkeypatch):
+    from expat import speech
+
+    _live_with_fake_pipeline(monkeypatch)
+    monkeypatch.setattr(speech, "transcribe", lambda audio: speech.Transcript("...", 2.0, None, "stt-model"))
+    at = _home()
+    at.session_state.pending_audio = _clip(2)
+    at.run()
+    assert not at.exception, at.exception
+    assert any("couldn't hear a question" in w.value for w in at.warning)
+    assert not at.session_state.conversations[at.session_state.current]["messages"]
+
+
+def test_typed_questions_still_work_when_the_microphone_is_on(monkeypatch):
+    _live_with_fake_pipeline(monkeypatch)
+    at = _home()
+    at.chat_input[0].set_value("How do I register?").run()
+    assert not at.exception, at.exception
+    conv = at.session_state.conversations[at.session_state.current]
+    assert conv["messages"][0] == {"role": "user", "content": "How do I register?"}
+
+
+def test_listen_reads_the_answer_without_citation_markers_and_caches_the_clip(monkeypatch):
+    from expat import speech
+
+    spoken: list[str] = []
+
+    def fake_synthesize(text):
+        spoken.append(text)
+        return speech.Speech(_clip(1), "audio/wav", len(text), "tts-model")
+
+    _live_with_fake_pipeline(monkeypatch)
+    monkeypatch.setattr(speech, "synthesize", fake_synthesize)
+    at = _home()
+    at.chat_input[0].set_value("How do I register?").run()
+    next(b for b in at.button if b.key and b.key.startswith("listen-")).click().run()
+    assert not at.exception, at.exception
+
+    assert spoken == ["Answer to: How do I register?"]  # "[S1]" is not read aloud
+    assert at.session_state.tts_clip["mime"] == "audio/wav"
+    assert not [b for b in at.button if b.key and b.key.startswith("listen-")]  # the player replaced the button
+    at.run()
+    assert len(spoken) == 1  # a rerun shows the cached clip, no second paid call
+
+
+def test_no_microphone_or_listen_button_in_demo_mode():
+    at = _home()
+    at.chat_input[0].set_value("simulate error").run()  # any question; Demo mode is forced by the fixture
+    assert not at.exception, at.exception
+    assert not [b for b in at.button if b.key and b.key.startswith("listen-")]
+    assert not at.chat_input[0].proto.accept_audio

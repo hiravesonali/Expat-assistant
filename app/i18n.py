@@ -112,6 +112,18 @@ STRINGS: dict[str, dict[str, str]] = {
         "budget": "Live answers are paused: this public demo has used up its AI budget for now. "
         "You can still explore the app with demo answers.",
         "use_demo": "Use demo answers",
+        # voice
+        "voice_question": "Voice question · transcribed automatically",
+        "transcribing": "Transcribing your question…",
+        "voice_too_long": "That recording is {n} seconds long; please keep spoken questions under {max} seconds.",
+        "voice_empty": "I couldn't hear a question in that recording. Please try again, or type it.",
+        "voice_failed": "The recording couldn't be transcribed right now. Please try again, or type your question.",
+        "voice_privacy": "Voice questions are sent for transcription and are not stored.",
+        "listen": "Listen",
+        "preparing_audio": "Preparing the audio…",
+        "listen_limited": "You've reached the limit for spoken answers in this public demo. Please try again later.",
+        "listen_failed": "The answer couldn't be read aloud right now. Please try again later.",
+        "listen_shortened": "Long answers are shortened when read aloud.",
     },
     "de": {
         "tagline": "Ihr Wegweiser fürs Ankommen in Deutschland",
@@ -193,6 +205,21 @@ STRINGS: dict[str, dict[str, str]] = {
         "budget": "Live-Antworten sind pausiert: Diese öffentliche Demo hat ihr KI-Budget vorerst aufgebraucht. "
         "Sie können die App weiterhin mit Demo-Antworten ausprobieren.",
         "use_demo": "Demo-Antworten verwenden",
+        # voice
+        "voice_question": "Sprachfrage · automatisch transkribiert",
+        "transcribing": "Ihre Frage wird transkribiert…",
+        "voice_too_long": "Die Aufnahme ist {n} Sekunden lang; bitte halten Sie gesprochene Fragen unter "
+        "{max} Sekunden.",
+        "voice_empty": "In der Aufnahme war keine Frage zu hören. Bitte versuchen Sie es erneut oder tippen Sie sie.",
+        "voice_failed": "Die Aufnahme konnte gerade nicht transkribiert werden. Bitte versuchen Sie es erneut "
+        "oder tippen Sie Ihre Frage.",
+        "voice_privacy": "Sprachfragen werden zur Transkription gesendet und nicht gespeichert.",
+        "listen": "Anhören",
+        "preparing_audio": "Audio wird vorbereitet…",
+        "listen_limited": "Sie haben das Limit für vorgelesene Antworten in dieser öffentlichen Demo erreicht. "
+        "Bitte versuchen Sie es später erneut.",
+        "listen_failed": "Die Antwort konnte gerade nicht vorgelesen werden. Bitte versuchen Sie es später erneut.",
+        "listen_shortened": "Lange Antworten werden beim Vorlesen gekürzt.",
     },
 }
 

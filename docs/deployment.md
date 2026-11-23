@@ -84,6 +84,21 @@ The app is public and every Live answer (~$0.005) is paid from one OpenRouter ke
 Override the defaults with `MAX_QUESTION_CHARS`, `QUESTIONS_PER_HOUR`, `DAILY_QUESTION_CAP` in the secrets.
 Demo mode is never limited (scripted answers, no API calls). Worst case per day with the defaults: 300 × $0.005 ≈ $1.50.
 
+### Voice ([ADR-0011](adr/0011-voice-cascade-stt-tts.md), Live mode only)
+
+| Layer | Default | Setting |
+|---|---|---|
+| Spoken question length | ≤ 45 s, checked before any paid call | `VOICE_MAX_SECONDS` |
+| Spoken questions | count against the question limits above | – |
+| Listen (answer read aloud) | 10 per session per hour, 100 per day for the whole app | `LISTENS_PER_HOUR`, `DAILY_LISTEN_CAP` |
+| Text read aloud | ≤ 1,200 characters, citations and links removed | `TTS_MAX_CHARS` |
+| Off switch | `VOICE_ENABLED = "false"` hides the microphone and the Listen button | `VOICE_ENABLED` |
+
+Reading an answer aloud costs about $0.01–0.02, several times the answer itself. Worst case per day with the
+defaults: 100 × $0.02 ≈ $2 on top of the questions. The models (`MODEL_STT`, `MODEL_TTS`) must be allowed in the
+OpenRouter workspace guardrails, otherwise the calls fail with "0 endpoints … matching your guardrail restrictions".
+The microphone needs HTTPS (Community Cloud) or `localhost`.
+
 ## Admin password
 
 - The admin pages (`app/pages/*`) call `_admin.require_admin()`.

@@ -15,5 +15,6 @@ Status values: `Proposed` (planning), `Accepted` (validated by implementation/ev
 | [0008](0008-deterministic-retrieval-agentic-tools.md) | Always-retrieve pipeline + agentic tool calling; numbers only from tools/sources | Proposed |
 | [0009](0009-streamlit-primary-ui-and-deployment.md) | Streamlit as the primary UI; deployment mandatory (Streamlit Community Cloud) | Accepted |
 | [0010](0010-deployed-index-bundle.md) | Deployed index: embedded Chroma + versioned bundle in a private HF dataset (Chroma Cloud shut down) | Accepted |
+| [0011](0011-voice-cascade-stt-tts.md) | Voice as a cascade: speech-to-text → text pipeline → on-demand text-to-speech, via OpenRouter | Proposed |
 
 Once a decision is validated, update its status and add a "Result" line with the actual numbers. That turns opinions into evidence.
