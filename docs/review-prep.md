@@ -4,15 +4,16 @@
 > Practise each answer out loud in ≤ 60 s: **decision → alternative considered → evidence (a number)**.
 
 ## 1. The 60-second pitch
-"**Ankommen** helps expats settle in Germany: federal rules everywhere plus local details for six cities
+"**Ankommen** helps expats settle in Germany: registration, permits, renting, family benefits, health
+insurance, taxes, citizenship and driving licences. Federal rules everywhere plus local details for six cities
 (Berlin, Hamburg, Munich, Cologne, Frankfurt, Stuttgart). You ask in English or German; it answers **only from
 official sources** (federal laws, state gazettes, BAMF, Familienportal, city portals) with a citation behind every claim, and it
 **calculates** deadlines and amounts with tested tools instead of guessing. Under the hood: one structured
 query-analysis call (English ↔ German rewrites, sub-questions, filters), hybrid search (Chroma vectors +
 German BM25, fused with RRF), metadata filters from the question and the user profile, and a LangChain
-agent with five tools. I evaluated it on a golden set: on **12 held-out questions, correct answers went
-from 70% (naive RAG) to 90%, with every claim backed by a source, at the same cost of about half a cent per
-answer**. Expanding to six cities, I measured that naive search pulls another city's rules into two out of
+agent with five tools. I evaluated it on a golden set of 85 questions: on **32 held-out questions, correct
+answers went from 86% (naive RAG) to 96%, with valid citations throughout, at the same cost of about half a
+cent per answer**. Expanding to six cities, I measured that naive search pulls another city's rules into two out of
 three answers; with per-question location filters that dropped to zero."
 
 ## 2. Demo script (5 minutes)
@@ -25,6 +26,8 @@ three answers; with per-question location filters that dropped to zero."
 | 5 | Ask in German: *"Wie viel Kindergeld bekomme ich für zwei Kinder?"* | Answers in German, top source § 66 EStG |
 | 6 | Ask: *"Got caught on the U-Bahn without a ticket, now a letter from the police. Will this kill my Blue Card?"* | Safety pre-check → lawyer + migration counselling, no legal guessing |
 | 7 | **Personalise answers** → set Blue Card + 2 kids, ask *"What do we need for the Anmeldung?"* | Profile changes retrieval (audience boost) and the checklist tool |
+| 7a | Ask: *"We forgot to apply for Kindergeld; our baby was born in January. Do we get it back-paid?"* | Deadline tool: the loss-free date has passed, but applying now still pays 6 months (§ 70 EStG); the judge-calibration story |
+| 7b | Ask: *"Do I need a driving test to swap my Japanese licence?"* | Nationwide topic, answered from the FeV country table (Anlage 11); does **not** ask for the city |
 | 8 | **Export chat** → Markdown | Sources and calculations travel with the answer |
 | 9 | (optional) Settings → Evaluation results page | Ablation + answer-quality tables, LangSmith experiment names |
 
@@ -33,7 +36,7 @@ Backup if the app is slow (cold start or slow embeddings): show the README scree
 ## 3. Requirements → where they are
 | Task requirement | Implementation | Code / doc |
 |---|---|---|
-| Knowledge base, embeddings, chunking, similarity search | 941 chunks from 30 official sources; §/Absatz- and section-aware chunking, parent expansion; Qwen3-Embedding-8B (bake-off) | `src/expat/ingestion/`, `docs/vector-db-design.md`, ADR-0001/0002 |
+| Knowledge base, embeddings, chunking, similarity search | 1531 chunks from 78 official sources (laws incl. annex tables, ministries, state gazettes, 6 city portals); §/Absatz- and section-aware chunking, parent expansion; Qwen3-Embedding-8B (bake-off) | `src/expat/ingestion/`, `docs/vector-db-design.md`, ADR-0001/0002 |
 | Advanced RAG: query translation + structured retrieval | One structured call: standalone question, EN/DE rewrites, multi-query, step-back, decomposition, domain/section/§ hints; hard + soft metadata filters | `rag/query_analysis.py`, `rag/filters.py`, ADR-0005 |
 | ≥ 3 tools | 5: tenancy notice, deadlines, family benefits, document checklist, Schengen 90/180 | `src/expat/tools/`, `docs/tools.md` |
 | Domain prompts + security | Safety pre-check (emergency, asylum, court cases, police letters, medical, tax forms), sources as data (injection hygiene), § tripwire | `safety.py`, `rag/prompts.py`, `rag/context.py` |
@@ -67,13 +70,16 @@ chunk *wrong* (other city, expired rule, confident domain); soft boosts for audi
 
 **5. "How does the model choose between retrieval and tools?"** Retrieval always runs; the agent decides tool
 calls from the tool descriptions and the rule "never compute dates or amounts yourself". Evals measure tool
-selection (0.82–0.92). Real story: the model passed `party="tenant"` for "my landlord gave me notice", so
+selection (holdout 0.90 naive → 1.00). Real story: the model passed `party="tenant"` for "my landlord gave me notice", so
 it got 6 instead of 9 months. Fix: the schema now says "who *sends* the notice".
 
 **6. "How do you prevent hallucinations?"** Prompt rule (no number/§ without a source), tools for maths,
-citation validator, § tripwire, and evals: faithfulness 1.00 on holdout (judge-scored).
+citation validator, § tripwire, and evals: faithfulness 0.92 and valid citations 1.00 on 32 holdout
+questions (judge-scored). I also check what the judge flags: for a 10-month stay the app said a US licence
+stays valid, but the 6-month extension must be applied for. Known issue, not tuned on holdout.
 
-**7. "How did you evaluate? Why trust an LLM judge?"** 40 golden questions (28 dev / 12 holdout), retrieval
+**7. "How did you evaluate? Why trust an LLM judge?"** 85 golden questions (53 dev / 32 holdout; grew from 40
+with the cities and the nationwide topics), retrieval
 metrics (hit@5, recall@10, MRR) and answer metrics (faithful, correct, citations, tool selection, refusal).
 Judge = Claude Haiku 4.5, a different family than the answer model (GPT-4.1-mini); binary rubrics,
 reasoning first. I read every failure: one was a judge mistake (it failed a correct answer as "too
@@ -81,7 +87,10 @@ specific"), one was unfair (it couldn't see the user profile – fixed). Calibra
 answers with the verdicts hidden (`evals/calibration/`). A second-model check (labelled by Claude Opus, an LLM;
 3 items confirmed by a human, including one disagreement) agreed with the judge on **12/15 (kappa 0.44)**. The judge was **too lenient twice**: it
 passed an answer that wrongly denied the Kindergeld back-payment, and one that missed documents a foreign family
-needs. So I treat judge scores as a trend signal and read the failures myself. Next: human review of the remaining 2 disagreements.
+needs. So I treat judge scores as a trend signal and read the failures myself. The Kindergeld case became a code
+fix: the deadline tool now says from which month a late application is still paid, and the eval confirms it.
+The judge also errs the other way: it failed a correct licence answer because my reference missed § 31 (1a)
+FeV, so I fixed the reference.
 
 **8. "Error scenarios and edge cases?"** Analysis model down → falls back to the raw question (R0 quality, no
 crash). Provider timeouts → retries, then an error card with Retry. Empty retrieval → "insufficient
@@ -96,8 +105,10 @@ secrets, never in git; no tracebacks to visitors; sensitive topics redirected; r
 city metadata. Per question I resolve the location (cities named in the question, incl. "Köln"/"München" and
 "moving from Berlin to Hamburg" -> both; else the profile; else *unknown* = nationwide sources only) and filter
 hard on it. If the answer depends on the city and none is known, the assistant asks "Which city do you live
-in?" with one-click buttons and then answers the original question. Evidence: leak@10 0.62–0.68 (naive) ->
-0.00 (dev and holdout, 71 questions); clarification accuracy 100%, never asked for federal questions.
+in?" with one-click buttons and then answers the original question. Evidence: leak@10 0.54–0.56 (naive) ->
+0.00 (dev and holdout, 85 questions); clarification accuracy 100%. It once over-asked ("Which city?" for a
+federal driving-licence question, because a local office handles it); the prompt rule now keeps federal rules
+city-independent.
 
 **10. "Privacy, copyright, liability?"** Statutes are public domain (§ 5 UrhG); portal content: robots.txt
 respected, chunks + attribution + deep links, scraped corpus not in git (shipped as a private versioned
@@ -116,14 +127,20 @@ bundle). Persistent disclaimer.
   calls with "402 payment required" while real spend was tiny – now every role has an output cap.
 - **Wrong-city answers are worse than none:** naive search mixed in other cities' rules for ~2/3 of questions.
 - **Streamlit Cloud kept old modules in memory** after a push → reboot after changes to `src/`.
+- **An official page was out of date:** BAMF's English naturalisation page still offers the 3-year fast track,
+  which was abolished on 30 Oct 2025 (StAG § 10 Abs. 3 "weggefallen"). I excluded it and used the current
+  German page plus the law, so the bot doesn't repeat outdated rules.
+- **Evals cost more than I estimated:** with 85 questions and a judge per metric, a full answer eval of both
+  splits used about $4.80 and hit the key limit; the failed run is kept out of the report, not averaged in.
 
 ## 6. Known limitations and what I would improve (reflection)
-- Small golden set (40): one question moves a score by 0.04–0.08. → more and harder questions, especially
+- Golden set still small (85; 6–8 per new topic): one question moves a topic score by 0.12–0.17. → more and harder questions, especially
   exact-identifier and German ones.
 - Citation style varies between runs (law named in text instead of `[S1]`). → map bracketed § to sources.
 - Latency 10–20 s on slow-embedding days. → cache query embeddings, faster provider, streaming earlier.
 - Local coverage: 6 cities in detail; other cities get federal + state rules. Gaps: Frankfurt Anmeldung page
   (frankfurt.de blocks bots), Baden-Württemberg law PDFs (expiring links; the ministry explainer is used).
-- Holdout answer eval for the Germany-wide version is incomplete (API key limit); retrieval evals are complete.
+- Dev answer eval after the last prompt fix covers 10 questions (the full rerun hit the key limit); holdout and
+  retrieval evals are complete. Licence extension (6 + 6 months) is not a tool yet (holdout `bur-032`).
 - Production: scheduled ingestion, reranker, user feedback loop, Postgres/pgvector or Qdrant if users need
   to write data.

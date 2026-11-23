@@ -5,7 +5,7 @@
 <h1 align="center">Ankommen</h1>
 <p align="center"><b>Your guide to settling in Germany</b> · <i>ankommen</i> = German for "to arrive, to settle in"</p>
 
-An English-language assistant that helps expats in **Germany** deal with registration, residence permits, renting and family benefits: federal rules everywhere, plus local details for **Berlin, Hamburg, Munich, Cologne, Frankfurt and Stuttgart**. When the answer depends on the city and it is unknown, it asks. It answers **only from official German sources**, with clickable citations and "last verified" dates, and does date and benefit calculations with tested tools instead of guessing.
+An English-language assistant that helps expats in **Germany** deal with registration, residence permits, renting, family benefits, health insurance, taxes (tax ID, tax classes), citizenship and driving licences: federal rules everywhere, plus local details for **Berlin, Hamburg, Munich, Cologne, Frankfurt and Stuttgart**. When the answer depends on the city and it is unknown, it asks. It answers **only from official German sources**, with clickable citations and "last verified" dates, and does date and benefit calculations with tested tools instead of guessing.
 
 > **Live demo:** https://expat-assistant.streamlit.app/
 >
@@ -43,7 +43,7 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
 - **Cross-lingual RAG:** English questions → German official sources (EN↔DE query rewriting, multi-query + RAG-Fusion, decomposition, step-back)
 - **Structured retrieval:** rich metadata (domain, section kind, jurisdiction, audience, validity) with filters from the question *and* the user profile; § / Absatz-aware chunking with parent expansion
 - **Hybrid search:** Chroma dense vectors + German BM25, fused with Reciprocal Rank Fusion
-- **Tool calling:** tenancy notice periods (§ 573c BGB), statutory deadlines, Kindergeld/Elterngeld estimates, document checklists, Schengen 90/180
+- **Tool calling:** tenancy notice periods (§ 573c BGB), statutory deadlines (incl. what a late Kindergeld/Elterngeld application still gets), Kindergeld/Elterngeld estimates, document checklists, Schengen 90/180
 - **Evaluated:** golden dataset + LangSmith experiments (ablation table below)
 - **Safe by design:** safety pre-check (emergency, asylum, court cases, police letters, medical, tax forms) with
   fixed referrals; sources treated as data (prompt-injection hygiene); input validation and usage limits
@@ -52,16 +52,17 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
 
 ## Results
 
-**Answer quality** (holdout, 12 questions never used for tuning; judge: Claude Haiku 4.5)
+**Answer quality** (holdout: 32 questions never used for tuning, 6 cities + nationwide topics; judge: Claude Haiku 4.5; 2026-11-23)
 
-| | Faithful | Correct | Valid citations | Refusal accuracy | Cost / answer |
-|---|---|---|---|---|---|
-| Naive RAG (R0) | 0.90 | 0.70 | 1.00 | 1.00 | $0.005 |
-| **This system (R5)** | **1.00** | **0.90** | **1.00** | 0.92 | $0.005 |
+| | Faithful | Correct | Valid citations | Tool selection | Refusal accuracy | Cost / answer |
+|---|---|---|---|---|---|---|
+| Naive RAG (R0) | 0.90 | 0.86 | 1.00 | 0.90 | 1.00 | ~$0.005 |
+| **This system (R5)** | **0.92** | **0.96** | **1.00** | **1.00** | **1.00** | ~$0.005 |
 
-**Germany-wide (71 questions, 6 cities):** without location filters, 62–68% of questions pulled another city's
-or state's rules into the top 10 results; with the per-question location it is **0%** on dev and holdout, while
-holdout hit@5 rose to 1.00. The assistant asked "Which city do you live in?" exactly when needed (100%).
+**Germany-wide (85 questions, 6 cities + health insurance, taxes, citizenship, driving licence):** without location
+filters, 54–56% of questions pulled another city's or state's rules into the top 10 results; with the per-question
+location it is **0%** on dev and holdout (hit@5 0.94 dev / 0.96 holdout). The assistant asked "Which city do you
+live in?" exactly when needed (100%).
 
 Retrieval ablation, before/after runs, failure analysis and known issues: [`docs/evaluation-plan.md`](docs/evaluation-plan.md).
 

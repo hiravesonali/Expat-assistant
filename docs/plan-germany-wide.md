@@ -1,8 +1,8 @@
 # Plan: from Munich to Germany-wide (branch `feature/germany-wide`)
 
-> Status: phases 1, 2 and 4 done and merged (2026-11-22). Phase 3 (more nationwide topics) built on branch
-> `feat/nationwide-topics` (2026-11-23): 13 sources ingested, 14 golden questions (`hea-`, `tax-`, `bur-026`–`032`).
-> Pending (needs OpenRouter credit): rebuild + publish the index, rerun retrieval and answer evals, then merge.
+> Status: all four phases done and merged. Phases 1, 2, 4 on 2026-11-22; phase 3 (more nationwide topics) on
+> 2026-11-23: 13 sources, 14 golden questions (`hea-`, `tax-`, `bur-026`–`032`), index published, evals in
+> docs/evaluation-plan.md ("Nationwide topics evaluation").
 > Phase 3 notes: the 3-year citizenship fast track was abolished on 30.10.2025, so BAMF's stale English
 > naturalisation page is excluded. `law_xml` now reads requested Anlagen (`include_annexes`, FeV Anlage 11
 > country list) and drops EStG sentence numbers.

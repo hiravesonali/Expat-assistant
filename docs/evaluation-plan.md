@@ -263,6 +263,50 @@ credit is available: `MODEL_JUDGE=anthropic/claude-haiku-4.5 uv run python -m ex
 - **Unsupported city:** "I live in Leipzig" no longer triggers a pointless "Which city?" (analysis reports
   `mentioned_city`; known-but-unsupported -> nationwide sources only).
 
+### Nationwide topics evaluation (2026-11-23)
+
+Phase 3 added health insurance, citizenship, foreign driving licences and tax ID / tax classes (13 sources,
+1531 chunks in total) and **14 golden questions** (`hea-`, `tax-`, `bur-026`–`032`): the set is now **85**
+(53 dev / 32 holdout), LangSmith `expat-golden-v3` (retrieval) and `expat-golden-v4` (answers; `bur-031`
+reference extended, see below).
+
+**Retrieval (complete, R5 production):**
+
+| Split | Questions | hit@5 | MRR@10 | leak@10 |
+|---|---|---|---|---|
+| dev | 40 old (unchanged ids) | 0.95 (was 0.95) | 0.84 (was 0.80) | 0.00 |
+| dev | 8 new | 0.88 | 0.58 | 0.00 |
+| holdout | 22 old | 1.00 (was 1.00) | 0.83 (was 0.88) | 0.00 |
+| holdout | 6 new | 0.83 | 0.58 | 0.00 |
+
+No old question got worse at hit@5 on either split. Naive R0 leaks another place's rules into 56% (dev) / 54%
+(holdout) of the questions. The two new-question misses: `bur-031` (Japanese licence; the FeV Anlage 11 table
+ranks 2nd in a fresh run, so the eval miss came from one query analysis, not from the index) and `bur-032` (10-month
+stay; § 29 FeV not in the top 5, but the BMV page with the same 6 + 6 month rule was).
+
+**Answers:** holdout is **complete for the first time** (all 32 answered and judged), R0 / R5: faithful
+0.90 / 0.92, **correct 0.86 / 0.96**, citations valid 1.00 / 1.00, tool selection 0.90 / 1.00, refusal accuracy
+1.00 / 1.00, clarification 1.00 / 1.00. New holdout questions (R5): correct 1.00. Dev (R5, before the location
+prompt fix, `expat-golden-v3`): old questions correct 0.85 (was 0.85), faithful 0.97 (was 0.90); new questions
+correct 0.88, faithful 1.00. The R5 dev rerun on v4 hit the OpenRouter key limit (20 failed answers) and is kept
+out of the report (`evals/results/_failed/`).
+
+**What the run found and what changed:**
+- **Fixed and confirmed:** `ten-002` (tenant notice period, the 2026-11-22 regression) and `fam-004` (late
+  Kindergeld application: the deadline tool now returns from which month a late application is still paid,
+  § 70 Abs. 1 Satz 2 EStG) both answer correctly.
+- **Over-asking for the city (dev `bur-031`):** "Do I need a driving test to swap my Japanese licence?" got
+  "Which city do you live in?" because a local office handles it. The `location_dependent` rule now says a
+  federal rule stays city-independent unless the user asks about the office itself. Rechecked on 10 dev questions
+  (`_partial/`): `bur-031` answers; `bur-001` / `bur-012` (city questions) still resolve the city.
+- **Reference gap, not a model error:** the `bur-031` answer named the § 31 Abs. 1a FeV exception (the office may
+  still order a test) and was judged wrong; the reference now includes it (dataset v4).
+- **Known issue (holdout `bur-032`, not tuned):** for a 10-month stay the answer said a US licence "is valid for
+  the duration of the stay"; it is valid for 6 months and the extension must be applied for (§ 29 Abs. 1 FeV).
+  The judge's groundedness 0 is right. Candidate fix: a deadline-tool procedure for the licence extension.
+- **Budget:** today's answer evals cost about $4.80, mostly judge calls; the estimate in §5 was too low for the
+  85-question set (≈ $1.30 per split with both variants).
+
 ## 4. Tooling (APIs verified 2026-11-17: `langsmith` 0.14.x, `openevals` 0.2.x)
 - **Datasets:** `Client().create_dataset(dataset_name="expat-golden-v1")` + `create_examples(...)` from the JSONL. Put the `dev`/`holdout` split in example metadata (or use LangSmith dataset splits).
 - **Experiments:** `Client().evaluate(target, data="expat-golden-v1", evaluators=[...], experiment_prefix="R4-hybrid", metadata={...config...}, max_concurrency=4)`, or `aevaluate` for the async pipeline. Evaluators are plain functions `(inputs, outputs, reference_outputs) -> bool | dict`. The deterministic metrics are simply Python.
