@@ -66,8 +66,8 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
 
 | | Faithful | Correct | Valid citations | Tool selection | Refusal accuracy | Cost / answer |
 |---|---|---|---|---|---|---|
-| Naive RAG (R0) | 0.90 | 0.86 | 1.00 | 0.90 | 1.00 | ~$0.005 |
-| **This system (R5)** | **0.92** | **0.96** | **1.00** | **1.00** | **1.00** | ~$0.005 |
+| Naive RAG (R0) | 0.90 | 0.86 | 1.00 | 0.90 | 1.00 | ~$0.003 |
+| **This system (R5)** | **0.92** | **0.96** | **1.00** | **1.00** | **1.00** | ~$0.003 |
 
 **Germany-wide (85 questions, 6 cities + health insurance, taxes, citizenship, driving licence):** without location
 filters, 54–56% of questions pulled another city's or state's rules into the top 10 results; with the per-question
@@ -77,6 +77,11 @@ live in?" exactly when needed (100%).
 **Judge calibration:** on 15 answers the correctness judge agreed with reference labels 12 times (80%, Cohen's
 kappa 0.44). The reference labels came from a second model, with 3 of them confirmed by a human, so judge scores
 are read as a trend and failures are checked by hand.
+
+**Eval cost:** measured from the traces, the judge was 82% of the eval spend. New runs use a cheaper judge
+(Gemini 2.5 Flash-Lite), short verdicts, a verdict cache and a spend guard: a full cycle went from ≈ $4.30 to
+≈ $0.96 ([evaluation plan §5](docs/evaluation-plan.md#5-budget-measured-2026-11-23)). The numbers above are
+from the Haiku 4.5 judge.
 
 Retrieval ablation, before/after runs, failure analysis and known issues: [`docs/evaluation-plan.md`](docs/evaluation-plan.md).
 
