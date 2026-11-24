@@ -1,0 +1,22 @@
+flowchart LR
+    subgraph Online["Online: every question"]
+        U([User: types or speaks, EN/DE]) --> UI[Streamlit app]
+        UI --> S{Safety check}
+        S -- sensitive --> R[Fixed referral]
+        S -- ok --> A[Query analysis<br/>EN/DE rewrites, city, filters]
+        A --> H[Hybrid search<br/>vectors + BM25, RRF]
+        H -- top sources --> G[Answer agent<br/>GPT-4.1-mini]
+        G <--> T[Tools<br/>notice periods, deadlines, benefits]
+        G --> C[Citation check]
+        C --> O([Answer with sources])
+    end
+    subgraph Offline["Offline: build the index"]
+        SRC[/78 official sources/] --> ING[Ingestion<br/>parse, chunk, metadata]
+        ING --> IDX[(Index<br/>Chroma + BM25 + parents)]
+        RULES[/Rules file 2026.yaml/]
+    end
+    IDX --> H
+    RULES --> T
+    OR[OpenRouter: models] -.- A
+    OR -.- G
+    LS[LangSmith: tracing + evals] -.- G
