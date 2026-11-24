@@ -298,6 +298,9 @@ HELP = {
             (":material/child_care:", "Family benefits",
              "Kindergeld and Elterngeld: who gets them, how much, how to apply.",
              "We're expecting a baby in March. How much Kindergeld and Elterngeld can we get?"),
+            (":material/health_and_safety:", "Health insurance, taxes, citizenship, driving",
+             "Public or private health insurance, tax ID and tax classes, naturalisation, foreign driving licences.",
+             "How do I get my tax ID after moving to Germany?"),
             (":material/calculate:", "Calculations",
              "Tenancy end dates, statutory deadlines, benefit estimates, document checklists, Schengen 90/180 days.",
              "I moved in on 3 November. By when do I have to register my address?"),
@@ -323,7 +326,8 @@ HELP = {
             "This is **general information, not legal or tax advice**. The official German text is binding.",
             "For emergencies, asylum, court cases, police letters, medical questions and tax returns the "
             "assistant does not answer; it points you to the right service instead.",
-            "Taxes, health insurance and citizenship are not covered in depth yet.",
+            "Tax returns and individual tax or legal advice are out of scope: ask a Steuerberater, a "
+            "Lohnsteuerhilfeverein or a lawyer.",
             "Questions can be up to {max_chars} characters, voice questions up to {voice_seconds} seconds, and "
             "there are {per_hour} Live questions per hour.",
             "Your profile and chats stay in this browser tab. Voice recordings are transcribed and not stored.",
@@ -343,6 +347,10 @@ HELP = {
             (":material/child_care:", "Familienleistungen",
              "Kindergeld und Elterngeld: wer sie bekommt, wie viel, wie man sie beantragt.",
              "Wir erwarten im März ein Baby. Wie viel Kindergeld und Elterngeld bekommen wir?"),
+            (":material/health_and_safety:", "Krankenversicherung, Steuern, Einbürgerung, Führerschein",
+             "Gesetzliche oder private Krankenversicherung, Steuer-ID und Steuerklassen, Einbürgerung, "
+             "ausländische Führerscheine.",
+             "Wie bekomme ich nach dem Umzug nach Deutschland meine Steuer-ID?"),
             (":material/calculate:", "Berechnungen",
              "Mietende, gesetzliche Fristen, Schätzung von Leistungen, Unterlagen-Checklisten, Schengen 90/180 Tage.",
              "Ich bin am 3. November eingezogen. Bis wann muss ich mich anmelden?"),
@@ -369,7 +377,8 @@ HELP = {
             "ist verbindlich.",
             "Bei Notfällen, Asyl, Gerichtsverfahren, Schreiben der Polizei, medizinischen Fragen und "
             "Steuererklärungen antwortet der Assistent nicht, sondern nennt die richtige Stelle.",
-            "Steuern, Krankenversicherung und Einbürgerung sind noch nicht ausführlich abgedeckt.",
+            "Steuererklärungen und individuelle Steuer- oder Rechtsberatung gehören nicht dazu: Fragen Sie "
+            "eine Steuerberatung, einen Lohnsteuerhilfeverein oder eine Anwältin bzw. einen Anwalt.",
             "Fragen dürfen bis zu {max_chars} Zeichen lang sein, Sprachfragen bis zu {voice_seconds} Sekunden; "
             "möglich sind {per_hour} Live-Fragen pro Stunde.",
             "Profil und Chats bleiben in diesem Browser-Tab. Sprachaufnahmen werden transkribiert und nicht "
