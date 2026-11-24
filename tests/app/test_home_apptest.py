@@ -83,7 +83,33 @@ def test_export_buttons_appear_once_the_chat_has_messages():
     assert not at.get("download_button")  # nothing to export on the start screen
     next(b for b in at.button if b.key and b.key.startswith("example-")).click().run()
     assert not at.exception, at.exception
-    assert [d.proto.label for d in at.get("download_button")] == ["Markdown (.md)", "JSON (.json)"]
+    labels = [d.proto.label for d in at.get("download_button")]
+    assert labels == ["PDF (.pdf)", "Markdown (.md)", "CSV (.csv)", "JSON (.json)"]
+
+
+def test_help_guide_opens_and_an_example_from_it_is_asked():
+    at = _home()
+    assert not at.tabs  # closed by default
+    at.button(key="help-open").click().run()
+    assert not at.exception, at.exception
+    assert [tab.label for tab in at.tabs] == ["Topics", "How to ask", "Reading an answer", "Limits & privacy"]
+    assert any("20 Live questions per hour" in m.value for m in at.markdown)  # limits come from the settings
+    at.button(key="help-try-2").click().run()  # "Renting"
+    assert not at.exception, at.exception
+    messages = at.session_state.conversations[at.session_state.current]["messages"]
+    assert [m["role"] for m in messages] == ["user", "assistant"] and "give notice" in messages[0]["content"]
+    assert not at.tabs  # the guide closed itself
+
+
+def test_help_guide_has_the_same_shape_in_both_languages():
+    import i18n
+
+    en, de = i18n.HELP["en"], i18n.HELP["de"]
+    assert en.keys() == de.keys()
+    assert all(len(en[k]) == len(de[k]) for k in en)
+    for guide in (en, de):  # every bullet list must survive .format with the three limit values
+        for key in ("how", "reading", "limits"):
+            "\n".join(guide[key]).format(max_chars=1, per_hour=1, voice_seconds=1)
 
 
 def test_which_city_follow_up_saves_the_city_and_answers_the_original_question(monkeypatch):

@@ -300,6 +300,8 @@ def render_sidebar() -> str:
             )
         render_conversation_list()
         with st.container(key="sidebar-bottom"):
+            if st.button(t("help_title"), icon=":material/help:", key="help-open", type="tertiary", width="stretch"):
+                open_help()
             with st.popover(profile_short(), icon=":material/person:", width="stretch"):
                 render_profile_form()
             conv = current_conversation()
@@ -312,28 +314,59 @@ def render_sidebar() -> str:
 
 
 def render_export(conv: dict[str, Any]) -> None:
-    """Download the current chat: Markdown to read or share, JSON with sources, tool calls and costs."""
+    """Download the current chat: PDF or Markdown to read or share, CSV or JSON with sources, tools and costs."""
     s = get_settings()
     prices = (s.price_in_per_mtok, s.price_out_per_mtok)
-    st.download_button(
-        "Markdown (.md)",
-        data=export.to_markdown(conv, *prices),
-        file_name=export.filename(conv, "md"),
-        mime="text/markdown",
-        icon=":material/description:",
-        width="stretch",
-        on_click="ignore",  # don't rerun the app on download
-    )
-    st.download_button(
-        "JSON (.json)",
-        data=export.to_json(conv, *prices),
-        file_name=export.filename(conv, "json"),
-        mime="application/json",
-        icon=":material/data_object:",
-        width="stretch",
-        on_click="ignore",
-    )
+    # (label, extension, mime, icon, content). The PDF is laid out only when its button is clicked.
+    formats: list[tuple[str, str, str, str, Any]] = [
+        ("PDF (.pdf)", "pdf", "application/pdf", ":material/picture_as_pdf:", lambda: export.to_pdf(conv, *prices)),
+        ("Markdown (.md)", "md", "text/markdown", ":material/description:", export.to_markdown(conv, *prices)),
+        ("CSV (.csv)", "csv", "text/csv", ":material/table:", export.to_csv(conv, *prices)),
+        ("JSON (.json)", "json", "application/json", ":material/data_object:", export.to_json(conv, *prices)),
+    ]
+    for label, extension, mime, icon, data in formats:
+        st.download_button(
+            label,
+            data=data,
+            file_name=export.filename(conv, extension),
+            mime=mime,
+            icon=icon,
+            width="stretch",
+            on_click="ignore",  # don't rerun the app on download
+        )
     st.caption(t("export_caption"))
+
+
+def _help_body() -> None:
+    s = get_settings()
+    guide = i18n.pick(i18n.HELP)
+    st.write(t("help_intro"))
+    topics, how, reading, limits = st.tabs(
+        [t("help_tab_topics"), t("help_tab_how"), t("help_tab_reading"), t("help_tab_limits")]
+    )
+    with topics:
+        for i, (icon, title, covered, example) in enumerate(guide["topics"]):
+            with st.container(border=True):
+                st.markdown(f"{icon} **{title}**  \n{covered}")
+                st.caption(f"“{example}”")
+                # The callback queues the question; the full rerun then closes the dialog and asks it.
+                asked = st.button(
+                    t("help_try"), key=f"help-try-{i}", icon=":material/send:", on_click=_on_example, args=(example,)
+                )
+                if asked:
+                    st.rerun()
+    limits_now = {
+        "max_chars": s.max_question_chars,
+        "per_hour": s.questions_per_hour,
+        "voice_seconds": s.voice_max_seconds,
+    }
+    for tab, key in ((how, "how"), (reading, "reading"), (limits, "limits")):
+        tab.markdown("\n".join(f"- {line}" for line in guide[key]).format(**limits_now))
+
+
+def open_help() -> None:
+    """The guide as a dialog. Built per call, so its title follows the interface language."""
+    st.dialog(t("help_title"), width="large", icon=":material/help:")(_help_body)()
 
 
 # ------------------------------------------------------------------------------------------------

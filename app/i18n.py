@@ -56,7 +56,17 @@ STRINGS: dict[str, dict[str, str]] = {
         "Off: demo mode with scripted answers, no API calls.",
         "dev_tools": "Developer tools",
         "privacy": "Your profile and chats live only in this browser tab.",
-        "export_caption": "Includes sources, calculations and token costs. Nothing is stored on the server.",
+        "export_caption": "PDF and Markdown to read or share; CSV and JSON with sources, calculations and token "
+        "costs. Nothing is stored on the server.",
+        # help guide
+        "help_title": "What can I ask?",
+        "help_intro": "Ankommen answers questions about settling in Germany from official German sources. "
+        "Pick an example to try it, or read how to get the best answer.",
+        "help_tab_topics": "Topics",
+        "help_tab_how": "How to ask",
+        "help_tab_reading": "Reading an answer",
+        "help_tab_limits": "Limits & privacy",
+        "help_try": "Ask this",
         "demo_badge": "Demo mode · scripted answers",
         # profile form
         "your_situation": "Your situation",
@@ -150,7 +160,17 @@ STRINGS: dict[str, dict[str, str]] = {
         "Aus: Demo-Modus mit vorbereiteten Antworten, ohne API-Aufrufe.",
         "dev_tools": "Entwickler-Werkzeuge",
         "privacy": "Ihr Profil und Ihre Chats bleiben nur in diesem Browser-Tab.",
-        "export_caption": "Mit Quellen, Berechnungen und Token-Kosten. Auf dem Server wird nichts gespeichert.",
+        "export_caption": "PDF und Markdown zum Lesen oder Teilen; CSV und JSON mit Quellen, Berechnungen und "
+        "Token-Kosten. Auf dem Server wird nichts gespeichert.",
+        # help guide
+        "help_title": "Was kann ich fragen?",
+        "help_intro": "Ankommen beantwortet Fragen zum Ankommen in Deutschland aus amtlichen deutschen Quellen. "
+        "Wählen Sie ein Beispiel zum Ausprobieren oder lesen Sie, wie Sie die beste Antwort bekommen.",
+        "help_tab_topics": "Themen",
+        "help_tab_how": "So fragen Sie",
+        "help_tab_reading": "Antwort lesen",
+        "help_tab_limits": "Grenzen & Datenschutz",
+        "help_try": "Das fragen",
         "demo_badge": "Demo-Modus · vorbereitete Antworten",
         "your_situation": "Ihre Situation",
         "situation_caption": "Freiwillig. So kann ich die passenden Regeln anwenden. Nur in diesem Browser-Tab "
@@ -260,6 +280,103 @@ TRUST = {
         ("🛡️", "Kennt seine Grenzen", "Verweist an Fachleute, wenn nötig"),
     ],
 }
+
+# Help guide ("What can I ask?"). Topics: (icon, title, what is covered, example question). The other tabs are
+# Markdown bullet lists; {max_chars}, {per_hour} and {voice_seconds} are filled from the settings.
+HELP = {
+    "en": {
+        "topics": [
+            (":material/how_to_reg:", "Registration (Anmeldung)",
+             "Deadlines, documents, the landlord's confirmation, appointments in your city.",
+             "Which documents do I need for the Anmeldung in Munich?"),
+            (":material/verified_user:", "Residence permits",
+             "EU Blue Card, work and student permits, family reunification, settlement permit.",
+             "When can I apply for a settlement permit with my Blue Card?"),
+            (":material/key:", "Renting",
+             "Notice periods, written form, rent increases, the rent brake (Mietpreisbremse).",
+             "I rent a flat since 2021. If I give notice today, when does my tenancy end?"),
+            (":material/child_care:", "Family benefits",
+             "Kindergeld and Elterngeld: who gets them, how much, how to apply.",
+             "We're expecting a baby in March. How much Kindergeld and Elterngeld can we get?"),
+            (":material/calculate:", "Calculations",
+             "Tenancy end dates, statutory deadlines, benefit estimates, document checklists, Schengen 90/180 days.",
+             "I moved in on 3 November. By when do I have to register my address?"),
+        ],
+        "how": [
+            "**Name your city.** Local rules differ. Six cities have local sources: Berlin, Hamburg, Munich, "
+            "Cologne, Frankfurt and Stuttgart. Elsewhere you get federal and state rules.",
+            "**Fill in the profile** in the sidebar (citizenship, residence status, family). Answers then match "
+            "your situation without repeating it each time.",
+            "**Give dates and numbers** when you want a calculation: move-in date, start of the tenancy, income.",
+            "**Ask in English or German**, typed or by microphone. German terms such as *Anmeldung* are fine.",
+            "**Ask follow-up questions.** The assistant remembers the conversation.",
+        ],
+        "reading": [
+            "**S1 chips** are sources. Click one to see the official page, the passage used and when it was "
+            "last verified.",
+            "**T1 chips and tool cards** are calculations, with the inputs used and the rule behind them.",
+            "**How I got this answer** shows the steps: how the question was rewritten, what was searched and found.",
+            "**Listen** reads the answer aloud (Live answers only).",
+            "**Export chat** in the sidebar saves the conversation as PDF, Markdown, CSV or JSON.",
+        ],
+        "limits": [
+            "This is **general information, not legal or tax advice**. The official German text is binding.",
+            "For emergencies, asylum, court cases, police letters, medical questions and tax returns the "
+            "assistant does not answer; it points you to the right service instead.",
+            "Taxes, health insurance and citizenship are not covered in depth yet.",
+            "Questions can be up to {max_chars} characters, voice questions up to {voice_seconds} seconds, and "
+            "there are {per_hour} Live questions per hour.",
+            "Your profile and chats stay in this browser tab. Voice recordings are transcribed and not stored.",
+        ],
+    },
+    "de": {
+        "topics": [
+            (":material/how_to_reg:", "Anmeldung",
+             "Fristen, Unterlagen, Wohnungsgeberbestätigung, Termine in Ihrer Stadt.",
+             "Welche Unterlagen brauche ich für die Anmeldung in München?"),
+            (":material/verified_user:", "Aufenthaltstitel",
+             "Blaue Karte EU, Arbeits- und Studienaufenthalt, Familiennachzug, Niederlassungserlaubnis.",
+             "Wann kann ich mit meiner Blauen Karte eine Niederlassungserlaubnis beantragen?"),
+            (":material/key:", "Mieten",
+             "Kündigungsfristen, Schriftform, Mieterhöhung, Mietpreisbremse.",
+             "Ich miete seit 2021 eine Wohnung. Wenn ich heute kündige, wann endet mein Mietverhältnis?"),
+            (":material/child_care:", "Familienleistungen",
+             "Kindergeld und Elterngeld: wer sie bekommt, wie viel, wie man sie beantragt.",
+             "Wir erwarten im März ein Baby. Wie viel Kindergeld und Elterngeld bekommen wir?"),
+            (":material/calculate:", "Berechnungen",
+             "Mietende, gesetzliche Fristen, Schätzung von Leistungen, Unterlagen-Checklisten, Schengen 90/180 Tage.",
+             "Ich bin am 3. November eingezogen. Bis wann muss ich mich anmelden?"),
+        ],
+        "how": [
+            "**Nennen Sie Ihre Stadt.** Örtliche Regeln sind verschieden. Für sechs Städte gibt es lokale Quellen: "
+            "Berlin, Hamburg, München, Köln, Frankfurt und Stuttgart. Sonst gelten Bundes- und Landesregeln.",
+            "**Füllen Sie das Profil** in der Seitenleiste aus (Staatsangehörigkeit, Aufenthaltsstatus, Familie). "
+            "Die Antworten passen dann zu Ihrer Situation.",
+            "**Nennen Sie Daten und Zahlen**, wenn etwas berechnet werden soll: Einzugsdatum, Mietbeginn, Einkommen.",
+            "**Fragen Sie auf Deutsch oder Englisch**, getippt oder per Mikrofon.",
+            "**Stellen Sie Anschlussfragen.** Der Assistent merkt sich das Gespräch.",
+        ],
+        "reading": [
+            "**S1-Chips** sind Quellen. Ein Klick zeigt die amtliche Seite, die verwendete Stelle und das "
+            "Datum der letzten Prüfung.",
+            "**T1-Chips und Werkzeugkarten** sind Berechnungen, mit den Eingaben und der Regel dahinter.",
+            "**So kam diese Antwort zustande** zeigt die Schritte: Umformulierung, Suche und Treffer.",
+            "**Anhören** liest die Antwort vor (nur bei Live-Antworten).",
+            "**Chat exportieren** in der Seitenleiste speichert das Gespräch als PDF, Markdown, CSV oder JSON.",
+        ],
+        "limits": [
+            "Dies ist **allgemeine Information, keine Rechts- oder Steuerberatung**. Der amtliche deutsche Text "
+            "ist verbindlich.",
+            "Bei Notfällen, Asyl, Gerichtsverfahren, Schreiben der Polizei, medizinischen Fragen und "
+            "Steuererklärungen antwortet der Assistent nicht, sondern nennt die richtige Stelle.",
+            "Steuern, Krankenversicherung und Einbürgerung sind noch nicht ausführlich abgedeckt.",
+            "Fragen dürfen bis zu {max_chars} Zeichen lang sein, Sprachfragen bis zu {voice_seconds} Sekunden; "
+            "möglich sind {per_hour} Live-Fragen pro Stunde.",
+            "Profil und Chats bleiben in diesem Browser-Tab. Sprachaufnahmen werden transkribiert und nicht "
+            "gespeichert.",
+        ],
+    },
+}  # fmt: skip
 
 STEP_LABELS = {
     "en": {

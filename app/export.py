@@ -1,4 +1,4 @@
-"""Conversation export as Markdown (to read / share) and JSON (machine-readable, with sources and tool calls).
+"""Conversation export: Markdown and PDF to read or share, JSON and CSV for machines (sources, tools, costs).
 
 Pure functions over the session-state conversation dict, so they are unit-tested without Streamlit:
     {"title": str, "messages": [{"role": "user", "content": str}
@@ -7,9 +7,12 @@ Pure functions over the session-state conversation dict, so they are unit-tested
 
 from __future__ import annotations
 
+import csv
+import io
 import json
 import re
 from datetime import datetime
+from html import escape
 from typing import Any
 
 from expat.guards import estimate_cost_usd
@@ -96,6 +99,103 @@ def to_markdown(conv: dict[str, Any], price_in: float, price_out: float, now: da
                 lines.append(f"- [{s['id']}] {label}{link}{verified}")
             lines.append("")
     return "\n".join(lines).rstrip() + "\n"
+
+
+CSV_COLUMNS = ("turn", "role", "content", "mode", "voice", "sources", "source_urls", "tools",
+               "input_tokens", "output_tokens", "estimated_cost_usd", "latency_ms", "error")  # fmt: skip
+_FORMULA_START = ("=", "+", "-", "@", "\t", "\r")
+
+
+def _cell(value: Any) -> Any:
+    """Spreadsheets run a cell that starts with = + - @ as a formula. Chat text is untrusted, so quote it."""
+    return "'" + value if isinstance(value, str) and value.startswith(_FORMULA_START) else value
+
+
+def to_csv(conv: dict[str, Any], price_in: float, price_out: float) -> bytes:
+    """One row per message, for a spreadsheet. UTF-8 with a BOM, so Excel shows umlauts and § correctly."""
+    out = io.StringIO()
+    writer = csv.DictWriter(out, fieldnames=CSV_COLUMNS, lineterminator="\n")
+    writer.writeheader()
+    for i, rec in enumerate(to_records(conv, price_in, price_out), start=1):
+        sources = rec.get("sources", [])
+        usage = rec.get("usage", {})
+        row = {
+            "turn": i,
+            "role": rec["role"],
+            "content": rec["content"],
+            "mode": rec.get("mode") or "",
+            "voice": "yes" if rec.get("voice") else "",
+            "sources": "; ".join(
+                f"[{s['id']}] " + (" · ".join(x for x in (s["legal_reference"], s["title"]) if x) or s["id"])
+                for s in sources
+            ),
+            "source_urls": " ".join(s["source_url"] for s in sources if s["source_url"]),
+            "tools": "; ".join(t["name"] for t in rec.get("tools", [])),
+            "input_tokens": usage.get("input_tokens", ""),
+            "output_tokens": usage.get("output_tokens", ""),
+            "estimated_cost_usd": usage.get("estimated_cost_usd", ""),
+            "latency_ms": usage.get("latency_ms", ""),
+            "error": rec.get("error", ""),
+        }
+        writer.writerow({k: _cell(v) for k, v in row.items()})
+    return ("﻿" + out.getvalue()).encode("utf-8")
+
+
+PDF_CSS = """
+body { font-family: sans-serif; font-size: 10.5pt; line-height: 1.4; color: #1f2933; }
+h1 { font-size: 18pt; margin-bottom: 2pt; }
+h2.role { font-size: 11pt; color: #0f5c4d; margin-top: 14pt; margin-bottom: 2pt; }
+h2, h3, h4 { font-size: 10.5pt; }
+.meta, .sources, .tools { font-size: 8.5pt; color: #52606d; }
+a { color: #0f5c4d; }
+table { border-collapse: collapse; }
+td, th { border: 0.5pt solid #9aa5b1; padding: 2pt 4pt; font-size: 9pt; }
+code { font-family: monospace; font-size: 9pt; }
+"""
+
+
+def to_html(conv: dict[str, Any], price_in: float, price_out: float, now: datetime | None = None) -> str:
+    """The chat as plain HTML (the PDF is rendered from this). Answers are Markdown; raw HTML in them is escaped."""
+    from markdown_it import MarkdownIt
+
+    md = MarkdownIt("commonmark", {"html": False}).enable("table")
+    stamp = (now or datetime.now()).strftime("%Y-%m-%d %H:%M")
+    parts = [
+        f"<h1>{escape(conv['title'])}</h1>",
+        f'<p class="meta">Exported from Ankommen on {stamp}. {escape(DISCLAIMER)}</p>',
+    ]
+    for rec in to_records(conv, price_in, price_out):
+        if rec["role"] == "user":
+            heading = "You (voice question)" if rec.get("voice") else "You"
+            parts += [f'<h2 class="role">{heading}</h2>', f"<p>{escape(rec['content'])}</p>"]
+            continue
+        parts.append('<h2 class="role">Assistant</h2>')
+        body = md.render(rec["content"]) if rec["content"] else f"<p>({escape(rec.get('error', 'no answer'))})</p>"
+        parts.append(body)
+        if rec["tools"]:
+            names = ", ".join(f"<code>{escape(t['name'])}</code>" for t in rec["tools"])
+            parts.append(f'<p class="tools"><b>Calculations:</b> {names}</p>')
+        if rec["sources"]:
+            items = []
+            for s in rec["sources"]:
+                label = escape(" · ".join(x for x in (s["legal_reference"], s["title"]) if x) or s["id"])
+                url = s["source_url"]
+                link = f' – <a href="{escape(url, quote=True)}">{escape(url)}</a>' if url else ""
+                verified = f" (verified {escape(str(s['last_verified']))})" if s["last_verified"] else ""
+                items.append(f"<li>[{escape(s['id'])}] {label}{link}{verified}</li>")
+            parts.append(f'<div class="sources"><b>Sources:</b><ul>{"".join(items)}</ul></div>')
+    return "<html><body>" + "\n".join(parts) + "</body></html>"
+
+
+def to_pdf(conv: dict[str, Any], price_in: float, price_out: float, now: datetime | None = None) -> bytes:
+    """A4 PDF with clickable source links, laid out by PyMuPDF (already a dependency of the ingestion)."""
+    import pymupdf
+
+    story = pymupdf.Story(html=to_html(conv, price_in, price_out, now), user_css=PDF_CSS)
+    page = pymupdf.paper_rect("a4")
+    content = pymupdf.Rect(page.x0 + 50, page.y0 + 50, page.x1 - 50, page.y1 - 50)  # margins
+    document = story.write_with_links(lambda _rect_num, _filled: (page, content, None))
+    return bytes(document.tobytes(garbage=3, deflate=True))
 
 
 def filename(conv: dict[str, Any], extension: str) -> str:
