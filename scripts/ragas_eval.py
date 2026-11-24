@@ -18,8 +18,8 @@ Why score the samples file and not re-run the pipeline: answers vary between run
 see the SAME answer, or "do they agree?" means nothing.
 
 Ragas metrics used (LLM = MODEL_JUDGE, the cheap judge):
-- faithfulness: share of the answer's statements supported by the evidence (retrieved sources, tool results and
-  the user's profile, i.e. what our groundedness judge sees). Compared with our binary groundedness verdict.
+- faithfulness: share of the answer's statements supported by the evidence (the question, the user's profile,
+  retrieved sources and tool results, i.e. what our groundedness judge sees). Compared with our binary verdict.
 - context_precision (with reference): are the relevant sources ranked high? One LLM call PER source.
 - context_recall: how much of the reference answer is covered by the retrieved sources (sources only, no tools).
 """
@@ -88,13 +88,15 @@ def skip_reason(record: dict[str, Any]) -> str | None:
     return None
 
 
-def profile_block(record: dict[str, Any]) -> str:
-    """The answer may use the profile ("as a Blue Card holder ..."); our groundedness judge sees it too."""
-    return "[USER PROFILE]\n" + json.dumps(record.get("profile", {}), ensure_ascii=False)
+def user_block(record: dict[str, Any]) -> str:
+    """The answer may restate the question ("with an income of 190,000 euros ...") and use the profile ("as a Blue
+    Card holder ..."). Our groundedness judge sees both; without them Ragas rejected such statements (fam-006)."""
+    profile = json.dumps(record.get("profile", {}), ensure_ascii=False)
+    return f"[USER QUESTION]\n{record['question']}\n\n[USER PROFILE]\n{profile}"
 
 
 def faithfulness_evidence(record: dict[str, Any]) -> list[str]:
-    return [profile_block(record), *record["retrieved_contexts"], *record.get("tool_contexts", [])]
+    return [user_block(record), *record["retrieved_contexts"], *record.get("tool_contexts", [])]
 
 
 @dataclass
@@ -375,7 +377,9 @@ def main(argv: list[str] | None = None) -> int:
         http_client=httpx.AsyncClient(timeout=120, event_hooks={"response": [usage.on_response]}),
     )
     cache = None if args.no_cache else DiskCacheBackend(cache_dir=str(cache_dir_for(model)))
-    llm = llm_factory(model, provider="openai", client=client, cache=cache)
+    # Ragas' default max_tokens=1024 cut off the statement list of a long answer (IncompleteOutputException on
+    # bur-010, 2026-11-24). Output is billed per token used, so a higher cap only costs when it is needed.
+    llm = llm_factory(model, provider="openai", client=client, cache=cache, max_tokens=4096)
 
     est = estimate(scorable, prompt_overheads(llm), metrics)
     remaining = key_remaining_usd(api_key)
@@ -404,7 +408,7 @@ def main(argv: list[str] | None = None) -> int:
             "model": model,
             "ragas_version": ragas.__version__,
             "metrics": list(metrics),
-            "faithfulness_evidence": "profile + retrieved sources + tool results",
+            "faithfulness_evidence": "question + profile + retrieved sources + tool results",
             "context_evidence": "retrieved sources only",
         },
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),

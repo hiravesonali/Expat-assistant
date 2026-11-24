@@ -107,7 +107,15 @@ def _sheet_answers() -> dict[int, str]:
     return answers
 
 
-def rejudge(labeller: str = "human") -> None:
+def _recorded_labeller() -> str | None:
+    """Who made the reference labels, as recorded in RESULT.md (the labels are the same for every judge)."""
+    if not RESULT.exists():
+        return None
+    match = re.search(r"^Reference labels by: \*\*(.+)\*\*$", RESULT.read_text(encoding="utf-8"), re.MULTILINE)
+    return match.group(1) if match else None
+
+
+def rejudge(labeller: str | None = None) -> None:
     """Judge the SAME labelled answers again with the current MODEL_JUDGE and score its agreement.
 
     Use it before switching judge models: the new judge must agree with the reference labels at least as well as
@@ -128,7 +136,9 @@ def rejudge(labeller: str = "human") -> None:
         items.append({**item, "judge": verdict.score})
         print(f"{n:2}. {item['id']:8} old judge {item['judge']!s:5} -> {model_name}: {verdict.score}")
     slug = model_name.split("/")[-1]
-    score(labeller, key=items, judge_name=model_name, result=OUT / f"RESULT_{slug}.md")
+    score(
+        labeller or _recorded_labeller() or "human", key=items, judge_name=model_name, result=OUT / f"RESULT_{slug}.md"
+    )
 
 
 def score(
@@ -171,6 +181,8 @@ if __name__ == "__main__":
     parser.add_argument("command", choices=("export", "score", "rejudge"))
     parser.add_argument("--labeller", default="human", help='who filled the sheet, e.g. "Claude (not a human)"')
     args = parser.parse_args()
-    {"export": lambda: export(), "score": lambda: score(args.labeller), "rejudge": lambda: rejudge(args.labeller)}[
-        args.command
-    ]()
+    {
+        "export": lambda: export(),
+        "score": lambda: score(args.labeller),
+        "rejudge": lambda: rejudge(args.labeller if args.labeller != "human" else None),
+    }[args.command]()

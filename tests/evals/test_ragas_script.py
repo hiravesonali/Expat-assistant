@@ -56,9 +56,10 @@ def test_skip_reason(changes: dict, reason: str | None) -> None:
     assert ragas_eval.skip_reason(_record(**changes)) == reason
 
 
-def test_faithfulness_sees_profile_sources_and_tools_like_our_judge() -> None:
+def test_faithfulness_sees_question_profile_sources_and_tools_like_our_judge() -> None:
     evidence = ragas_eval.faithfulness_evidence(_record())
-    assert evidence[0].startswith("[USER PROFILE]") and '"munich"' in evidence[0]
+    assert evidence[0].startswith("[USER QUESTION]\nHow long is the notice period?")
+    assert "[USER PROFILE]" in evidence[0] and '"munich"' in evidence[0]
     assert evidence[1].startswith("[S1]") and evidence[-1].startswith("[T1]")
 
 
