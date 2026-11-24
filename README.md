@@ -24,6 +24,14 @@ An assistant that helps expats in **Germany** deal with registration, residence 
 
 ## How it works
 
+![System design: the online flow for every question and the offline index build](docs/diagrams/system-design.png)
+
+Editable diagram: [`docs/diagrams/system-design.drawio`](docs/diagrams/system-design.drawio) (opens in draw.io
+and imports into Miro).
+
+<details>
+<summary>Detailed pipeline</summary>
+
 ```mermaid
 flowchart LR
     V([Voice question]) -. speech-to-text .-> Q
@@ -38,6 +46,7 @@ flowchart LR
     C --> U[Streamlit UI<br/>chips, steps, sources]
     U -. Listen: text-to-speech .-> L([Spoken answer])
 ```
+</details>
 
 The index (Chroma + BM25 + parent store) is built locally from 78 official sources and shipped to the deployed app
 as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Every turn is traced in LangSmith.
