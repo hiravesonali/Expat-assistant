@@ -15,10 +15,11 @@ An assistant that helps expats in **Germany** deal with registration, residence 
 ![An answer with a cited law paragraph and a tool calculation](docs/images/answer.png)
 
 <details>
-<summary>More screenshots: start screen, "How I got this answer"</summary>
+<summary>More screenshots: start screen, "What can I ask?" guide, "How I got this answer"</summary>
 
 ![Start screen with suggested topics](docs/images/home.png)
-![Query analysis: standalone question, English and German rewrites](docs/images/how-i-got-this-answer.png)
+![The "What can I ask?" guide: topics with one-click example questions](docs/images/help.png)
+![How I got this answer: standalone question, English and German rewrites, legal reference, top search hits](docs/images/how-i-got-this-answer.png)
 </details>
 
 ## How it works
@@ -52,7 +53,8 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
   pipeline as a typed question, so citations and checks are identical; recordings are not stored
   ([ADR-0011](docs/adr/0011-voice-cascade-stt-tts.md))
 - **English | Deutsch:** one switch sets the interface and the answer language
-- **Evaluated:** golden dataset + LangSmith experiments (results below)
+- **Evaluated:** 85-question golden set, LangSmith experiments, LLM judges calibrated against labels, and a
+  Ragas cross-check (results below)
 - **Safe by design:** safety pre-check (emergency, asylum, court cases, police letters, medical, tax forms) with
   fixed referrals; sources treated as data (prompt-injection hygiene); input validation and usage limits
 - **Transparent:** citation chips, tool cards, "How I got this answer" timeline, tokens and cost per answer,
@@ -97,10 +99,11 @@ Retrieval ablation, before/after runs, failure analysis and known issues: [`docs
 
 | Part | Choice |
 |---|---|
-| Language and tooling | Python 3.12, uv, Pydantic, ruff, mypy, pytest (480+ offline tests) |
+| Language and tooling | Python 3.12, uv, Pydantic, ruff, mypy, pytest (500+ offline tests) |
 | Models, all through OpenRouter ([ADR-0006](docs/adr/0006-openrouter-configurable-models.md)) | GPT-4.1-mini for query analysis and answers; Qwen3-Embedding-8B for embeddings, chosen by a bake-off ([ADR-0002](docs/adr/0002-embedding-model.md)); Whisper large v3 turbo for speech-to-text; Gemini 3.8 Flash Lite TTS for read-aloud |
 | Retrieval | Chroma (embedded) + own German BM25 + Reciprocal Rank Fusion, parent store in SQLite |
 | Orchestration and tracing | LangChain, LangSmith (EU region) |
+| Evaluation | LangSmith experiments, openevals LLM judges (Gemini 2.5 Flash-Lite), Ragas 0.4 in its own environment |
 | UI and hosting | Streamlit on Community Cloud: chat plus password-protected pages for retrieval debugging, the collection, evals and ingestion status |
 
 Every model is a setting (`MODEL_ANSWER`, `MODEL_STT`, …), so swapping one is a config change plus an eval run.
@@ -117,6 +120,8 @@ falls back to **Demo mode** with scripted answers, so the link always works. Det
   classes, citizenship and foreign driving licences. Tax returns and individual tax or legal advice are out of
   scope (the assistant refers to a Steuerberater, Lohnsteuerhilfeverein or lawyer).
 - Sources are snapshots with a "last verified" date; rules change, and the official German text is binding.
+- Lists published as separate documents are not indexed yet, e.g. Baden-Württemberg's list of rent-cap
+  municipalities (found by the Ragas cross-check).
 - Voice was smoke-tested live and tried by hand, but not measured on recordings with accents or background noise.
 - The evaluation sets are small (85 questions, 32 of them holdout; 6–8 per new topic), so the numbers show
   direction, not precision.
@@ -130,6 +135,12 @@ uv run expat-ingest               # fetch official sources -> data/processed/ (~
 uv run expat-index                # embed + build Chroma, BM25 and the parent store
 uv run streamlit run app/Home.py  # chat UI (switch "Live answers" on in Settings)
 ```
+Evaluation (paid runs print a cost estimate first and stop if the key's credit can't cover it):
+```bash
+uv run python -m expat.evals retrieval --split dev                     # retrieval ablation R0-R5
+uv run python -m expat.evals answers --split holdout --dataset expat-golden-v4 --mode langsmith --dry-run
+uv run --script scripts/ragas_eval.py --dry-run                        # Ragas cross-check (own environment)
+```
 make-it-in-germany.com blocks scripted downloads: save its two pages by hand to
 `data/manual/miig-blue-card.html` and `data/manual/miig-family-reunification.html`
 (URLs in `sources.yaml`), then run `uv run expat-ingest --source miig-blue-card miig-family-reunification`.
@@ -141,7 +152,8 @@ src/expat/    ingestion · store (Chroma, BM25, bundle) · rag (analysis, retrie
               tools · evals · speech · safety · guards · config
 rules/        versioned amounts and thresholds used by the tools (2026.yaml)
 sources.yaml  registry of the official sources
-evals/        golden questions and judge calibration
+evals/        golden questions, judge calibration, results and REPORT.md
+scripts/      judge calibration, Ragas cross-check, retrieval benchmark
 tests/        offline tests (network tests are marked and skipped by default)
 docs/         plan, pipeline and database design, evaluation, deployment, decisions (ADRs)
 ```
@@ -154,6 +166,7 @@ docs/         plan, pipeline and database design, evaluation, deployment, decisi
 | RAG pipeline | [`docs/rag-pipeline.md`](docs/rag-pipeline.md) |
 | Tools | [`docs/tools.md`](docs/tools.md) |
 | Evaluation | [`docs/evaluation-plan.md`](docs/evaluation-plan.md) |
+| Data sources | [`docs/data-sources.md`](docs/data-sources.md) |
 | Deployment and limits | [`docs/deployment.md`](docs/deployment.md) |
 | Decisions (ADRs) | [`docs/adr/`](docs/adr/) |
 
