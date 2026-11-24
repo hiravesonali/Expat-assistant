@@ -56,7 +56,8 @@ as a versioned bundle ([ADR-0010](docs/adr/0010-deployed-index-bundle.md)). Ever
 - **Safe by design:** safety pre-check (emergency, asylum, court cases, police letters, medical, tax forms) with
   fixed referrals; sources treated as data (prompt-injection hygiene); input validation and usage limits
 - **Transparent:** citation chips, tool cards, "How I got this answer" timeline, tokens and cost per answer,
-  chat export as Markdown or JSON
+  chat export as PDF, Markdown, CSV or JSON
+- **Guided:** a "What can I ask?" guide with topics, one-click example questions, tips for asking and the limits
 - **Private:** the profile holds coarse categories only (no name, address or income); profile and chats live in
   the browser session and are never saved on the server
 
