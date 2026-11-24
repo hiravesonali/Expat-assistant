@@ -12,14 +12,14 @@ official sources** (federal laws, state gazettes, BAMF, Familienportal, city por
 query-analysis call (English ↔ German rewrites, sub-questions, filters), hybrid search (Chroma vectors +
 German BM25, fused with RRF), metadata filters from the question and the user profile, and a LangChain
 agent with five tools. I evaluated it on a golden set of 85 questions: on **32 held-out questions, correct
-answers went from 86% (naive RAG) to 96%, with valid citations throughout, at the same cost of about half a
-cent per answer**. Expanding to six cities, I measured that naive search pulls another city's rules into two out of
+answers went from 86% (naive RAG) to 96%, with valid citations throughout, at about a third of a cent per
+answer**. Expanding to six cities, I measured that naive search pulls another city's rules into two out of
 three answers; with per-question location filters that dropped to zero."
 
 ## 2. Demo script (5 minutes)
 | # | Do | Point out |
 |---|---|---|
-| 1 | Start screen | Brand, topic cards, "knows its limits" promises; disclaimer |
+| 1 | Start screen, then **What can I ask?** | Brand, topic cards, "knows its limits" promises; disclaimer; the guide's topics with one-click examples |
 | 2 | Card **"End my lease"** | Tool card (Tenancy notice calculator), exact end date, chips `§ 573c BGB` + `T1`; open a chip → quote + "verified" date |
 | 3 | Open **"How I got this answer"** | Standalone question, English + **German rewrites**, top hits table with scores, tool input/output, tokens + **≈ $ cost** |
 | 4 | Ask: *"My landlord gave me notice after 10 years because he needs the flat for his daughter. How long is my notice period?"* | **9 months** (landlord side, 3+3+3) – a bug the evals found and I fixed |
@@ -99,7 +99,16 @@ to a cheap judge from another family (Gemini 2.5 Flash-Lite, 10× cheaper input,
 60-word verdicts, judge groundedness only for the production variant, cache verdicts, and added a spend guard
 that stops a run before it starts if the estimate doesn't fit the key's credit. A full cycle went from ≈ $4.30
 to ≈ $0.96. The trade-off: a cheaper judge must prove itself on the same 15 labelled answers before its numbers
-replace the old ones (`judge_calibration.py rejudge`).
+replace the old ones (`judge_calibration.py rejudge`). It did: **14/15 (kappa 0.81) vs Haiku's 12/15 (0.44)**. But
+it is not perfect: on ten-015 Haiku caught an unsupported claim that Gemini missed, and Ragas caught it too.
+
+**7b. "Did you use a standard eval framework?"** Yes, Ragas as a second opinion on the same 28 holdout answers
+my judges scored: faithfulness 0.89, context precision 0.74, context recall 0.93, **86% agreement** with my
+groundedness judge. I checked every disagreement by hand: one Ragas find was real (the answer said Stuttgart is
+on the rent-cap list, but no retrieved source names Stuttgart: a missing document), two were Ragas being
+stricter about practical advice, one was a Ragas mistake. Both wrong answers had context recall 1.00, so their
+errors came from generation, not retrieval. Ragas runs in its own environment (`uv run --script`) because its
+dependency `instructor` would have downgraded the app's `openai` package.
 
 **8. "Error scenarios and edge cases?"** Analysis model down → falls back to the raw question (R0 quality, no
 crash). Provider timeouts → retries, then an error card with Retry. Empty retrieval → "insufficient
@@ -139,6 +148,9 @@ bundle). Persistent disclaimer.
 - **An official page was out of date:** BAMF's English naturalisation page still offers the 3-year fast track,
   which was abolished on 30 Oct 2025 (StAG § 10 Abs. 3 "weggefallen"). I excluded it and used the current
   German page plus the law, so the bot doesn't repeat outdated rules.
+- **Adding Ragas would have changed the live app:** its dependency pins `jiter<0.15`, which forces an older
+  `openai`; I caught it in the lockfile diff and moved Ragas into an isolated script. Its cache key also ignores
+  the model name, so the script keeps one cache folder per judge model.
 - **Evals cost more than I estimated:** with 85 questions and a judge per metric, a full answer eval of both
   splits used about $4.80 and hit the key limit; the failed run is kept out of the report, not averaged in.
 
@@ -151,5 +163,7 @@ bundle). Persistent disclaimer.
   (frankfurt.de blocks bots), Baden-Württemberg law PDFs (expiring links; the ministry explainer is used).
 - Dev answer eval after the last prompt fix covers 10 questions (the full rerun hit the key limit); holdout and
   retrieval evals are complete. Licence extension (6 + 6 months) is not a tool yet (holdout `bur-032`).
+- Lists published as separate documents are not indexed (Baden-Württemberg's rent-cap municipalities, found by
+  Ragas). The cheap judge can miss unsupported claims a stronger judge catches; Ragas covers part of that.
 - Production: scheduled ingestion, reranker, user feedback loop, Postgres/pgvector or Qdrant if users need
   to write data.
