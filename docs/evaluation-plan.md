@@ -307,6 +307,87 @@ out of the report (`evals/results/_failed/`).
 - **Budget:** today's answer evals cost about $4.80, mostly judge calls; the estimate in §5 was too low for the
   85-question set (≈ $1.30 per split with both variants).
 
+### Ragas cross-check (2026-11-24)
+**Why:** our judges are calibrated on only 15 answers. [Ragas](https://docs.ragas.io) (the best-known RAG eval
+library) gives a second, independent opinion on the same answers, and adds what our ID-based hit@k can't see: does
+the retrieved *text* actually contain what the reference answer needs?
+
+**Metrics** (`ragas.metrics.collections`, Ragas 0.4.4, LLM = the cheap judge `MODEL_JUDGE`):
+
+| Ragas metric | What it asks | Evidence | Compared with |
+|---|---|---|---|
+| faithfulness | which share of the answer's statements is supported? (2 LLM calls) | question + profile + sources + tool results, exactly what our groundedness judge sees | our groundedness (binary; "grounded" = faithfulness ≥ 0.8) |
+| context precision (with reference) | are the sources that help the reference answer ranked high? (1 call per source) | retrieved sources | hit@5 / MRR |
+| context recall | how much of the reference answer do the sources cover? (1 call) | retrieved sources | our correctness: are wrong answers explained by missing sources? |
+
+**Design decisions:**
+- **Same answers for both sides.** `answers --samples` writes each answer with the exact sources and tool results
+  it was generated from (`evals/results/samples/*.jsonl`) plus our judges' verdicts. Ragas scores that file; it never
+  re-runs the pipeline, because a new run gives different answers and "do they agree?" would mean nothing.
+- **Own environment.** Ragas needs `instructor`, which pins `jiter<0.15` and so forces an older `openai` than the
+  app uses. Added to the project, it would downgrade the deployed app. `scripts/ragas_eval.py` declares its
+  dependencies inline (PEP 723) and runs with `uv run --script`, isolated from the app.
+- **Refusals, city questions and pipeline errors are skipped:** there is no RAG answer to score.
+- **Budget:** the same spend guard as `answers` (estimate from the real sample texts and live prices, × 1.25 vs
+  the key's credit; `--dry-run`, `--limit`). Ragas makes ~13 calls per answer (10 sources), ≈ $0.004 per answer
+  with Gemini 2.5 Flash-Lite; the measured cost from OpenRouter's `usage` is saved with the results.
+- **Cache per model** (`evals/.ragas_cache/<model>/`): Ragas' cache key is the prompt only, not the model, so
+  one shared folder would silently reuse another model's verdicts.
+- **No telemetry:** Ragas sends usage analytics by default; the script sets `RAGAS_DO_NOT_TRACK=true`.
+- **`max_tokens=4096`:** Ragas' default of 1024 cut off the statement list of a long answer (bur-010,
+  `IncompleteOutputException`). Output is billed per token used, so the higher cap costs nothing extra.
+- **Not committed:** the samples files contain scraped source text (see README, Data and licensing); the score
+  files in `evals/results/ragas/` hold ids and numbers only.
+
+**Run** (holdout R5: ≈ $0.10 pipeline + our judges, ≈ $0.10 Ragas):
+```bash
+uv run python -m expat.evals answers --split holdout --variants R5 --mode langsmith --dataset expat-golden-v4 --samples
+uv run --script scripts/ragas_eval.py --dry-run     # estimate only
+uv run --script scripts/ragas_eval.py --limit 3     # smoke run, check a few verdicts by hand
+uv run --script scripts/ragas_eval.py               # all scorable answers -> evals/results/ragas/*.json + .md
+```
+
+**Results (2026-11-24, holdout R5, 28 answers; 4 skipped: refusals and city questions).** Input: a new R5 run
+judged by Gemini 2.5 Flash-Lite (correctness 0.93, groundedness 0.96; kept in `evals/results/_crosscheck/`, out
+of the headline report, which stays Haiku vs Haiku). Full table: `evals/results/ragas/`.
+
+| Ragas metric | Mean | Reading |
+|---|---|---|
+| faithfulness | 0.89 | most answers fully supported; the lower ones add advice the sources don't state |
+| context precision | 0.74 | the helpful sources are often not ranked first among the ~8–10 handed to the model |
+| context recall | 0.93 | the sources almost always cover the reference answer |
+
+**Agreement with our judges:**
+- **Groundedness: 24 of 28 answers agree (86%).** Mean faithfulness is 0.90 where our judge said grounded and
+  0.69 where it said not grounded (fam-006, which recommends the Familienkasse for Elterngeld: a real error).
+- **Both wrong answers (fam-006, ten-013) have context recall 1.00:** the right sources were retrieved, so those
+  errors come from generation, not retrieval.
+
+**The 4 disagreements, checked by hand** (Ragas keeps every statement verdict in its cache):
+- **ten-015, Ragas right, our judge wrong:** "Stuttgart is on the list of municipalities" is true, but none of
+  the 8 retrieved sources names Stuttgart (context recall 0.00 agrees). The list is a separate document that is
+  not in the index. Haiku 4.5 caught this on 2026-11-23 (groundedness 0 for the same claim); the cheap Gemini
+  judge missed it. **Two real finds:** a data gap (candidate fix: ingest the Baden-Württemberg municipality list),
+  and a reminder that the cheap judge can miss an unsupported claim that a stronger judge catches. Ragas as a
+  second opinion covers part of that gap.
+- **bur-010, bur-007, a difference in strictness:** Ragas rejects practical advice that is not in the legal text
+  ("contact the registration office", "you may need the confirmation for other formalities"). Our judge accepts
+  general next steps.
+- **mul-005, Ragas wrong:** it rejected "you don't deregister separately when you move within Germany", although
+  [S3] says the new registration office informs the old one.
+
+**Lessons:**
+- **Give Ragas the same evidence as our judge.** The first run did not include the question. Ragas then rejected
+  statements that restate it ("the family's income is about 190,000 euros") and agreed on 82%. With the question
+  it agreed on 86%.
+- **Single faithfulness scores from a cheap model are noisy.** Re-scoring the same answers changed several
+  answers by ±0.2 (bur-007 1.00 → 0.78, ten-008 0.60 → 0.80, fam-009 0.78 → 1.00), enough to cross the 0.8
+  threshold. Read the means and the rejected statements, not single numbers.
+- **Mixed languages were not a problem in practice:** the English prompts handled German sources and questions.
+  The wrong verdicts came from reasoning slips (a date rule in fam-006), not from language.
+- **Cost:** Ragas $0.10 over two full scorings (most calls were cached the second time), plus $0.11 for the
+  pipeline run and our judges. About $0.004 per answer for the three metrics.
+
 ## 4. Tooling (APIs verified 2026-11-17: `langsmith` 0.14.x, `openevals` 0.2.x)
 - **Datasets:** `Client().create_dataset(dataset_name="expat-golden-v1")` + `create_examples(...)` from the JSONL. Put the `dev`/`holdout` split in example metadata (or use LangSmith dataset splits).
 - **Experiments:** `Client().evaluate(target, data="expat-golden-v1", evaluators=[...], experiment_prefix="R4-hybrid", metadata={...config...}, max_concurrency=4)`, or `aevaluate` for the async pipeline. Evaluators are plain functions `(inputs, outputs, reference_outputs) -> bool | dict`. The deterministic metrics are simply Python.
@@ -326,7 +407,10 @@ judge output; the 85-question set with Haiku cost ≈ $4.30 per full cycle and h
 1. **Judge model `google/gemini-2.5-flash-lite`** ($0.10 / $0.40 per M tokens vs $1 / $5): a different family than
    the answer model, structured output, no hidden reasoning tokens. Before its numbers replace Haiku's, it is
    re-scored on the 15 labelled calibration answers: `uv run python scripts/judge_calibration.py rejudge`
-   (≈ $0.001) -> `evals/calibration/RESULT_<model>.md`. *Pending: the key had no credit left on 2026-11-23.*
+   (≈ $0.001) -> `evals/calibration/RESULT_<model>.md`. **Done 2026-11-24: 14/15 agreement (93%), Cohen's
+   kappa 0.81, vs Haiku 4.5's 12/15 (kappa 0.44)** on the same 15 answers and labels. It also gets fam-006
+   right, one of the three human-confirmed labels, where Haiku was too strict; its one miss is fam-005 (too
+   lenient). 15 answers is a small sample, but the cheap judge is at least as good as the old one.
 2. **Groundedness only for R5** (default; `--groundedness-all` for every variant): the naive-vs-system
    headline uses correctness; groundedness was ~60% of the judge cost.
 3. **Short reasoning** (`judges-v2` prompts): at most 60 words, only the claims that fail.

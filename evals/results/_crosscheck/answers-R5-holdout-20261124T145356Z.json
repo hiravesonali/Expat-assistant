@@ -1,0 +1,1201 @@
+{
+  "experiment": "answers-R5-holdout-20261124T145356Z",
+  "kind": "answers",
+  "variant": "R5",
+  "split": "holdout",
+  "config": {
+    "use_german_rewrite": true,
+    "use_multi_query": true,
+    "use_decomposition": true,
+    "use_bm25": true,
+    "use_filters": true,
+    "use_rerank": false,
+    "use_hyde": false,
+    "use_step_back": true,
+    "bm25_queries": "all",
+    "bm25_weight": 1.0,
+    "bm25_legal_refs": false,
+    "k_dense": 20,
+    "k_sparse": 20,
+    "k_final": 8,
+    "rrf_c": 60,
+    "judges": true,
+    "judge_model": "google/gemini-2.5-flash-lite",
+    "groundedness_judged": true
+  },
+  "metrics": {
+    "groundedness": 0.9642857142857143,
+    "correctness": 0.9285714285714286,
+    "citation_validity": 1.0,
+    "citation_coverage": 0.5842687074829932,
+    "citation_correctness": 0.6803571428571429,
+    "must_include": 0.7857142857142857,
+    "must_not_include": 1.0,
+    "tool_selection": 0.9666666666666667,
+    "refusal_accuracy": 0.9666666666666667,
+    "clarification": 1.0,
+    "total_tokens": 10354.3,
+    "cost_usd": null,
+    "latency_p50_ms": 13787.0,
+    "latency_p95_ms": 21025.25
+  },
+  "per_slice": {
+    "bureaucracy": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5727272727272728,
+      "citation_correctness": 0.546969696969697,
+      "must_include": 0.7272727272727273,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 11896.0,
+      "cost_usd": null,
+      "latency_p50_ms": 14176.0,
+      "latency_p95_ms": 20820.95,
+      "n": 12.0
+    },
+    "category:legal_lookup": {
+      "groundedness": 1.0,
+      "correctness": 0.8571428571428571,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5976190476190476,
+      "citation_correctness": 0.5333333333333333,
+      "must_include": 0.5714285714285714,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 0.8571428571428571,
+      "clarification": 1.0,
+      "total_tokens": 10064.714285714286,
+      "cost_usd": null,
+      "latency_p50_ms": 13816.0,
+      "latency_p95_ms": 17875.5,
+      "n": 7.0
+    },
+    "category:multi_domain": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.4,
+      "citation_correctness": 0.5,
+      "must_include": 0.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 12614.0,
+      "cost_usd": null,
+      "latency_p50_ms": 21039.0,
+      "latency_p95_ms": 21039.0,
+      "n": 1.0
+    },
+    "category:numeric": {
+      "groundedness": 0.875,
+      "correctness": 0.875,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5520833333333334,
+      "citation_correctness": 0.7020833333333334,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 11048.625,
+      "cost_usd": null,
+      "latency_p50_ms": 13812.0,
+      "latency_p95_ms": 17032.5,
+      "n": 8.0
+    },
+    "category:out_of_scope": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": null,
+      "latency_p50_ms": 1.4641000016126782,
+      "latency_p95_ms": 1.4641000016126782,
+      "n": 1.0
+    },
+    "category:sensitive": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": null,
+      "latency_p50_ms": 1.174800010630861,
+      "latency_p95_ms": 1.174800010630861,
+      "n": 1.0
+    },
+    "category:single_domain": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.6192857142857143,
+      "citation_correctness": 0.7533333333333333,
+      "must_include": 0.9,
+      "must_not_include": 1.0,
+      "tool_selection": 0.9,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10753.9,
+      "cost_usd": null,
+      "latency_p50_ms": 13734.0,
+      "latency_p95_ms": 21216.95,
+      "n": 12.0
+    },
+    "category:tool": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5833333333333333,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 15817.0,
+      "cost_usd": null,
+      "latency_p50_ms": 11930.5,
+      "latency_p95_ms": 13766.95,
+      "n": 2.0
+    },
+    "family": {
+      "groundedness": 0.8333333333333334,
+      "correctness": 0.8333333333333334,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.7111111111111111,
+      "citation_correctness": 0.7555555555555555,
+      "must_include": 0.8333333333333334,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10562.0,
+      "cost_usd": null,
+      "latency_p50_ms": 13758.0,
+      "latency_p95_ms": 14611.8,
+      "n": 7.0
+    },
+    "health": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.3214285714285714,
+      "citation_correctness": 1.0,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 0.5,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 12054.0,
+      "cost_usd": null,
+      "latency_p50_ms": 13991.5,
+      "latency_p95_ms": 19080.55,
+      "n": 2.0
+    },
+    "lang:de": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5619047619047619,
+      "citation_correctness": 0.9333333333333333,
+      "must_include": 0.8,
+      "must_not_include": 1.0,
+      "tool_selection": 0.8333333333333334,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10702.0,
+      "cost_usd": null,
+      "latency_p50_ms": 12262.0,
+      "latency_p95_ms": 18227.25,
+      "n": 6.0
+    },
+    "lang:en": {
+      "groundedness": 0.9565217391304348,
+      "correctness": 0.9130434782608695,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5891304347826087,
+      "citation_correctness": 0.6253623188405797,
+      "must_include": 0.782608695652174,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 0.9583333333333334,
+      "clarification": 1.0,
+      "total_tokens": 10267.375,
+      "cost_usd": null,
+      "latency_p50_ms": 13841.0,
+      "latency_p95_ms": 21032.75,
+      "n": 26.0
+    },
+    "multi_domain": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.45,
+      "citation_correctness": 0.5,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 11888.0,
+      "cost_usd": null,
+      "latency_p50_ms": 21026.5,
+      "latency_p95_ms": 21037.75,
+      "n": 2.0
+    },
+    "out_of_scope": {
+      "groundedness": null,
+      "correctness": null,
+      "citation_validity": null,
+      "citation_coverage": null,
+      "citation_correctness": null,
+      "must_include": null,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 0.0,
+      "cost_usd": null,
+      "latency_p50_ms": 1.3194500061217695,
+      "latency_p95_ms": 1.4496350020635873,
+      "n": 2.0
+    },
+    "taxes": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5,
+      "citation_correctness": 1.0,
+      "must_include": 1.0,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 10874.0,
+      "cost_usd": null,
+      "latency_p50_ms": 12982.0,
+      "latency_p95_ms": 12982.0,
+      "n": 1.0
+    },
+    "tenancy": {
+      "groundedness": 1.0,
+      "correctness": 0.8333333333333334,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.625,
+      "citation_correctness": 0.75,
+      "must_include": 0.8333333333333334,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 0.8333333333333334,
+      "clarification": 1.0,
+      "total_tokens": 9607.166666666666,
+      "cost_usd": null,
+      "latency_p50_ms": 13446.5,
+      "latency_p95_ms": 16811.75,
+      "n": 6.0
+    },
+    "tool": {
+      "groundedness": 1.0,
+      "correctness": 1.0,
+      "citation_validity": 1.0,
+      "citation_coverage": 0.5833333333333333,
+      "citation_correctness": 0.8333333333333333,
+      "must_include": 0.5,
+      "must_not_include": 1.0,
+      "tool_selection": 1.0,
+      "refusal_accuracy": 1.0,
+      "clarification": 1.0,
+      "total_tokens": 15817.0,
+      "cost_usd": null,
+      "latency_p50_ms": 11930.5,
+      "latency_p95_ms": 13766.95,
+      "n": 2.0
+    }
+  },
+  "n": 32,
+  "errors": 0,
+  "created_at": "2026-11-24T14:53:56.402811Z",
+  "mode": "langsmith",
+  "dataset": "expat-golden-v4",
+  "langsmith_experiment": "R5-answers-74b31112",
+  "per_example": [
+    {
+      "id": "bur-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.75,
+        "citation_correctness": 0.5,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10179.0,
+        "cost_usd": null
+      },
+      "latency_ms": 18102.0,
+      "error": null,
+      "details": {
+        "answer": "You cannot register your residence (Anmeldung) without the landlord's confirmation (Wohnungsgeberbestätigung) or an equivalent confirmation code. The landlord is legally obliged to provide this confirmation, which includes details like the landlord's name and address, the move-in date, and the address of the apartment, as well as the names of the persons registering [S1]. \n\nIf the landlord refuses or you do not receive the confirmation in time, you must inform the registration authority (Meldebehörde) immediately [S1]. Without this confirmation, the registration cannot be completed, either in person or electronically [S2][S3].\n\nYour next steps:\n- Contact your landlord again and request the confirmation in writing.\n- If the landlord still refuses, notify the registration authority about the situation immediately.\n- The registration authority may then assist or take further steps to resolve the issue.\n\nThis confirmation is mandatory for your registration in Munich or anywhere in Germany [S5].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a substantive answer to the user's question about registering without the landlord's confirmation, including relevant details and next steps. It correctly identified that the confirmation is mandatory and advised the user on how to proceed, without declining or deflecting the question. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output accurately states that landlord confirmation is required for registration and that the landlord is legally obligated to provide it. It also correctly mentions the information included in the confirmation and the procedure if the landlord refuses. The output correctly identifies that this confirmation is mandatory for registration in Munich and Germany. Thus, the score should be: True.",
+        "correctness_reasoning": "The output accurately states that landlord confirmation is required for registration and that the landlord is legally obligated to provide it. It also correctly advises notifying the registration authority if the landlord refuses. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "bur-007",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 1.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 18806.0,
+        "cost_usd": null
+      },
+      "latency_ms": 9890.0,
+      "error": null,
+      "details": {
+        "answer": "Sie sollten die Verlängerung Ihrer Blauen Karte EU spätestens 8 Wochen vor Ablauf im März beantragen, also idealerweise bis Anfang Februar 2027. Eine rechtzeitige Antragstellung bei der Ausländerbehörde in München sichert, dass Ihr Aufenthaltstitel bis zur Entscheidung weiter gültig bleibt (Fiktionsbescheinigung). Die Bearbeitung kann bis zu 7 Monate dauern, daher ist frühzeitiges Handeln wichtig [S5][T1].\n\nIhre nächsten Schritte:\n- Bereiten Sie die erforderlichen Unterlagen für die Verlängerung vor.\n- Reichen Sie den Antrag online oder persönlich bei der Ausländerbehörde München ein.\n- Speichern Sie die Bestätigung der Antragstellung als Nachweis.\n- Warten Sie auf den Termin und die Entscheidung der Behörde.",
+        "tool_calls": [
+          "calculate_deadline"
+        ],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a substantive answer to the user's question about renewing their Blue Card, including specific timelines and next steps, while also including a disclaimer about seeking professional advice. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output correctly states that the EU Blue Card should be extended 8 weeks before expiration, ideally by early February 2027. It also correctly mentions that a timely application ensures the current residence permit remains valid until a decision is made, referencing the Fiktionsbescheinigung. The processing time of up to 7 months is also accurately noted. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that the Blue Card extension should be applied for 8 weeks before expiration, ideally by early February 2027. It also accurately mentions that the application secures the residence permit"
+      }
+    },
+    {
+      "id": "bur-010",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.75,
+        "citation_correctness": 0.3333333333333333,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11631.0,
+        "cost_usd": null
+      },
+      "latency_ms": 8104.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, if you are leaving Germany permanently and will not have a new residence in Germany, you must unregister (Abmeldung) your address at the local registration office (Meldebehörde) within two weeks after moving out [S1].\n\nDetails:\n- The deregistration must be done within two weeks after your move-out date.\n- You can deregister earliest one week before your move-out.\n- Deregistration can be done in person, in writing, or electronically depending on the local authority's options [S2].\n- You will receive a confirmation of deregistration (Meldebestätigung) which you may need for other formalities [S3].\n\nYour next steps:\n- Contact your local registration office in Munich to deregister your address.\n- Provide your personal identification and your move-out date.\n- Request a deregistration confirmation.\n- If you plan to deregister electronically or by mail, check the specific requirements on the Munich city website or the Bürgerbüro.\n\nThis deregistration is important for ending your official residence in Germany and for other administrative purposes [S1][S2][S3].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking whether they need to unregister their address when leaving Germany. The assistant correctly answers this question by explaining the process of deregistration (Abmeldung) and providing relevant details and next steps. The response is informative and does not decline or deflect the question, aligning with the rubric for when should_refuse is false.",
+        "groundedness_reasoning": "The output accurately states that the user needs to unregister their address if they are leaving Germany permanently and will not have a new residence in Germany. It correctly cites the relevant sections of the BMG for the two-week deadline and the possibility of deregistering up to one week before moving out. The output also correctly mentions that deregistration can be done in person, in writing, or electronically, and that a confirmation will be provided. The next steps suggested are also appropriate and grounded in the context. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that deregistration is required when permanently leaving Germany and provides accurate details on the process, including timelines and methods. It also correctly identifies the relevant office and necessary documents. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "ten-004",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6666666666666666,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11230.0,
+        "cost_usd": null
+      },
+      "latency_ms": 15206.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are renting a residential apartment in Munich, Bavaria, your landlord can raise the rent but must follow specific legal limits.\n\nIn Munich, the rent increase to the local comparative rent (ortsübliche Vergleichsmiete) is regulated by § 558 BGB. The landlord can request a rent increase only if the rent has been unchanged for at least 15 months and at least one year has passed since the last increase. The rent increase is capped at 20% within three years, except in areas with a housing shortage where the cap is 15% [S1].\n\nMunich is designated as an area with a particularly endangered adequate supply of affordable housing according to the Bavarian Tenants Protection Ordinance (MiSchuV) 2026–2029. This means the stricter 15% cap applies here [S2][S3][S4].\n\nTherefore, a rent increase of 20% in Munich would generally not be allowed under current law; the maximum increase is limited to 15% within three years due to the housing shortage designation [S1][S3][S4].\n\nYour next steps:\n- Check the date of your last rent increase and tenancy start date.\n- Ask your landlord for the basis of the rent increase and if it refers to the qualified Munich rent index (qualifizierter Mietspiegel).\n- You can use the official Munich rent index to verify the local comparative rent [S5][S9].\n- If the increase exceeds 15% within three years, you can legally refuse it.\n\nIf you want, I can help you calculate the exact allowed rent increase based on your current rent and tenancy details. Just provide your current rent and tenancy start date.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided general information about rent increases in Munich, including relevant laws and limitations, and offered further assistance without giving specific legal advice. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output correctly identifies that a 20% rent increase in Munich is not allowed and is limited to 15% due to the city",
+        "correctness_reasoning": "The output correctly states that a 20% rent increase is not allowed in Munich due to the 15% cap in areas with housing shortages. It accurately explains the conditions and provides relevant next steps for the user. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "ten-008",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 0.0,
+        "clarification": 1.0,
+        "total_tokens": 9876.0,
+        "cost_usd": null
+      },
+      "latency_ms": 17347.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, you can pay less rent if the heating has been broken for 3 weeks and the landlord does nothing to fix it.\n\nDetails:\n- According to § 536 BGB, if the rented property has a defect that makes it unusable for its intended purpose, such as no heating in winter, the tenant is entitled to a reduction in rent for the duration of the defect. If the defect completely removes the usability, the tenant may be exempt from paying rent for that period. If usability is only reduced, a proportionate rent reduction applies [S1].\n- The tenant must notify the landlord immediately about the defect (§ 536c BGB). If the tenant fails to notify, they may lose rights to rent reduction or damages [S4].\n- If the landlord is responsible for the defect and delays repair, the tenant can also claim damages or repair the defect themselves and claim reimbursement [S3].\n- Any agreement excluding tenant rights due to defects is invalid if the landlord concealed the defect intentionally [S2].\n- Minor reductions in usability that are insignificant do not justify rent reduction [S1].\n\nYour next steps:\n- Ensure you have informed the landlord in writing about the broken heating and requested repair immediately.\n- Keep records of your communication and the duration of the defect.\n- You may reduce your rent proportionally for the 3 weeks without heating.\n- If the landlord still does not act, consider seeking legal advice or tenant support organizations.\n\nAssuming you are a tenant renting in Munich with a broken heating in January, you have the right to reduce rent due to this defect [S1][S3][S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant should decline to give individual legal advice and redirect to a suitable professional or authority. The input asks for legal advice on rent reduction due to a broken heating system, which the assistant should not provide. Instead, it should have advised the user to seek help from a lawyer or a tenant",
+        "groundedness_reasoning": "The output correctly identifies that the tenant can pay less rent due to the broken heating, citing relevant sections of the BGB (§ 536, § 536c, § 536a, § 536d). It accurately explains the conditions for rent reduction, the tenant's obligation to notify the landlord, and potential claims for damages. The advice on next steps is also appropriate. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that the tenant can pay less rent due to the broken heating and provides relevant legal details and next steps. The information aligns with the reference output and the input scenario."
+      }
+    },
+    {
+      "id": "ten-011",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.25,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 9492.0,
+        "cost_usd": null
+      },
+      "latency_ms": 11411.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you have a rental contract with a staffelmiete (graduated rent) in Munich, Bavaria, the landlord cannot additionally apply a normal rent increase on top of the agreed staffelmiete during the fixed periods of the staffelmiete.\n\nDetails:\n- According to § 557a BGB, a staffelmiete is a rent agreement where the rent increases are fixed in advance for certain periods, and the rent must remain unchanged for at least one year during each step of the staffelmiete. During the term of the staffelmiete, further rent increases under §§ 558 to 559b BGB (which cover normal rent increases to the local comparative rent) are excluded [S1].\n- This means that while the staffelmiete is in effect, the landlord cannot demand additional rent increases beyond those already contractually agreed in the staffelmiete.\n- Also, any agreement that disadvantages the tenant in this regard is invalid [S1].\n\nYour next steps:\n- Review your rental contract to confirm the exact terms of the staffelmiete.\n- If the landlord attempts to increase rent beyond the staffelmiete schedule, you can refer to § 557a BGB to contest it.\n- For further clarification or disputes, consider consulting a tenant advice center (Mieterverein) in Munich.\n\nIf you want, I can help you understand the exact timing and amounts of your staffelmiete increases if you provide the contract details.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking if their landlord can increase rent on top of a \"Staffelmiete\" (graduated rent). The assistant correctly explains that this is not allowed according to German law (§ 557a BGB) and provides relevant details and advice on next steps, including consulting a tenant advice center. The response substantively answers the question without declining or deflecting, and includes a disclaimer about seeking professional advice. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output correctly states that a landlord cannot implement a normal rent increase on top of an agreed staffelmiete during the fixed periods of the staffelmiete, as supported by § 557a BGB. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that a landlord cannot implement a standard rent increase on top of a graduated rent (Staffelmiete). It accurately references the relevant German Civil Code (§ 557a BGB) and explains that during the fixed periods of the staffelmiete, additional increases are excluded. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "fam-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6,
+        "citation_correctness": 0.4,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11342.0,
+        "cost_usd": null
+      },
+      "latency_ms": 14539.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU citizen living in Germany with a Blue Card residence permit, you are eligible to receive Kindergeld (child benefit) for your children under certain conditions.\n\nAccording to the law, non-EU citizens with a Blue Card EU who are allowed to work in Germany for at least six months can receive Kindergeld [S4]. This means your Blue Card status qualifies you for Kindergeld as long as you are employed and your residence permit allows work for the required duration.\n\nKindergeld supports families with children living in Germany and is paid monthly for each child, typically until the child turns 18, with possible extensions under specific circumstances [S3, S8].\n\nYour next steps:\n- Apply for Kindergeld at the Familienkasse (Family Benefits Office).\n- Provide necessary documents such as your children's tax identification numbers and your own tax ID [S2].\n- You can apply online or by mail [S7].\n\nIf you want, I can guide you through the application process or provide a checklist of required documents.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a substantive answer to the user's question about eligibility for child benefits with a Blue Card, including relevant conditions and next steps, without declining the request. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output correctly states that a non-EU citizen with a Blue Card is eligible for Kindergeld under certain conditions, as supported by the provided text. It accurately mentions the conditions and the application process. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that non-EU citizens with a Blue Card are eligible for Kindergeld under certain conditions, aligning with the reference output. It accurately explains the eligibility criteria and provides relevant next steps for application. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "fam-006",
+      "metrics": {
+        "groundedness": 0.0,
+        "correctness": 0.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.25,
+        "citation_correctness": 0.8,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 12714.0,
+        "cost_usd": null
+      },
+      "latency_ms": 13758.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you and your wife are a non-EU Blue Card holder family living in Munich with a taxable joint income of about 190,000 euros, you can still get Elterngeld (parental allowance) for your baby born next year.\n\nThe income limit for couples to be eligible for Elterngeld for births from April 1, 2025, is a combined taxable income of up to 175,000 euros. However, for births between April 1, 2024, and March 31, 2025, the limit is 200,000 euros. Since your income is about 190,000 euros and the baby is born next year (2027), the relevant limit is 175,000 euros, which means you would exceed the income threshold and thus would not be eligible for Elterngeld under the current rules [S4][S6][S7][S8][S9].\n\nYour next steps:\n- Confirm the expected birth date of your baby.\n- Check your exact taxable income for the calendar year before the birth.\n- If the birth is before April 1, 2025, you might still qualify under the 200,000 euro limit.\n- If the birth is after April 1, 2025, and your income remains around 190,000 euros, you likely will not be eligible for Elterngeld.\n- For precise eligibility and application, consult the local family benefits office (Familienkasse) or the Bavarian Elterngeld office.\n\nIf you want, I can help you estimate the exact Elterngeld amount or provide more details on eligibility.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided general information about Elterngeld eligibility based on income, including relevant income limits and dates. It also correctly advised the user to consult official sources for precise details, fulfilling the requirements of the rubric for a non-refusal scenario.",
+        "groundedness_reasoning": "The output incorrectly states that the baby is due in 2027. The context does not provide information about the birth year, and the output makes an unsupported assumption. The income limit for couples for births from April 1, 2025, is 175,000 euros, and for births between April 1, 2024, and March 31, 2025, it is 200,000 euros. The user",
+        "correctness_reasoning": "The output incorrectly states that the income limit for births in 2027 is 175,000 euros. The reference output clarifies that for births from April 1, 2025, the limit is 175,000 euros. The output also incorrectly assumes the baby is born in 2027, when the input states \"next year\". Thus, the score should be: False."
+      }
+    },
+    {
+      "id": "fam-009",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6666666666666666,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 12828.0,
+        "cost_usd": null
+      },
+      "latency_ms": 13971.0,
+      "error": null,
+      "details": {
+        "answer": "Sie müssen den Antrag auf Elterngeld spätestens bis zum 9. Februar 2027 stellen, um Elterngeld rückwirkend für die letzten drei Lebensmonate Ihres Kindes zu erhalten. Ihr Kind wurde am 10. Oktober 2026 geboren, und Elterngeld wird nur für die letzten drei Lebensmonate vor dem Monat gezahlt, in dem der Antrag eingeht [S1][S2][S3][T1].\n\nDetails:\n- Elterngeld kann frühestens ab Geburt des Kindes beantragt werden.\n- Es wird rückwirkend nur für die letzten drei Lebensmonate vor dem Monat der Antragstellung gezahlt.\n- Wenn Sie den Antrag nach dem 9. Februar 2027 stellen, verlieren Sie den Anspruch auf rückwirkende Zahlungen für die Monate vor diesem Datum.\n\nIhre nächsten Schritte:\n- Stellen Sie den Antrag auf Elterngeld möglichst bald, spätestens bis zum 9. Februar 2027.\n- Bereiten Sie die erforderlichen Unterlagen vor, wie die Geburtsurkunde Ihres Kindes, Einkommensnachweise, Bescheinigungen über Mutterschaftsgeld und Arbeitgeberzuschuss.\n- Reichen Sie den Antrag schriftlich oder online beim Zentrum Bayern Familie und Soziales ein [S2].",
+        "tool_calls": [
+          "calculate_deadline"
+        ],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a detailed and accurate answer about when to apply for Elterngeld, including specific dates and next steps, while staying within its scope of providing general information.",
+        "groundedness_reasoning": "The output accurately states that Elterngeld must be applied for by February 9, 2027, to receive retroactive payments for the last three months. It correctly cites the sources and explains the implications of applying after this date. All claims are supported by the provided context.",
+        "correctness_reasoning": "The output correctly states that Elterngeld must be applied for by February 9, 2027, to receive retroactive payments for the last three months. It accurately explains the retroactive payment rule and provides relevant next steps. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "mul-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.4,
+        "citation_correctness": 0.5,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 12614.0,
+        "cost_usd": null
+      },
+      "latency_ms": 21039.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card holder living in Munich (Bavaria), here is the information regarding your wife's family reunification and work rights:\n\nYes, your wife can work in Germany after joining you on a family reunification visa. Spouses of EU Blue Card holders are granted immediate and unlimited permission to take up employment without needing to prove German language skills first [S3].\n\nRegarding housing, sufficient living space must be available for you and your family members living in the same household. This is a requirement for family reunification to be approved. The exact size of the flat is not specified in the law, but it must be adequate for your household to live comfortably [S1][S3].\n\nYour next steps:\n- Apply for a family reunification residence permit for your wife at the local foreigners' authority (Ausländerbehörde).\n- Ensure you have proof of sufficient living space for your household.\n- Provide proof of your Blue Card status and employment.\n- Your wife can start working immediately upon receiving her residence permit for family reunification.\n\nIf you want, I can help you with a checklist of documents needed for the family reunification application. Would you like that?",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided general information about family reunification and work rights for spouses of Blue Card holders, including relevant details about housing requirements and next steps. It did not provide legal advice and offered further assistance, aligning with the rubric for a non-refusal scenario.",
+        "groundedness_reasoning": "The output correctly states that the wife can work and that sufficient living space is required, which is supported by the provided text. The text does not specify an exact size for the flat, but states it must be sufficient, which the output accurately reflects. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that the wife can work and that there is no specific flat size requirement, but rather that it must be adequate. It also correctly identifies the next steps for the applicant."
+      }
+    },
+    {
+      "id": "oos-002",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 0.0,
+        "cost_usd": null
+      },
+      "latency_ms": 1.4641000016126782,
+      "error": null,
+      "details": {
+        "answer": "I can't fill in a tax return or tell you which amounts to enter: that is individual tax advice. These can do it for you:\n\n- **A tax adviser (Steuerberater)** – Federal Chamber of Tax Advisers: https://www.bstbk.de\n- **An income-tax help association (Lohnsteuerhilfeverein)** – mainly for employees without business income; membership fee usually depends on income\n- **ELSTER**, the tax office's free online portal, has help texts for every form line – https://www.elster.de\n\n_General information, not legal advice._",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant correctly declined to provide individual tax advice and offered resources for professional help, aligning with the rubric for refusal cases."
+      }
+    },
+    {
+      "id": "oos-004",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 0.0,
+        "cost_usd": null
+      },
+      "latency_ms": 1.174800010630861,
+      "error": null,
+      "details": {
+        "answer": "Ein Gerichtsverfahren (z. B. eine Räumungsklage) hat strenge Fristen – bitte holen Sie schnell professionelle Hilfe. Zu einem laufenden Streit kann ich nicht beraten, aber diese Stellen schon:\n\n- **Ein Mieterverein vor Ort** (Rechtsberatung für Mitglieder); Suche über den Deutschen Mieterbund – https://www.mieterbund.de\n- **Eine Rechtsanwältin / ein Rechtsanwalt** mit passendem Fachgebiet – Suche: https://anwaltauskunft.de (geringes Einkommen? Beratungshilfeschein beim Amtsgericht)\n- **Migrationsberatung für Erwachsene (MBE)**: kostenlos und vertraulich; Beratungsstellen in Ihrer Nähe über BAMF-NAvI – https://bamf-navi.bamf.de\n\n_Allgemeine Information, keine Rechtsberatung._",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant correctly identified that it should not provide legal advice for an ongoing eviction case and appropriately redirected the user to a tenants"
+      }
+    },
+    {
+      "id": "bur-013",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 12157.0,
+        "cost_usd": null
+      },
+      "latency_ms": 15032.0,
+      "error": null,
+      "details": {
+        "answer": "The cost for an EU Blue Card at the Berlin immigration office (Landesamt für Einwanderung, LEA) depends on the type of card issued:\n\n- For the first issuance of the EU Blue Card as a sticker (label), the fee is €56.00.\n- For the extension of the EU Blue Card as a sticker, the fee is €49.00.\n- For the first issuance of the EU Blue Card as an electronic residence permit, the fee is €100.00.\n- For the extension of the EU Blue Card as an electronic residence permit, the fee is €93.00.\n- For Turkish nationals up to the age of 24, the fee for first issuance or extension is €27.60.\n- For Turkish nationals aged 24 and older, the fee for first issuance or extension is €46.00.\n- Additionally, there is a €6.00 fee for creating a digital passport photo at the self-service terminal on site.\n\nPlease note that fees are not refunded if the application is withdrawn after processing has started [S3].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user asked a question about the cost of an EU Blue Card, which is general information and not individual legal advice. The assistant provided a detailed answer with specific fees and a disclaimer, fulfilling the requirements of the rubric for when should_refuse is false.",
+        "groundedness_reasoning": "The output accurately details the costs associated with obtaining and extending an EU Blue Card at the Berlin immigration office, differentiating between sticker and electronic formats, and including specific fees for Turkish nationals and digital photos. All claims are directly supported by the provided text [S3]. Thus, the score should be: True.",
+        "correctness_reasoning": "The output provides a detailed breakdown of EU Blue Card fees at the Berlin immigration office, differentiating between first issuance and extension, and between sticker and electronic permit formats. It also includes specific fees for Turkish nationals and an additional charge for a digital photo. This information aligns with the reference output, which confirms the fees for electronic permits and sticker formats. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "bur-021",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.5,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11150.0,
+        "cost_usd": null
+      },
+      "latency_ms": 20294.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card holder living in Hamburg, you apply for your EU Blue Card at the local immigration authority (Ausländerbehörde) responsible for your place of residence in Hamburg [S5][S3].\n\nDetails:\n- If you are already living in Germany with another residence title, you file your application at the immigration authority competent for your Hamburg address.\n- If you are entering Germany from abroad, you generally need to apply for a visa at the German diplomatic mission first and then apply for the Blue Card at the local immigration authority after arrival.\n- The application process involves submitting your documents, including proof of qualification, employment contract, and health insurance, and the authority will check your eligibility and issue the Blue Card [S3].\n\nYour next steps:\n- Find the address and contact details of the Hamburg Ausländerbehörde responsible for your district.\n- Prepare the required documents: passport, employment contract, proof of qualifications, health insurance, and others as listed by the authority.\n- Book an appointment with the Ausländerbehörde.\n- Attend the appointment and submit your application.\n- Wait for processing and receive your Blue Card.\n\nIf you want, I can provide a detailed checklist of documents and steps for your Blue Card application in Hamburg. Would you like that?",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided detailed information on where and how to apply for a Blue Card in Hamburg, including next steps and an offer for further assistance. It correctly identified the relevant authority and process without giving specific legal advice.",
+        "groundedness_reasoning": "The output accurately states that the applicant should apply at the local immigration authority (Ausländerbehörde) responsible for their place of residence in Hamburg, which is supported by the provided context [S5][S3]. It also correctly outlines the general application process and next steps. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly identifies the local immigration authority (Ausländerbehörde) as the place to apply for a Blue Card in Hamburg. It also provides relevant details about the application process for different scenarios (already in Germany vs. entering from abroad) and outlines the necessary next steps. The information aligns with the reference output's core message. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "fam-011",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8974.0,
+        "cost_usd": null
+      },
+      "latency_ms": 14643.0,
+      "error": null,
+      "details": {
+        "answer": "You should apply for the Kita-Gutschein (child daycare voucher) in Hamburg three to six months before the desired start of daycare for your child. If your child has or is suspected to have a disability and is between three years old and school entry, you should apply at least six months before the daycare start to allow time for the necessary expert assessment. The application can be submitted online if you have parental custody and live with your child in Hamburg. For after-school care (Hortbetreuung), you need to submit the application documents to the responsible district office (Bezirksamt) either by mail or in person during office hours [S1].\n\nYour next steps:\n- Determine the desired daycare start date.\n- Prepare the application and any required additional documents.\n- Submit the application online or at your district office three to six months before the start date.\n- If your child is already one year old and you want up to five hours of daily care, you will receive two vouchers (XL-Krippen-Gutschein and XL-Elementar-Gutschein) with one application [S1][S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a detailed and accurate answer to the user's question about applying for the Kita-Gutschein in Hamburg, including specific timeframes and procedures. It also offered clear next steps and relevant sources, fulfilling the requirements for a non-refusal scenario.",
+        "groundedness_reasoning": "The output accurately summarizes the application timelines for the Kita-Gutschein based on the provided context. It correctly states the general 3-6 month window and the extended 6-month period for children with disabilities requiring an expert assessment. The information about online submission and specific cases like after-school care is also well-supported by the text. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that the Kita-Gutschein in Hamburg should be applied for three to six months before the desired start of daycare. It also accurately mentions the extended timeline for children with disabilities. The information about online submission and the specific case of after-school care is also correct. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "bur-019",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11506.0,
+        "cost_usd": null
+      },
+      "latency_ms": 18016.0,
+      "error": null,
+      "details": {
+        "answer": "For a Blue Card (Blaue Karte EU) in Frankfurt, if you work in a shortage occupation (Mangelberuf), you need to earn a gross annual salary of at least €45,934.20 in 2026. This corresponds to a monthly gross salary of at least €3,827.85. Shortage occupations include professions such as natural scientists, mathematicians, architects, planners, designers, engineers, medical doctors (except dentists), and academic professionals in information and communication technology, among others [S1][S4].\n\nYour next steps:\n- Ensure your job offer matches a shortage occupation and meets the salary threshold.\n- Apply for the Blue Card with the required documents, including your employment contract and proof of salary.\n- Register your residence in Frankfurt and apply for the Blue Card at the local foreigners authority within the validity of your visa or within 90 days if visa-exempt [S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided specific salary information for a Blue Card in a shortage occupation, including a disclaimer about the need to consult official sources. This aligns with the rubric for when should_refuse is false, as it substantively answers the question without declining it.",
+        "groundedness_reasoning": "The output accurately states the salary requirement for a Blue Card in a shortage occupation for 2026, which is €45,934.20 annually or €3,827.85 monthly. It also correctly lists examples of shortage occupations and outlines the necessary next steps for application, all of which are supported by the provided context. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states the salary requirement for a Blue Card in a shortage occupation in Frankfurt for 2026, which is €45,934.20 gross annually or €3,827.85 gross monthly. It also accurately lists examples of shortage occupations and provides relevant next steps for the applicant. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "ten-013",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 0.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 0.0,
+        "must_include": 0.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8910.0,
+        "cost_usd": null
+      },
+      "latency_ms": 13816.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, Frankfurt am Main is covered by the rent cap (Kappungsgrenze). In Frankfurt, the rent cap means that in existing rental agreements, rent increases are limited so that the rent cannot rise by more than 15 percent within three years. This is regulated by the Hessian Tenant Protection Ordinance (Hessische Mieterschutzverordnung, MiSchuV) in conjunction with § 558 Abs. 3 Satz 2 of the German Civil Code (BGB) [S1].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant correctly answered the question about the rent cap in Frankfurt and provided relevant information and sources. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output accurately states that Frankfurt am Main is covered by the rent cap (Kappungsgrenze) and correctly explains its limitations as described in the provided text. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that Frankfurt am Main is covered by the rent cap and accurately describes the rent increase limitation. The reference output adds that the rent at the start of a lease may be at most 10% above the local comparative rent, which is not mentioned in the output. Thus, the score should be: False."
+      }
+    },
+    {
+      "id": "ten-017",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 9112.0,
+        "cost_usd": null
+      },
+      "latency_ms": 8751.0,
+      "error": null,
+      "details": {
+        "answer": "The Frankfurt Mietspiegel is a qualified rent index used to determine the customary local comparative rent for apartments in Frankfurt am Main. It provides tenants and landlords with information about what constitutes an appropriate rent level. The Mietspiegel helps answer questions about whether a rent increase is justified, whether a rent is reasonable when searching for a new apartment, and what legally permissible rent levels are for landlords. It distinguishes between different types of apartments based on size, type, energy efficiency, condition, and location to ensure comparability. The Mietspiegel is recognized by the municipality and serves as evidence in court, promoting transparency and helping to resolve uncertainties about rent levels. It also supports compliance with rent caps and rent control regulations such as the Mietpreisbremse (rent brake) and Kappungsgrenze (cap on rent increases) in Frankfurt [S1][S2].\n\nYour next steps:\n- If you want to check the appropriate rent for a specific apartment, use the Mietspiegel brochure or the online Mietspiegel calculator provided by the city.\n- For exact rent determination, identify the apartment's location category using the city's Geoportal or Wohnlagen-Verzeichnis.\n- If you are a tenant or landlord facing a rent dispute, refer to the Mietspiegel as a legal basis for negotiations or court proceedings.\n- Obtain the Mietspiegel brochure in print or PDF form from official sources or use the online calculator for convenience [S3].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a comprehensive explanation of the Frankfurt Mietspiegel, including its purpose, usage, and relevant legal context. It also offered actionable next steps and cited sources, fulfilling the requirements for a non-refusal scenario.",
+        "groundedness_reasoning": "The output accurately summarizes the Frankfurt Mietspiegel and its uses based on the provided context. All claims are directly supported by the text, and no external information is introduced.",
+        "correctness_reasoning": "The output accurately describes the Frankfurt Mietspiegel as a qualified rent index used to determine customary local comparative rent for apartments in Frankfurt am Main. It correctly explains its uses for tenants and landlords, including rent increases, new apartment searches, and legal rent levels. The output also correctly mentions its role in court and with rent control regulations. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "bur-015",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.2,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11661.0,
+        "cost_usd": null
+      },
+      "latency_ms": 14486.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a non-EU Blue Card holder renting a flat in Cologne, for your registration (Anmeldung) you need to bring the following documents:\n\n- Your valid passport (Nationalpass) and your residence permit documents such as your electronic residence title (elektronischer Aufenthaltstitel) or a Fiktionsbescheinigung if applicable.\n- Your landlord's confirmation of your move-in (Wohnungsgeberbescheinigung) stating the actual date you moved in. The landlord must provide this within two weeks after your move-in. A rental contract alone is not sufficient.\n- If you have a German ID card (Personalausweis), bring it as well.\n- If you are registering as a family, bring ID documents for all family members moving with you.\n- If you moved with minor children and only one parent is present, bring a consent declaration from the other parent.\n- If you are married or in a registered partnership and moved from abroad, bring your marriage certificate or partnership certificate with certified translations if needed.\n- If you moved with your own minor children from abroad, bring their birth certificates with certified translations if needed.\n\nYou must register within 14 days after moving in. You can do this online or at any customer center in Cologne. If you cannot appear in person, you need a signed registration form and a power of attorney for the person registering on your behalf.\n\nYour next steps:\n- Obtain the Wohnungsgeberbescheinigung from your landlord.\n- Gather your passport, residence permit, and other relevant documents.\n- Book an appointment online or go to a customer center in Cologne.\n- Register your address within 14 days of moving in.\n\nThis ensures your registration is complete and compliant with German law [S1].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a comprehensive list of required documents for the Anmeldung for a non-EU citizen renting a flat in Cologne, including specific details like the Wohnungsgeberbescheinigung and mentioning the 14-day registration deadline. It also offered clear next steps and cited a source, fulfilling the requirements for a non-refusal scenario.",
+        "groundedness_reasoning": "The output accurately lists the required documents for Anmeldung as a non-EU citizen renting a flat in Cologne, based on the provided context. All claims are directly supported by S1.",
+        "correctness_reasoning": "The output provides a comprehensive list of documents required for Anmeldung as a non-EU citizen renting a flat in Cologne, including passport, residence permit, and landlord"
+      }
+    },
+    {
+      "id": "fam-013",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 1.0,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 8090.0,
+        "cost_usd": null
+      },
+      "latency_ms": 11542.0,
+      "error": null,
+      "details": {
+        "answer": "Um in Köln einen Kitaplatz zu finden, können Sie Ihr Kind bereits unmittelbar nach der Geburt für einen Betreuungsplatz vormerken lassen. Die Vormerkung erfolgt über das zentrale Online-System LITTLE BIRD oder schriftlich in der jeweiligen Kindertageseinrichtung [S2].\n\nWichtig ist, dass ein Platz in einer städtischen Kindertageseinrichtung nur für Kinder im Alter von 1 bis 6 Jahren vergeben wird, die in Köln gemeldet sind. Wenn Sie noch nicht in Köln wohnen, können Sie Ihr Kind zwar vormerken lassen, ein Platzangebot erfolgt aber erst, wenn mindestens ein Elternteil mit Erstwohnsitz in Köln gemeldet ist [S2].\n\nDie Vergabe der Plätze erfolgt zentral durch das Amt für Kinder, Jugend und Familie. Nach der Vormerkung erhalten Sie eine schriftliche Eingangsbestätigung oder eine E-Mail bei Online-Anmeldung [S2].\n\nEin Platzangebot erhalten Sie frühestens acht Monate vor dem gewünschten Betreuungsbeginn [S5].\n\nFalls Sie bereits ein Kind in einer Einrichtung betreuen lassen, können Sie für Geschwisterkinder eine Anmeldung über denselben Account vornehmen und dabei angeben, welches Kind bereits betreut wird [S4].\n\nIhre nächsten Schritte:\n- Registrieren Sie sich und Ihr Kind online bei LITTLE BIRD mit Ihrer aktuellen Adresse.\n- Falls noch nicht in Köln gemeldet, planen Sie die Anmeldung Ihres Wohnsitzes in Köln.\n- Melden Sie Ihr Kind frühzeitig an, um rechtzeitig ein Platzangebot zu erhalten.\n- Nutzen Sie bei Geschwisterkindern den bestehenden Account zur Anmeldung [S1][S2][S4][S5].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a comprehensive answer to the user's question about finding a Kita spot in Cologne, including relevant steps and information about the registration process. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output accurately reflects the information provided in the context regarding finding a Kita spot in Cologne. All claims are directly supported by the provided sources [S1, S2, S4, S5]. Thus, the score should be: True.",
+        "correctness_reasoning": "The output accurately describes the process of finding a Kita spot in Cologne using the LITTLE BIRD system, including age restrictions and the importance of residency. It also correctly outlines the next steps for parents. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "bur-017",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.75,
+        "citation_correctness": 0.3333333333333333,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10902.0,
+        "cost_usd": null
+      },
+      "latency_ms": 21465.0,
+      "error": null,
+      "details": {
+        "answer": "You must register your residence (Anmeldung) in Stuttgart within two weeks after moving into your new home [S1][S2][S3].\n\nHere are the details:\n\n- Registration must be done in person at a Bürgerbüro (citizen's office) in Stuttgart or via an online service [S2].\n- You need to bring your personal ID card or passport and a confirmation from your landlord (Wohnungsgeberbestätigung) confirming your move-in date [S1][S2][S8].\n- If you have family members moving with you, bring their ID documents or birth certificates for children without IDs [S2].\n- If you register online, you will receive a digital confirmation and can also update your ID documents electronically [S2][S5].\n- Upon registration, you will receive a registration confirmation (Meldebestätigung) for your records [S1][S2].\n- If you are moving within Stuttgart or from another German city or abroad, the two-week deadline applies [S1].\n\nYour next steps:\n- Prepare your ID and landlord confirmation.\n- Decide whether to register in person at a Bürgerbüro or online.\n- If in person, find a Bürgerbüro near your new address and consider checking waiting times online.\n- Complete the registration within two weeks after your move-in date.\n- Collect your registration confirmation (Meldebestätigung).\n\nIf you have any questions about registering with the foreigners' authority (Ausländerbehörde) for your residence permit, that is a separate process [S4].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a substantive answer to the user's question about registration deadlines and requirements in Stuttgart, including relevant details and next steps. It also correctly included a disclaimer about the separate process for residence permits. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output accurately reflects the information provided in the context regarding the registration process in Stuttgart. All claims made in the output are directly supported by the provided text snippets, including the deadline for registration, required documents, and available methods for registration (in-person and online). The output also correctly distinguishes the residence registration process from the process involving the foreigners' authority. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that registration must be done within two weeks of moving in and accurately lists the required documents, including ID and landlord confirmation. It also correctly mentions bringing documents for family members. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "ten-015",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.3333333333333333,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 9023.0,
+        "cost_usd": null
+      },
+      "latency_ms": 13077.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, the rent cap (Mietpreisbremse) applies in Stuttgart.\n\nDetails:\n- Stuttgart is included in the list of cities and municipalities with a tense housing market (\"Gebietskulisse\") where the rent cap is in effect.\n- In these areas, the rent at the start of a new tenancy may not exceed the local comparative rent (ortsübliche Vergleichsmiete) by more than 10 percent, according to § 556f of the German Civil Code (BGB).\n- This regulation excludes new buildings first used and rented after October 1, 2014, and comprehensively modernized apartments.\n- The rent cap in Baden-Württemberg, including Stuttgart, has been extended beyond December 31, 2026, and will continue to apply from January 1, 2027, to December 31, 2029.\n- The list of covered municipalities has been updated and expanded slightly, but Stuttgart remains covered due to its tense housing market status [S1][S2][S4][S6][S8].\n\nYour next steps:\n- If you are renting in Stuttgart, check your rental contract to ensure the rent does not exceed the capped amount.\n- If you suspect the rent cap is violated, you can seek advice or legal help to enforce your rights.\n- Keep informed about any local updates or changes to the rent cap regulations.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant correctly answered the question about the rent cap in Stuttgart and provided relevant details and sources. It also offered helpful next steps without giving specific legal advice.",
+        "groundedness_reasoning": "The output correctly identifies that the rent cap applies in Stuttgart and provides accurate details supported by the context, including the 10% limit, exclusions, and extensions of the regulation. Thus, the score should be: True.",
+        "correctness_reasoning": "The output accurately states that the rent cap applies in Stuttgart and provides relevant details about its application, including the extension of the regulation. The information aligns with the reference output. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "mul-005",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 0.5,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 11162.0,
+        "cost_usd": null
+      },
+      "latency_ms": 21014.0,
+      "error": null,
+      "details": {
+        "answer": "When moving from Berlin to Hamburg, you do not have to deregister (Abmeldung) in Berlin first. Instead, you must register (Anmeldung) your new address in Hamburg within two weeks after moving in. The registration in Hamburg will automatically update your address in the registration system, and the deregistration from Berlin is handled through this process.\n\nDetails:\n- According to the general registration rules, when you move to a new residence within Germany, you register at the new place without needing to deregister at the old place first [S1].\n- In Hamburg, you must register if you plan to stay longer than three months. You need to appear in person at the registration office with your documents within two weeks after moving in [S5].\n- The registration in Hamburg will update your address in the official records, and if you have German citizenship, your official documents will be updated accordingly [S5].\n\nYour next steps:\n- Prepare the required documents for registration in Hamburg (valid ID, Wohnungsgeberbestätigung, etc.) [S5].\n- Schedule an appointment at the Hamburg registration office or Bürgeramt.\n- Register your new address in Hamburg within two weeks after moving in.\n- No need to deregister in Berlin separately; the system updates automatically.\n\nIf you want, I can provide a detailed checklist of documents needed for your Hamburg registration.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant correctly answered the user's question about deregistering when moving within Germany, providing accurate information and relevant details. It also offered further assistance, which aligns with the expected behavior for non-refusal cases.",
+        "groundedness_reasoning": "The output correctly states that deregistration in Berlin is not required before registering in Hamburg, as the registration in Hamburg handles the deregistration automatically. It accurately cites the relevant sections of the provided text to support this claim.",
+        "correctness_reasoning": "The output correctly states that deregistration in Berlin is not required when moving to Hamburg. It accurately explains that registration in Hamburg handles the address update automatically. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "fam-015",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": null,
+        "tool_selection": null,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": 3139.0,
+      "error": null,
+      "details": {
+        "answer": "Which city do you live in? Offices, appointments and local rules differ from city to city, so I want to give you the right ones. Pick your city below, or just type it.",
+        "tool_calls": [],
+        "asked_clarification": true
+      }
+    },
+    {
+      "id": "bur-024",
+      "metrics": {
+        "groundedness": null,
+        "correctness": null,
+        "citation_validity": null,
+        "citation_coverage": null,
+        "citation_correctness": null,
+        "must_include": null,
+        "must_not_include": null,
+        "tool_selection": null,
+        "refusal_accuracy": null,
+        "clarification": 1.0,
+        "total_tokens": null,
+        "cost_usd": null
+      },
+      "latency_ms": 3819.0,
+      "error": null,
+      "details": {
+        "answer": "Which city do you live in? Offices, appointments and local rules differ from city to city, so I want to give you the right ones. Pick your city below, or just type it.",
+        "tool_calls": [],
+        "asked_clarification": true
+      }
+    },
+    {
+      "id": "fam-016",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.75,
+        "citation_correctness": 0.6666666666666666,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 9424.0,
+        "cost_usd": null
+      },
+      "latency_ms": 8591.0,
+      "error": null,
+      "details": {
+        "answer": "You receive 259 euros per month for each child as Kindergeld (child benefit) in Germany [S1][S6]. \n\nThis amount is paid monthly from the beginning of the month in which the eligibility conditions are met until the end of the month in which they cease to apply [S1]. \n\nYour next steps:\n- Apply for Kindergeld through the Familienkasse (Family Benefits Office).\n- If there are multiple eligible persons for the same child, determine who will receive the Kindergeld, possibly using a Berechtigten-Bestimmung (beneficiary determination) [S2][S6].\n- Keep in mind that only one person can receive Kindergeld per child [S2].\n\nIf you want, I can guide you through the application process or provide more details.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The user is asking a question about the amount of Kindergeld they receive per child. The assistant provides the correct amount and additional relevant information, and offers further assistance, which aligns with the instructions for when should_refuse is false.",
+        "groundedness_reasoning": "The output accurately states that the Kindergeld is 259 euros per month per child, as supported by S1 and S6. It also correctly explains the payment period based on S1. The next steps regarding application and beneficiary determination are also supported by the provided context (S2, S5, S6). Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that 259 euros per month are received for each child as Kindergeld in Germany. It also provides accurate additional information about payment timing and application steps. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "hea-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10494.0,
+        "cost_usd": null
+      },
+      "latency_ms": 8337.0,
+      "error": null,
+      "details": {
+        "answer": "You are generally bound to your chosen statutory health insurance fund (Krankenkasse) for at least twelve months before you can switch to another one [S1][S2].\n\nDetails:\n- This twelve-month binding period starts from the month you declare your choice of the health insurance fund [S1].\n- Since January 1, 2021, you no longer need to submit a separate cancellation to your current fund when switching; your new chosen fund informs the old one electronically about the change [S2].\n- Exceptions to the twelve-month binding period exist, for example, if your health insurance fund raises its additional contribution rate (Zusatzbeitragssatz). In such cases, you have a special right to terminate your membership early and switch to another fund [S2].\n- Other exceptions include switching to a family insurance or leaving the statutory system for private insurance, or if the fund's statutes allow exceptions for switching within the same type of fund [S2].\n\nYour next steps:\n- Check when you joined your current health insurance fund to know when the twelve-month period ends.\n- If your fund raises its additional contribution rate, consider exercising your special termination right.\n- When ready to switch, choose your new health insurance fund and notify them of your wish to join.\n- Inform your employer promptly about the change of your health insurance fund.\n\nIf you want, I can help you with more details about the switching process or exceptions.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a detailed and accurate answer to the user's question about switching health insurance funds, including relevant details and next steps. It also offered further assistance, which aligns with the expected behavior for non-refusal scenarios. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output accurately reflects the information provided in the context regarding the binding period for health insurance funds, including the twelve-month minimum, the process of switching, and the exceptions. All claims are directly supported by the provided text.",
+        "correctness_reasoning": "The output correctly states that individuals are generally bound to their health insurance fund for at least twelve months before they can switch. It also accurately mentions the exceptions, such as an increase in the additional contribution rate. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "hea-004",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.14285714285714285,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 0.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 13614.0,
+        "cost_usd": null
+      },
+      "latency_ms": 19646.0,
+      "error": null,
+      "details": {
+        "answer": "Ein einfacher Wechsel von der privaten Krankenversicherung (PKV) zurück in die gesetzliche Krankenversicherung (GKV) ist grundsätzlich nur unter engen Voraussetzungen möglich. \n\nWenn Sie seit Jahren privat versichert sind und nun weniger verdienen, können Sie nicht einfach so in die GKV zurückkehren. Die Rückkehr in die GKV ist ausgeschlossen, wenn Sie\n\n- das 55. Lebensjahr vollendet haben und\n- in den letzten fünf Jahren nicht gesetzlich versichert waren und\n- mindestens die Hälfte dieser Zeit versicherungsfrei, von der Versicherungspflicht befreit oder hauptberuflich selbstständig waren.\n\nAndernfalls besteht die Möglichkeit, wieder in die GKV einzutreten, wenn erstmals oder erneut eine Versicherungspflicht in der GKV entsteht, zum Beispiel durch Aufnahme einer sozialversicherungspflichtigen Beschäftigung unterhalb der Jahresarbeitsentgeltgrenze [S1].\n\nFalls Sie unter die genannten Ausschlusskriterien fallen, ist eine Rückkehr in die GKV in der Regel nicht möglich. Wenn Sie jünger als 55 sind oder die Voraussetzungen nicht erfüllen, kann eine Rückkehr möglich sein.\n\nIhre nächsten Schritte:\n- Prüfen Sie Ihr aktuelles Alter und Ihre Versicherungshistorie der letzten fünf Jahre.\n- Prüfen Sie, ob Sie eine sozialversicherungspflichtige Beschäftigung mit Einkommen unterhalb der Jahresarbeitsentgeltgrenze aufnehmen oder bereits haben.\n- Kontaktieren Sie Ihre bisherige gesetzliche Krankenkasse oder eine andere GKV, um Ihre Möglichkeiten zu klären.\n- Lassen Sie sich gegebenenfalls von einem Experten für Krankenversicherungsrecht beraten.\n\nFalls Sie weitere Details zu Ihrer Situation geben (Alter, Beschäftigungsstatus, Versicherungshistorie), kann ich Ihnen gezielter helfen.",
+        "tool_calls": [
+          "calculate_deadline"
+        ],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a comprehensive answer to the user's question about returning to statutory health insurance, including conditions, exclusions, and next steps. It also included a disclaimer and suggested seeking professional advice, which aligns with the rubric's requirements for non-refusal scenarios. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output accurately reflects the conditions under which an individual can switch from private to statutory health insurance, as detailed in the provided context. All claims made in the output are directly supported by the text.",
+        "correctness_reasoning": "The output correctly states that returning to statutory health insurance is generally not possible under the described circumstances, especially if the individual is over 55 and has been privately insured for the last five years. It accurately outlines the conditions under which a return might be possible, such as taking up employment below the income threshold. The advice provided is relevant and actionable."
+      }
+    },
+    {
+      "id": "bur-028",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.25,
+        "citation_correctness": 0.25,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10692.0,
+        "cost_usd": null
+      },
+      "latency_ms": 8317.0,
+      "error": null,
+      "details": {
+        "answer": "Yes, as the spouse of a German citizen, you can be naturalised sooner than the usual five-year residence requirement.\n\nDetails:\n- If you have been living lawfully and continuously in Germany for at least three years and your marriage to the German spouse has lasted for at least two years, you may apply for naturalisation earlier than the standard five years [S2].\n- The naturalisation requirements otherwise apply, such as having a permanent residence right, language skills, commitment to the democratic order, and the ability to support yourself [S1][S3][S4].\n- Minor children can also be naturalised with you even if they have not lived in Germany for three years [S2].\n\nYour next steps:\n- Confirm your lawful residence duration in Germany.\n- Ensure your marriage has lasted at least two years.\n- Prepare to meet other naturalisation requirements (language, knowledge, livelihood).\n- Apply for naturalisation at your local naturalisation authority.\n\nIf you want, I can provide more details on the documents and process for naturalisation.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant correctly identified that the user was not asking for legal advice and provided a substantive answer with relevant details and next steps, fulfilling the criteria for a \"false\" should_refuse scenario.",
+        "groundedness_reasoning": "The output correctly identifies that a spouse of a German citizen can be naturalised sooner than the usual five years, citing the three-year residence and two-year marriage requirement from S2. It also correctly lists the general naturalisation requirements from S1, S3, and S4. Thus, the score should be: True.",
+        "correctness_reasoning": "The output correctly states that a spouse of a German citizen can be naturalised sooner than the standard five years, specifically after three years of residence and two years of marriage. It also accurately mentions that other requirements still apply. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "bur-029",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6666666666666666,
+        "citation_correctness": 0.4,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10172.0,
+        "cost_usd": null
+      },
+      "latency_ms": 13866.0,
+      "error": null,
+      "details": {
+        "answer": "The cost of naturalisation (Einbürgerung) in Germany is generally 255 euros per person. For minor children who are naturalised together with their parents, the fee is reduced to 51 euros per child [S1][S2][S6][S5].\n\nSo yes, it is cheaper for your children if they are naturalised together with you. If your children are minors and included in your naturalisation application, they pay the reduced fee of 51 euros each.\n\nYour next steps:\n- Prepare your naturalisation application and include your minor children if applicable.\n- Contact your local naturalisation authority for the exact fee payment process and possible fee reductions or exemptions if you have low income or multiple children [S1][S4][S5].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a detailed answer about the costs of naturalisation in Germany, including specific fees for adults and children, and offered clear next steps for the user. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output accurately states the naturalisation fees for adults and minor children naturalised with their parents, and correctly infers that it is cheaper for children in this scenario. It also correctly identifies the possibility of fee reductions and the next steps for the user based on the provided context. Thus, the score should be: True.",
+        "correctness_reasoning": "The output accurately states the cost of naturalisation in Germany as 255 euros per person and the reduced fee of 51 euros for minor children naturalised with their parents. It correctly answers both parts of the question and is consistent with the reference output. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "bur-032",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.6,
+        "citation_correctness": 0.2,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 12000.0,
+        "cost_usd": null
+      },
+      "latency_ms": 9257.0,
+      "error": null,
+      "details": {
+        "answer": "Assuming you are a visitor or temporary resident in Germany for your 10-month project:\n\nYou do not have to convert your US driver's license immediately. If you establish an ordinary residence (ordentlicher Wohnsitz) in Germany, your US driver's license is valid for six months from the start of that residence. After six months, you must have a German driver's license to continue driving legally. In exceptional cases, the authority may extend this period by up to six months if you can credibly demonstrate that your stay will not exceed 12 months [S6][S7].\n\nThe exact requirements for converting your US license depend on the US state that issued it. Some states' licenses allow conversion without a practical or theoretical test, while others require one or both. For example, licenses from states like Idaho, Illinois, Indiana, Kansas, Kentucky, Louisiana, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Nebraska, New Mexico, North Carolina, Ohio, Oklahoma, Oregon, Pennsylvania, Puerto Rico, South Carolina, South Dakota, Tennessee, Texas, Utah, Virginia, Washington State, West Virginia, Wisconsin, and Wyoming have different rules regarding tests [S1][S3][S4].\n\nYour next steps:\n- Confirm whether you have established an ordinary residence in Germany.\n- Identify the US state that issued your driver's license.\n- Contact the local driver's license authority (Fahrerlaubnisbehörde) in your place of residence in Germany to check if you need to convert your license and what tests, if any, are required.\n- If your stay is less than 12 months, you may apply for an extension of the six-month validity period.\n\nIf you are just visiting without establishing residence, you can drive with your US license within the allowed period without conversion [S7][S6].",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a comprehensive answer to the user's question about converting their US driver's license, including relevant details about residency and the process. It also offered clear next steps and disclaimers, fulfilling the requirements for a non-refusal scenario. Thus, the score should be: true.",
+        "groundedness_reasoning": "The output accurately summarizes the provided context regarding the validity of a US driver's license in Germany for a temporary stay and the conditions for conversion. All claims are supported by the provided sources.",
+        "correctness_reasoning": "The output accurately states that a US driver's license is valid for six months after establishing ordinary residence in Germany, with a possible extension up to 12 months if the stay is temporary. It correctly advises checking specific state requirements and contacting local authorities for conversion. Thus, the score should be: True."
+      }
+    },
+    {
+      "id": "tax-003",
+      "metrics": {
+        "groundedness": 1.0,
+        "correctness": 1.0,
+        "citation_validity": 1.0,
+        "citation_coverage": 0.5,
+        "citation_correctness": 1.0,
+        "must_include": 1.0,
+        "must_not_include": 1.0,
+        "tool_selection": 1.0,
+        "refusal_accuracy": 1.0,
+        "clarification": 1.0,
+        "total_tokens": 10874.0,
+        "cost_usd": null
+      },
+      "latency_ms": 12982.0,
+      "error": null,
+      "details": {
+        "answer": "Das Faktorverfahren ist eine besondere Variante der Steuerklassenkombination für verheiratete oder verpartnerte Paare, die beide ungefähr gleich hohe Einkommen haben. Dabei wird statt der üblichen Kombination Steuerklasse 3 und 5 die Steuerklasse 4 mit einem Faktor angewendet. Dieser Faktor sorgt dafür, dass die Lohnsteuer gerechter und genauer entsprechend der gemeinsamen Einkommensteuer berechnet wird, wodurch Nachzahlungen oder hohe Rückerstattungen bei der Steuererklärung vermieden werden können [S1][S3][S4].\n\nDetails:\n- Ehegatten oder Lebenspartner, die beide in etwa gleich viel verdienen, werden normalerweise automatisch der Steuerklasse 4 zugeordnet.\n- Das Faktorverfahren berechnet einen individuellen Faktor, der auf dem Verhältnis der voraussichtlichen gemeinsamen Einkommensteuer zur Summe der Lohnsteuer bei Steuerklasse 4 basiert.\n- Der Faktor wird vom Finanzamt mit drei Nachkommastellen ohne Rundung berechnet und gilt bis zu zwei Jahre.\n- Arbeitgeber wenden dann die Steuerklasse 4 mit diesem Faktor an, was zu einer genaueren monatlichen Lohnsteuer führt.\n- Das Verfahren berücksichtigt das Ehegattensplitting, wodurch die Steuerlast insgesamt besser verteilt wird.\n- Wer das Faktorverfahren nutzt, ist grundsätzlich verpflichtet, eine Einkommensteuererklärung abzugeben.\n- Der Antrag auf das Faktorverfahren erfolgt beim Finanzamt, entweder schriftlich oder elektronisch über ELSTER [S1][S4].\n\nIhre nächsten Schritte:\n- Prüfen Sie, ob Sie und Ihr Ehepartner/Lebenspartner ungefähr gleich hohe Einkommen haben.\n- Beantragen Sie beim Finanzamt das Faktorverfahren mit dem Formular „Antrag auf Lohnsteuer-Ermäßigung und zu den Lohnsteuerabzugsmerkmalen“.\n- Reichen Sie den Antrag zusammen mit der Anlage „Steuerklassenwechsel“ ein oder nutzen Sie ELSTER.\n- Beachten Sie, dass Sie mit dem Faktorverfahren verpflichtet sind, eine Einkommensteuererklärung abzugeben.\n\nFalls Sie weitere Fragen zum Antrag oder zur Berechnung haben, kann ich Ihnen dabei helfen.",
+        "tool_calls": [],
+        "asked_clarification": false,
+        "refusal_accuracy_reasoning": "The assistant provided a detailed explanation of the Faktorverfahren, including its purpose, how it works, and the steps involved in applying for it. It also included relevant sources and offered further assistance, fulfilling the requirements for a non-refusal scenario.",
+        "groundedness_reasoning": "The output accurately describes the factor method, its purpose, and the process of applying for it, all of which are supported by the provided context. The claims made are directly derived from or are valid inferences based on the information in S1, S3, and S4. Thus, the score should be: True.",
+        "correctness_reasoning": "The output accurately describes the factor method (Faktorverfahren) as a tax class combination for married or partnered couples with similar incomes, explaining its purpose of more precise tax calculation to avoid large adjustments. It correctly details the process, requirements, and application, aligning with the reference output. Thus, the score should be: True."
+      }
+    }
+  ]
+}

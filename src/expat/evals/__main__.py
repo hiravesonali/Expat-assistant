@@ -61,6 +61,11 @@ def build_parser() -> argparse.ArgumentParser:
     answers.add_argument("--no-cache", action="store_true", help="ignore cached judge verdicts")
     answers.add_argument("--dry-run", action="store_true", help="print the cost estimate and exit (free)")
     answers.add_argument("--force", action="store_true", help="run even if the estimate exceeds the key's credit")
+    answers.add_argument(
+        "--samples",
+        action="store_true",
+        help="also write evals/results/samples/<experiment>.jsonl (answers + contexts) for scripts/ragas_eval.py",
+    )
 
     report = sub.add_parser("report", help="render evals/results/*.json to REPORT.md")
     report.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR)
@@ -177,6 +182,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             max_concurrency=args.max_concurrency,
             ids=ids,
             groundedness_variants=grounded_variants,
+            write_sample_files=args.samples,
         )
         if cache is not None:
             print(f"Judge cache: {cache.hits} hits (free), {cache.misses} new verdicts")

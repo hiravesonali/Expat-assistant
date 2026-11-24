@@ -76,8 +76,15 @@ location it is **0%** on dev and holdout (hit@5 0.94 dev / 0.96 holdout). The as
 live in?" exactly when needed (100%).
 
 **Judge calibration:** on 15 answers the correctness judge agreed with reference labels 12 times (80%, Cohen's
-kappa 0.44). The reference labels came from a second model, with 3 of them confirmed by a human, so judge scores
-are read as a trend and failures are checked by hand.
+kappa 0.44); the cheaper Gemini 2.5 Flash-Lite judge agreed 14 times (93%, kappa 0.81). The reference labels came
+from a second model, with 3 of them confirmed by a human, so judge scores are read as a trend and failures are
+checked by hand.
+
+**Ragas cross-check:** on 28 holdout answers [Ragas](https://docs.ragas.io) scored faithfulness 0.89, context
+precision 0.74 and context recall 0.93, and agreed with our groundedness judge on 86%. Checking the disagreements
+found a claim our cheap judge had missed (a city named in no retrieved source), and showed that both wrong
+answers had the right sources, so their errors came from generation. Ragas runs in its own environment so it
+doesn't change the app's dependencies ([details](docs/evaluation-plan.md#ragas-cross-check-2026-11-24)).
 
 **Eval cost:** measured from the traces, the judge was 82% of the eval spend. New runs use a cheaper judge
 (Gemini 2.5 Flash-Lite), short verdicts, a verdict cache and a spend guard: a full cycle went from ≈ $4.30 to

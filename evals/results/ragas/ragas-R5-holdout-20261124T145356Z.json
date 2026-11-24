@@ -1,0 +1,321 @@
+{
+  "config": {
+    "samples": "answers-R5-holdout-20261124T145356Z.jsonl",
+    "model": "google/gemini-2.5-flash-lite",
+    "ragas_version": "0.4.4",
+    "metrics": [
+      "faithfulness",
+      "context_precision",
+      "context_recall"
+    ],
+    "faithfulness_evidence": "question + profile + retrieved sources + tool results",
+    "context_evidence": "retrieved sources only"
+  },
+  "created_at": "2026-11-24T14:58:23+00:00",
+  "n_scored": 28,
+  "n_skipped": 4,
+  "skipped": {
+    "oos-002": "refusal question",
+    "oos-004": "refusal question",
+    "fam-015": "clarification",
+    "bur-024": "clarification"
+  },
+  "means": {
+    "faithfulness": 0.8900263922585351,
+    "context_precision": 0.7384273492601113,
+    "context_recall": 0.9255952380952381
+  },
+  "comparison": {
+    "faithful_threshold": 0.8,
+    "groundedness_pairs": 28,
+    "groundedness_agreement": 0.8571428571428571,
+    "groundedness_disagreements": [
+      {
+        "id": "bur-007",
+        "faithfulness": 0.78,
+        "ours_groundedness": 1.0
+      },
+      {
+        "id": "bur-010",
+        "faithfulness": 0.58,
+        "ours_groundedness": 1.0
+      },
+      {
+        "id": "ten-015",
+        "faithfulness": 0.33,
+        "ours_groundedness": 1.0
+      },
+      {
+        "id": "mul-005",
+        "faithfulness": 0.64,
+        "ours_groundedness": 1.0
+      }
+    ],
+    "faithfulness_when_ours_grounded": 0.897527369749592,
+    "faithfulness_when_ours_not_grounded": 0.6875,
+    "context_recall_when_ours_correct": 0.9198717948717949,
+    "context_recall_when_ours_incorrect": 1.0
+  },
+  "usage": {
+    "calls": 36,
+    "input_tokens": 198437,
+    "output_tokens": 41240,
+    "cost_usd": 0.03353,
+    "estimate_usd": 0.07844,
+    "seconds": 33.6
+  },
+  "per_example": [
+    {
+      "id": "bur-003",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 5,
+      "faithfulness": 0.8333333333333334,
+      "context_precision": 0.8874999999778125,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-007",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 7,
+      "faithfulness": 0.7777777777777778,
+      "context_precision": 0.32499999998375,
+      "context_recall": 0.6666666666666666
+    },
+    {
+      "id": "bur-010",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 8,
+      "faithfulness": 0.5833333333333334,
+      "context_precision": 0.99999999998,
+      "context_recall": 1.0
+    },
+    {
+      "id": "ten-004",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 10,
+      "faithfulness": 1.0,
+      "context_precision": 0.59999999998,
+      "context_recall": 1.0
+    },
+    {
+      "id": "ten-008",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 8,
+      "faithfulness": 0.8,
+      "context_precision": 0.9999999999,
+      "context_recall": 0.75
+    },
+    {
+      "id": "ten-011",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 6,
+      "faithfulness": 0.9,
+      "context_precision": 0.94999999997625,
+      "context_recall": 1.0
+    },
+    {
+      "id": "fam-003",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 8,
+      "faithfulness": 1.0,
+      "context_precision": 0.8041666666465626,
+      "context_recall": 1.0
+    },
+    {
+      "id": "fam-006",
+      "ours_groundedness": 0.0,
+      "ours_correctness": 0.0,
+      "n_sources": 10,
+      "faithfulness": 0.6875,
+      "context_precision": 0.6893424036182701,
+      "context_recall": 1.0
+    },
+    {
+      "id": "fam-009",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 3,
+      "faithfulness": 1.0,
+      "context_precision": 0.9999999999666667,
+      "context_recall": 1.0
+    },
+    {
+      "id": "mul-003",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 11,
+      "faithfulness": 1.0,
+      "context_precision": 0.6464646464430975,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-013",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 7,
+      "faithfulness": 1.0,
+      "context_precision": 0.3333333333,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-021",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 6,
+      "faithfulness": 0.8333333333333334,
+      "context_precision": 0.3333333333,
+      "context_recall": 0.5
+    },
+    {
+      "id": "fam-011",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 5,
+      "faithfulness": 0.8,
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-019",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 4,
+      "faithfulness": 1.0,
+      "context_precision": 0.249999999975,
+      "context_recall": 1.0
+    },
+    {
+      "id": "ten-013",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 0.0,
+      "n_sources": 4,
+      "faithfulness": 1.0,
+      "context_precision": 0.7499999999625,
+      "context_recall": 1.0
+    },
+    {
+      "id": "ten-017",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 3,
+      "faithfulness": 1.0,
+      "context_precision": 0.9999999999666667,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-015",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 10,
+      "faithfulness": 1.0,
+      "context_precision": 0.9999999999,
+      "context_recall": 1.0
+    },
+    {
+      "id": "fam-013",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 5,
+      "faithfulness": 1.0,
+      "context_precision": 0.9999999999666667,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-017",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 9,
+      "faithfulness": 1.0,
+      "context_precision": 0.9999999999666667,
+      "context_recall": 1.0
+    },
+    {
+      "id": "ten-015",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 8,
+      "faithfulness": 0.3333333333333333,
+      "context_precision": 0.3928571428375,
+      "context_recall": 0.0
+    },
+    {
+      "id": "mul-005",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 7,
+      "faithfulness": 0.6428571428571429,
+      "context_precision": 0.7499999999625,
+      "context_recall": 1.0
+    },
+    {
+      "id": "fam-016",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 6,
+      "faithfulness": 1.0,
+      "context_precision": 0.6666666666333333,
+      "context_recall": 1.0
+    },
+    {
+      "id": "hea-003",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 4,
+      "faithfulness": 0.8461538461538461,
+      "context_precision": 0.99999999995,
+      "context_recall": 1.0
+    },
+    {
+      "id": "hea-004",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 4,
+      "faithfulness": 0.9285714285714286,
+      "context_precision": 0.8055555555287036,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-028",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 6,
+      "faithfulness": 1.0,
+      "context_precision": 0.5833333333041666,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-029",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 7,
+      "faithfulness": 1.0,
+      "context_precision": 0.8766666666491333,
+      "context_recall": 1.0
+    },
+    {
+      "id": "bur-032",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 8,
+      "faithfulness": 1.0,
+      "context_precision": 0.22619047617916663,
+      "context_recall": 1.0
+    },
+    {
+      "id": "tax-003",
+      "ours_groundedness": 1.0,
+      "ours_correctness": 1.0,
+      "n_sources": 4,
+      "faithfulness": 0.9545454545454546,
+      "context_precision": 0.8055555555287036,
+      "context_recall": 1.0
+    }
+  ]
+}

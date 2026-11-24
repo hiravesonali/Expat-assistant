@@ -176,3 +176,43 @@ def test_groundedness_can_be_skipped_without_counting_as_a_failure() -> None:
     assert called == []
     assert score.metrics["groundedness"] is None  # drops out of the average (not 0)
     assert score.metrics["correctness"] == 1.0
+
+
+def test_samples_file_holds_the_scored_answers_with_their_contexts(tmp_path: Path) -> None:
+    def factory(config: RetrievalConfig):
+        def target(question: str, profile: UserProfile) -> AnswerOutput:
+            example = next(e for e in EXAMPLES.values() if e.question == question)
+            return AnswerOutput(
+                answer=example.reference_answer + " [S1][T1]",
+                contexts=[_ctx("S1", "bgb#573c")],
+                tool_results=[ToolResultEvent(call_id="c1", name="tenancy_notice_period", result={"months": 6})],
+            )
+
+        return target
+
+    ids = ["ten-001", "oos-001"]
+    variants = {"R5": RetrievalConfig.baseline()}
+    run_answer_eval(
+        factory, variants, split=None, judges=_fake_judges(), results_dir=tmp_path, ids=ids, write_sample_files=True
+    )
+    [path] = (tmp_path / "samples").glob("answers-R5-all-*.jsonl")
+    records = {r["id"]: r for r in map(json.loads, path.read_text(encoding="utf-8").splitlines())}
+    assert set(records) == set(ids)
+    ten = records["ten-001"]
+    assert ten["variant"] == "R5" and ten["reference"] == EXAMPLES["ten-001"].reference_answer
+    assert (
+        ten["retrieved_contexts"][0].startswith("[S1] bgb#573c") and "Kündigungsfrist" in ten["retrieved_contexts"][0]
+    )
+    assert ten["tool_contexts"] == ['[T1] tool tenancy_notice_period\n{"months": 6}']
+    assert ten["ours"] == {"groundedness": 1.0, "correctness": 1.0}
+    assert ten["ours_reasoning"]["correctness"] == "c reasoning"
+    assert records["oos-001"]["should_refuse"] is True and records["oos-001"]["ours"]["correctness"] is None
+    assert not list(tmp_path.glob("*.jsonl"))  # the report loader only reads results_dir/*.json
+
+
+def test_no_samples_file_by_default(tmp_path: Path) -> None:
+    def factory(config: RetrievalConfig):
+        return lambda question, profile: AnswerOutput(answer="x [S1]", contexts=[_ctx("S1", "bgb#573c")])
+
+    run_answer_eval(factory, {"R5": RetrievalConfig.baseline()}, split=None, results_dir=tmp_path, ids=["ten-001"])
+    assert not (tmp_path / "samples").exists()
