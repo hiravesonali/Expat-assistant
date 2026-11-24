@@ -307,6 +307,48 @@ out of the report (`evals/results/_failed/`).
 - **Budget:** today's answer evals cost about $4.80, mostly judge calls; the estimate in §5 was too low for the
   85-question set (≈ $1.30 per split with both variants).
 
+### Ragas cross-check (2026-11-24)
+**Why:** our judges are calibrated on only 15 answers. [Ragas](https://docs.ragas.io) (the best-known RAG eval
+library) gives a second, independent opinion on the same answers, and adds what our ID-based hit@k can't see: does
+the retrieved *text* actually contain what the reference answer needs?
+
+**Metrics** (`ragas.metrics.collections`, Ragas 0.4.4, LLM = the cheap judge `MODEL_JUDGE`):
+
+| Ragas metric | What it asks | Evidence | Compared with |
+|---|---|---|---|
+| faithfulness | which share of the answer's statements is supported? (2 LLM calls) | profile + sources + tool results, exactly what our groundedness judge sees | our groundedness (binary; "grounded" = faithfulness ≥ 0.8) |
+| context precision (with reference) | are the sources that help the reference answer ranked high? (1 call per source) | retrieved sources | hit@5 / MRR |
+| context recall | how much of the reference answer do the sources cover? (1 call) | retrieved sources | our correctness: are wrong answers explained by missing sources? |
+
+**Design decisions:**
+- **Same answers for both sides.** `answers --samples` writes each answer with the exact sources and tool results
+  it was generated from (`evals/results/samples/*.jsonl`) plus our judges' verdicts. Ragas scores that file; it never
+  re-runs the pipeline, because a new run gives different answers and "do they agree?" would mean nothing.
+- **Own environment.** Ragas needs `instructor`, which pins `jiter<0.15` and so forces an older `openai` than the
+  app uses. Added to the project, it would downgrade the deployed app. `scripts/ragas_eval.py` declares its
+  dependencies inline (PEP 723) and runs with `uv run --script`, isolated from the app.
+- **Refusals, city questions and pipeline errors are skipped:** there is no RAG answer to score.
+- **Budget:** the same spend guard as `answers` (estimate from the real sample texts and live prices, × 1.25 vs
+  the key's credit; `--dry-run`, `--limit`). Ragas makes ~13 calls per answer (10 sources), ≈ $0.004 per answer
+  with Gemini 2.5 Flash-Lite; the measured cost from OpenRouter's `usage` is saved with the results.
+- **Cache per model** (`evals/.ragas_cache/<model>/`): Ragas' cache key is the prompt only, not the model, so
+  one shared folder would silently reuse another model's verdicts.
+- **No telemetry:** Ragas sends usage analytics by default; the script sets `RAGAS_DO_NOT_TRACK=true`.
+- **Not committed:** the samples files contain scraped source text (see README, Data and licensing); the score
+  files in `evals/results/ragas/` hold ids and numbers only.
+
+**Run** (holdout R5: ≈ $0.10 pipeline + our judges, ≈ $0.10 Ragas):
+```bash
+uv run python -m expat.evals answers --split holdout --variants R5 --samples
+uv run --script scripts/ragas_eval.py --dry-run     # estimate only
+uv run --script scripts/ragas_eval.py --limit 3     # smoke run, check a few verdicts by hand
+uv run --script scripts/ragas_eval.py               # all scorable answers -> evals/results/ragas/*.json + .md
+```
+
+**Results:** *pending: the key had no credit left on 2026-11-24.* Read with care: questions are partly German and
+the reference answers English, while Ragas' prompts are English. Check a few statement verdicts by hand before
+trusting the numbers.
+
 ## 4. Tooling (APIs verified 2026-11-17: `langsmith` 0.14.x, `openevals` 0.2.x)
 - **Datasets:** `Client().create_dataset(dataset_name="expat-golden-v1")` + `create_examples(...)` from the JSONL. Put the `dev`/`holdout` split in example metadata (or use LangSmith dataset splits).
 - **Experiments:** `Client().evaluate(target, data="expat-golden-v1", evaluators=[...], experiment_prefix="R4-hybrid", metadata={...config...}, max_concurrency=4)`, or `aevaluate` for the async pipeline. Evaluators are plain functions `(inputs, outputs, reference_outputs) -> bool | dict`. The deterministic metrics are simply Python.

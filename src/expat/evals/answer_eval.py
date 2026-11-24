@@ -92,15 +92,24 @@ class AnswerOutput(BaseModel):
         ids = [c.source_id for c in self.contexts] + [c.id for c in self.citations] + self.tool_result_ids()
         return list(dict.fromkeys(ids))
 
-    def context_text(self) -> str:
-        """The evidence the groundedness judge sees: retrieved sources AND tool outputs (both are citable)."""
+    def source_blocks(self) -> list[str]:
+        """One text block per retrieved [S#] source, as the answer model saw it."""
         blocks = [f"[{c.source_id}] {c.title} ({c.legal_reference or c.doc_key})\n{c.text}" for c in self.contexts]
         if not self.contexts:
             # Fallback when the pipeline doesn't expose the context pack: the citation quotes are all we have.
             blocks = [f"[{c.id}] {c.title}\n{c.quote}" for c in self.citations if c.kind == "source"]
-        for tid, result in zip(self.tool_result_ids(), self.tool_results, strict=True):
-            blocks.append(f"[{tid}] tool {result.name}\n{json.dumps(result.result, ensure_ascii=False, default=str)}")
-        return "\n\n".join(blocks)
+        return blocks
+
+    def tool_blocks(self) -> list[str]:
+        """One text block per tool result ([T#]); tool outputs are citable evidence too."""
+        return [
+            f"[{tid}] tool {result.name}\n{json.dumps(result.result, ensure_ascii=False, default=str)}"
+            for tid, result in zip(self.tool_result_ids(), self.tool_results, strict=True)
+        ]
+
+    def context_text(self) -> str:
+        """The evidence the groundedness judge sees: retrieved sources AND tool outputs (both are citable)."""
+        return "\n\n".join(self.source_blocks() + self.tool_blocks())
 
     def cited_doc_keys(self) -> list[str] | None:
         """doc_keys of the [S#] sources the answer cites; None if we can't map ids to doc_keys (no context pack)."""
@@ -267,6 +276,39 @@ def score_answer(
     return ExampleScore(id=example.id, metrics=metrics, latency_ms=output.latency_ms, details=details)
 
 
+def sample_record(example: GoldenExample, output: AnswerOutput, score: ExampleScore, variant: str) -> dict[str, Any]:
+    """One line of a samples file: the answer, the exact evidence it was generated from, and our judges' verdicts.
+
+    External scorers (scripts/ragas_eval.py) read these files, so they score the SAME answers as our judges;
+    re-running the pipeline would produce different answers and make the comparison meaningless.
+    """
+    return {
+        "id": example.id,
+        "variant": variant,
+        "split": example.split,
+        "question": example.question,
+        "profile": example.profile.model_dump(mode="json", exclude_none=True),
+        "reference": example.reference_answer,
+        "should_refuse": example.should_refuse,
+        "expect_clarification": example.expect_clarification,
+        "asked_clarification": output.asked_clarification,
+        "error": output.error,
+        "answer": output.answer,
+        "retrieved_contexts": output.source_blocks(),
+        "tool_contexts": output.tool_blocks(),
+        "ours": {m: score.metrics.get(m) for m in ("groundedness", "correctness")},
+        "ours_reasoning": {m: score.details.get(f"{m}_reasoning") for m in ("groundedness", "correctness")},
+    }
+
+
+def write_samples(records: list[dict[str, Any]], path: Path) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="\n") as fh:
+        for record in records:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+    return path
+
+
 def _call_target(target: AnswerTarget, example: GoldenExample) -> AnswerOutput:
     start = time.perf_counter()
     try:
@@ -291,10 +333,12 @@ def _run_langsmith(
     judges: JudgeSet | None,
     price_per_mtok: tuple[float, float] | None,
     with_groundedness: bool = True,
+    outputs_sink: dict[str, AnswerOutput] | None = None,
 ) -> tuple[list[ExampleScore], str | None]:
     """LangSmith experiment whose single evaluator reports all metrics; scores are also kept for the local JSON.
 
     Scoring happens once inside the evaluator and is memoised by example id, so the (paid) judges never run twice.
+    outputs_sink, if given, receives each pipeline output by example id (for the samples file).
     """
     examples_by_id = by_id(examples)
     by_question = {e.question: e for e in examples}  # LangSmith inputs carry question + profile, not our id
@@ -305,10 +349,11 @@ def _run_langsmith(
 
     def all_metrics_evaluator(outputs: dict[str, Any], reference_outputs: dict[str, Any]) -> dict[str, Any]:
         example = examples_by_id[reference_outputs["id"]]
-        score = score_answer(
-            example, AnswerOutput.model_validate(outputs), judges, price_per_mtok, with_groundedness=with_groundedness
-        )
+        output = AnswerOutput.model_validate(outputs)
+        score = score_answer(example, output, judges, price_per_mtok, with_groundedness=with_groundedness)
         scored[example.id] = score
+        if outputs_sink is not None:
+            outputs_sink[example.id] = output
         return {"results": [{"key": k, "score": v} for k, v in score.metrics.items() if v is not None]}
 
     data = [
@@ -344,6 +389,7 @@ def run_answer_eval(
     ids: list[str] | None = None,
     judge_model: str | None = None,
     groundedness_variants: Collection[str] | None = None,
+    write_sample_files: bool = False,
 ) -> list[ExperimentResult]:
     """Run the full pipeline per variant and write `evals/results/answers-<variant>-<split>-<ts>.json`.
 
@@ -351,6 +397,8 @@ def run_answer_eval(
     price_per_mtok=(input_usd, output_usd) per million tokens enables the cost_usd metric.
     groundedness_variants: run the groundedness judge only for these variants (None = all). The CLI default is
     R5 only: the naive-vs-system headline uses correctness, and groundedness is ~60% of the judge cost.
+    write_sample_files: also write `evals/results/samples/<experiment>.jsonl` (answers + contexts + our verdicts)
+    for external scorers such as scripts/ragas_eval.py.
     """
     variants = variants if variants is not None else default_answer_variants()
     examples = load_golden(golden_path, split=split)
@@ -370,10 +418,11 @@ def run_answer_eval(
         target = target_factory(config)
         ls_name: str | None = None
         grounded = groundedness_variants is None or variant in groundedness_variants
+        outputs: dict[str, AnswerOutput] = {}
         if mode == "local":
+            outputs = {e.id: _call_target(target, e) for e in examples}
             scores = [
-                score_answer(e, _call_target(target, e), judges, price_per_mtok, with_groundedness=grounded)
-                for e in examples
+                score_answer(e, outputs[e.id], judges, price_per_mtok, with_groundedness=grounded) for e in examples
             ]
         else:
             if split is None:
@@ -390,6 +439,7 @@ def run_answer_eval(
                 judges=judges,
                 price_per_mtok=price_per_mtok,
                 with_groundedness=grounded,
+                outputs_sink=outputs,
             )
         now = datetime.now(UTC)
         metrics, per_slice = aggregate(scores, by_id(examples), ANSWER_METRICS)
@@ -415,5 +465,12 @@ def run_answer_eval(
             per_example=scores,
         )
         write_result(result, results_dir)
+        if write_sample_files:
+            examples_by_id = by_id(examples)
+            records = [
+                sample_record(examples_by_id[s.id], outputs[s.id], s, variant) for s in scores if s.id in outputs
+            ]
+            path = write_samples(records, results_dir / "samples" / f"{result.experiment}.jsonl")
+            print(f"samples for external scorers: {path}")
         results.append(result)
     return results

@@ -36,3 +36,7 @@ Thumbs.db
 
 # Judge verdict cache (evals); regenerable, may contain answer text
 evals/.judge_cache.jsonl
+
+# Ragas (scripts/ragas_eval.py): verdict cache, and samples with scraped source text (not committed, see README)
+evals/.ragas_cache/
+evals/results/samples/
