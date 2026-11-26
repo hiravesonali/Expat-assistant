@@ -130,4 +130,10 @@
 .st-key-lang-switch [data-testid="stButtonGroup"] button {
     min-height: 1.9rem; padding: .15rem .8rem; font-size: .82rem; background: #FFFFFF;
 }
-@media (max-width: 640px) { .st-key-lang-switch { right: 4rem; } }
+/* Streamlit's "Running… Stop" indicator sits in the toolbar; on Community Cloud the toolbar icons push it under
+   the switch. Pin it just left of the switch instead (switch ≈ 9.2rem wide). */
+[data-testid="stStatusWidget"] { position: fixed; top: .75rem; right: 18.25rem; z-index: 999990; }
+@media (max-width: 640px) {
+    .st-key-lang-switch { right: 4rem; }
+    [data-testid="stStatusWidget"] { right: 14.75rem; }
+}
